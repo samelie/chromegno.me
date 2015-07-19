@@ -11,22 +11,25 @@ var EXT = 'JPG';
 var Organizer = (function() {
 	var picsDir = path.join(process.cwd(), 'data/pics');
 
-	function start() {
+	function start(callback) {
 		dir.subdirs(picsDir, function(err, dirs) {
 			//goes too deep if already organized
 			if (dirs.length > 4) {
+				console.log("SKIPPED");
+				callback();
 				return;
 			}
 			_.each(dirs, function(path) {
 				//only choose the folders just at the root level
-				if (path.length === 45) {
-					_createFolders(path);
+				if (path.length === 44) {
+					_createFolders(path, callback);
 				}
 			});
 		});
 	}
 
-	function _createFolders(folderPath) {
+	function _createFolders(folderPath, callback) {
+		//console.log(folderPath);
 		var numImages = 0,
 			count = 0,
 			index = 0;
@@ -53,8 +56,11 @@ var Organizer = (function() {
 
 			function __next() {
 				var p = files[index];
-				//console.log(p, index);
+				console.log(p, index);
 				if (!p) {
+					process.chdir(path.join(process.cwd(), '../../../../'));
+					console.log(process.cwd());
+					callback();
 					return;
 				}
 				var split = p.split('/');
@@ -78,5 +84,9 @@ var Organizer = (function() {
 		});
 	}
 
-	start();
+	return {
+		start: start
+	}
 })();
+
+module.exports = Organizer;

@@ -9,6 +9,8 @@
 		"q": "latest",
 		"node-dir": "latest",
 		"fs-extra": "latest",
-		"fluent-ffmpeg": "latest"
+		"fluent-ffmpeg": "latest",
+		"shelljs": "latest",
+		"xml2js": "latest"
 	}
 }

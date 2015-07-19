@@ -11,10 +11,10 @@ var FRAME_RATES = ['3', '1', (1 / 3).toFixed(3).toString()];
 var IMGS_PER_CLIP = 12;
 var EXT = '.JPG';
 
-var Organizer = (function() {
+var FFMPEG = (function() {
 	var picsDir = path.join(process.cwd(), 'data/pics');
 
-	function start() {
+	function start(callback) {
 		var clips = [];
 		dir.subdirs(picsDir, function(err, dirs) {
 			_.each(dirs, function(path) {
@@ -23,104 +23,71 @@ var Organizer = (function() {
 					clips.push(info);
 				}
 			});
-			_createClips(clips);
+			_createClips(clips, callback);
 		});
 	}
 
 	function _getClipInfo(clipFolder) {
+		var data = Object.create(null);
 		var split = clipFolder.split('/');
 		var chapter = clipFolder.split('/')[split.length - 2];
 		if (chapter.indexOf('pics') !== -1) {
 			return undefined;
 		}
 		var index = clipFolder.split('/')[split.length - 1];
-		return [clipFolder, chapter, index];
-
-		/*function __encode(frameRate) {
-			var cmd = 'prince -v builds/pdf/book.html -o builds/pdf/book.pdf';
-			exec(cmd, function(error, stdout, stderr) {
-				// command output is in stdout
-			});
-		}*/
+		data['dir'] = clipFolder;
+		data['chapter'] = chapter;
+		data['index'] = index;
+		return data;
 	}
 
-	function _createClips(clips) {
+	function _createClips(clips, callback) {
 		var index = 0;
 
 		function __ripClip() {
 			var clipInfo = clips[index];
-			process.chdir(clipInfo[0]);
-			console.log(process.cwd());
+			if (!clipInfo) {
+				callback(clips);
+				return;
+			}
+			clipInfo['videos'] = [];
+			process.chdir(clipInfo['dir']);
 			var frIndex = 0;
+			var output;
 
-			function __encodeMov(framerate) {
-				var output = clipInfo[2] + ".mov";
-				var ff = exec("ffmpeg -framerate " + framerate + " -pattern_type glob -i \'*.JPG\' -y -vcodec prores " + output, function(error, stdout, stderr) {
+			function __encodeComplete() {
+				clipInfo['videos'].push(output);
+				frIndex++;
+				var fr = FRAME_RATES[frIndex];
+				if (fr) {
+					__encodeMp4(fr);
+				} else {
+					index++;
+					__ripClip();
+				}
+			}
+
+			function __encodeMp4(framerate) {
+				output = clipInfo['index'] + "_" + frIndex + ".mp4";
+				if (fs.existsSync(output)) {
+					__encodeComplete();
+					return;
+				}
+				var command = "ffmpeg -framerate " + framerate + " -pattern_type glob -i \'*" + EXT + "\' -codec:v libx264 -b:v 4000k -maxrate 4000k -bufsize 4000k -vf scale=-1:720 -threads 4 -g 12 -codec:a libfdk_aac -b:a 128k -preset fast -profile:v baseline -pix_fmt yuv420p -y " + output
+				var ff = exec(command, function(error, stdout, stderr) {
 					if (error) {}
 				});
 				ff.on('exit', function(code) {
-					console.log('Child process exited with exit code ' + code);
-					___encodeMp4(clipInfo[2]);
+					__encodeComplete();
 				});
-				/*console.log(output);
-				ffmpeg("\'*" + EXT + "\'")
-					.inputOptions("-framerate " + framerate)
-					.inputOptions('-pattern_type glob')
-					.videoCodec('prores')
-					.output(output)
-					.on('start', function(cmd) {
-						console.log(cmd);
-					})
-					.on('error', function(err) {
-						console.log('An error occurred: ' + err.message);
-					})
-					.on('end', function() {
-						___encodeMp4(clipInfo[2]);
-					})
-					.run();*/
 			}
-
-			function ___encodeMp4(p) {
-				console.log(p);
-				ffmpeg(p + '.mov')
-					.inputOptions('-threads 8')
-					.outputOptions('-map 0')
-					.outputOptions('-profile:v Baseline')
-					.outputOptions('-g 12')
-					.outputOptions('-strict -2')
-					.format('mp4')
-					.output(p + '.mp4')
-					.on('start', function(commandLine) {
-						console.log(commandLine);
-					})
-					.on('error', function(err) {
-						console.log(err);
-					})
-					.on('end', function() {
-						frIndex++;
-						var fr = FRAME_RATES[frIndex];
-						if (fr) {
-							__encodeMov(fr);
-						} else {
-							index++;
-							__ripClip();
-						}
-					})
-					.run();
-			}
-			/*	var ff = exec("ffmpeg -framerate 3 -pattern_type glob -i \'*.JPG\' -y -vcodec prores 0.mov", function(error, stdout, stderr) {
-				if (error) {}
-			});
-			ff.on('exit', function(code) {
-				console.log('Child process exited with exit code ' + code);
-			});*/
-			__encodeMov(FRAME_RATES[frIndex])
+			__encodeMp4(FRAME_RATES[frIndex])
 		}
 		__ripClip();
 	}
-
-	start();
-
+	return {
+		start: start
+	}
 })();
 
-//ffmpeg -framerate 1 -pattern_type glob -i '*.png' -c:v libx264 -pix_fmt yuv420p out.mp4
+module.exports = FFMPEG;
