@@ -1,0 +1,96 @@
+#   OS
+
+._*
+.DS_Store
+.DS_Store?
+.AppleDouble
+Icon?
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+*.pyc
+
+Archive.zip
+*.zip
+
+#   VCS
+
+.svn
+*.orig
+!.gitinclude
+
+
+#   IDE
+
+.settings/
+.project
+user.properties
+.idea?
+.metadata/*
+*.ignore
+*.sublime-*
+*~
+*.swp
+*.swo
+
+
+#   BINARIES
+
+*.air
+*.py[cod]
+node_modules/
+
+# Packages
+
+*.egg
+*.egg-info
+eggs
+develop-eggs
+.installed.cfg
+#lib
+lib64
+*.mp4
+*.srt
+*.mkv
+*.gif
+# Installer logs
+
+pip-log.txt
+
+# Unit test / coverage reports
+
+.coverage
+.tox
+nosetests.xml
+
+# Translations
+*.mo
+
+# Mr Developer
+
+.mr.developer.cfg
+.project
+.pydevproject
+
+node_modules
+nodewebkit/build
+nodewebkit/display/dist
+mobile/assets/css/**/*
+mobile/assets/js/**/*
+app.nw
+bower_components
+node/videos/**/*
+node/exports/**/*
+refactor/videos/**/*
+mobile/assets/vendor/**/*
+videos/**/*
+labs/**/*.jpg
+labs/**/*.JPG
+.env
+mobile/build/**/*
+*.JPG
+*.jpg
+data/**/*.JPG
+data/**/*.jpg

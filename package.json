@@ -1,0 +1,14 @@
+{
+	"name": "gallyer-viz",
+	"version": "0.0.1",
+	"description": "",
+	"main": "",
+	"author": "samelie",
+	"devDependencies": {
+		"lodash": "latest",
+		"q": "latest",
+		"node-dir": "latest",
+		"fs-extra": "latest",
+		"fluent-ffmpeg": "latest"
+	}
+}
