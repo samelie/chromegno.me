@@ -56,7 +56,6 @@ var Organizer = (function() {
 
 			function __next() {
 				var p = files[index];
-				console.log(p, index);
 				if (!p) {
 					process.chdir(path.join(process.cwd(), '../../../../'));
 					console.log(process.cwd());

@@ -11,6 +11,13 @@
 		"fs-extra": "latest",
 		"fluent-ffmpeg": "latest",
 		"shelljs": "latest",
-		"xml2js": "latest"
+		"xml2js": "latest",
+		"xhr2": "latest",
+		"dotenv": "1.1.0",
+		"aws-sdk": "latest",
+		"mime": "latest",
+		"s3": "latest",
+		"s3-upload-stream": "latest"
+
 	}
 }
