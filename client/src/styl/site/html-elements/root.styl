@@ -1,0 +1,45 @@
+/**
+ * Root
+ *
+ * For categories, see:
+ * https://developer.mozilla.org/en/docs/Web/Guide/HTML/HTML5/HTML5_element_list
+ */
+
+/**
+ * Selection
+ */
+::selection {
+  background: var(--color-gold);
+  text-shadow: none;
+}
+
+/**
+ * Universal
+ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/**
+ * html
+ */
+html {
+  color: var(--color-white);
+  font-family: var(--ff-proxima-reg);
+  line-height: var(--root-line-height);
+  height: 100%;
+  overflow-y: scroll;
+  -ms-touch-action: none;
+  font-size: var(--fs-root-large);
+}
+
+.ie{
+  user-select: none !important;
+}
+
+span, div{
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
+}

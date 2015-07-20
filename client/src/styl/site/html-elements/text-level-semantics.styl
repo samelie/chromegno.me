@@ -1,0 +1,39 @@
+/**
+ * Text-level semantics
+ */
+
+a {
+  background: transparent;
+  color: var(--color-gold);
+  text-decoration: none;
+  word-wrap: break-word;
+  &:focus {
+    outline: 0;
+  }
+  &:active,
+  &:hover {
+  }
+}
+
+code, kbd, samp, tt {
+  font-family: var(--ff-proxima-reg);
+}
+
+kbd {
+  background: var(--color-grey-light);
+  border-radius: 0.3em;
+  padding: 0.5em 0.5em 0.4em;
+}
+
+q {
+  font-family: var(--ff-proxima-light);
+  quotes: "\201C" "\201D" "\2018" "\2019";
+}
+
+em {
+  font-style: normal;
+}
+
+button{
+  background: transparent;
+}

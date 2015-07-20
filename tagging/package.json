@@ -1,0 +1,21 @@
+{
+	"name": "ripper",
+	"version": "0.0.1",
+	"description": "",
+	"main": "",
+	"author": "samelie",
+	"devDependencies": {
+		"q": "latest",
+		"fs-extra": "latest",
+		"node-dir": "latest",
+		"request": "latest",
+		"xml2js": "latest",
+		"lodash": "latest",
+		"ytdl-core":"latest",
+		"rimraf": "latest",
+		"dotenv": "1.1.0",
+		"node-uuid":"latest",
+		"colors":"latest",
+		"fluent-ffmpeg":"latest"
+	}
+}

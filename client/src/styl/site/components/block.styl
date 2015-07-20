@@ -1,0 +1,63 @@
+/**
+ * Block
+ */
+
+.Block {
+	position: relative;
+}
+
+
+.BlockItem {
+	position: absolute;
+	background-color: var(--color-gold-dark);
+	width: 100%;
+	min-width: 300px;
+	height: var(--blocks-height);
+	//height: var(--playlistitem-height);
+	border-bottom: 1px solid var(--color-grey-dark);
+	cursor: pointer;
+	font-size: 0;
+	overflow:scroll;
+
+	img{
+		position: relative;
+		width: var(--playlistitem-thumbwidth);
+		height: 100%;
+		display: inline-block;
+		vertical-align: top;
+	}
+
+	&.is-disabled {
+		display: none;
+		visibility: hidden;
+	}
+}
+
+.BlockItem-region{
+	height:100%;
+	width:100%;
+}
+
+.BlockItem-attribute{
+	width:100%;
+	font-size:var(--fs-block-attribute);
+	height:var(--blockvo-height);
+	background-color:var(--blockvo-attribgcolor);
+}
+
+
+.BlockVO{
+	position:relative;
+	height:var(--blockvo-height);
+	background-color:var(--blockvo-bgcolor);
+	width:100%;
+	border-bottom: 1px solid var(--color-grey-dark);
+	span{
+		font-size: var(--fs-blockvo);
+	}
+
+	.is-disabled &{
+		display: none;
+		visibility: hidden;
+	}
+}

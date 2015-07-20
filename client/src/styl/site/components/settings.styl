@@ -1,0 +1,38 @@
+/**
+ * settings
+ */
+
+.Settings {
+	position: relative;
+	text-align: center;
+}
+
+.Settings-title{
+
+}
+
+.SettingsItem {
+	position: relative;
+	width: 100%;
+	border-bottom: 1px solid var(--color-grey-dark);
+	cursor: pointer;
+	text-align:left;
+	background-color: var(--settings-bgcolor);
+}
+
+.SettingsItem-type{
+	color: var(--settings-textcolor);
+	font-size: var(--fs-settings);
+	pointer-events:none;
+}
+
+.SettingsButton{
+	font-size: var(--fs-settingsicon);
+	user-select: none;
+	padding: 5px;
+	cursor: pointer;
+	color: var(--playlistitem-iconcolor);
+	&:hover{
+		color: var(--playlistitem-iconhovercolor);
+	}
+}

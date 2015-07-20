@@ -1,0 +1,71 @@
+/**
+ * Search
+ */
+
+.Search {
+	position: relative;
+}
+
+.SearchItem {
+	position: relative;
+	width: 100%;
+	border-bottom: 1px solid var(--color-grey-dark);
+	cursor: pointer;
+	text-align:center;
+}
+
+.SearchItem-main{
+	position: relative;
+	width: 100%;
+	height: 100%;
+	background-color: var(--search-bgcolor);
+	cursor: pointer;
+	&:hover{
+		background-color: var( --color-grey-dark);
+		color: var(--color-gold-dark);
+	}
+}
+
+.SearchItem-type{
+	color: var(--search-textcolor);
+	font-size: var(--fs-search);
+	pointer-events:none;
+}
+
+.SearchItem-input{
+	width: 100%;
+	margin: 0;
+}
+
+.SearchItem-button{
+	user-select:none;
+	position: relative;
+	background-color: var(--search-submitbgcolor);
+	width: 100%;
+	margin-bottom: 5px;
+	span{
+		font-size: var(--fs-searchbutton);
+	}
+	&:hover{
+		background-color: var(--search-submitoverbgcolor);
+	}
+}
+
+/* CONTROLS */
+
+.SearchItemControls{
+	position: relative;
+	width: 100%;
+	background-color: var(--search-controlsbgcolor);
+	min-height:var(--search-controlsheight);
+	padding-bottom: 10px;
+	padding-top: 10px;
+	display: none;
+	.is-active &{
+		display: block;
+	}
+}
+
+/* VINE */
+
+.VineControls-title{}

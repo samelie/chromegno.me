@@ -1,0 +1,64 @@
+{
+	"columns": [{
+		"style": {
+			"width": "20%"
+		},
+		"views": [{
+			"module": "MaxModules",
+			"package": "Collection"
+		}, {
+			"module": "Search",
+			"package": "Collection"
+		}, {
+			"module": "Settings",
+			"package": "Collection"
+		}]
+	}, {
+		"style": {
+			"width": "10%"
+		},
+		"views": []
+	}, {
+		"style": {
+			"width": "40%"
+		},
+		"views": [{
+			"module": "Playlist",
+			"package": "Collection"
+		}]
+	}, {
+		"style": {
+			"width": "30%"
+		},
+		"views": [{
+			"module": "Block",
+			"package": "Collection"
+		}]
+	}],
+
+	"search": [{
+		"type": "vine",
+		"active": true
+	}, {
+		"type": "youtube",
+		"active": true
+	}, {
+		"type": "instagram",
+		"active": false
+	}],
+
+	"settings": {
+		"downloadBuffer": {
+			"name": "Download Buffer",
+			"value": 12
+		},
+		"maxResultsYoutube": {
+			"name": "Results per youtube query",
+			"value": 20
+		},
+		"maxResultsVine": {
+			"name": "Results per vine query",
+			"value": 20
+		}
+	}
+}
