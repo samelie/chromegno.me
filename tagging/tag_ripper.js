@@ -5,6 +5,7 @@ var ffmpeg = require('fluent-ffmpeg');
 var _ = require('lodash');
 var path = require('path');
 var request = require('request');
+var dir = require('node-dir');
 var rimraf = require('rimraf');
 
 var UTILS = require('./youtube_utils');
@@ -34,6 +35,65 @@ var RIPPER = (function() {
 	var _callback;
 	var chosenIds;
 
+	//-----------------------
+	//API
+	//-----------------------
+	function getManifest(callback) {
+		var path = './data.json';
+		fs.readFile(path, 'utf8', function(err, data) {
+			if (err) {
+				console.log('Error: ' + err);
+				return;
+			}
+			data = JSON.parse(data);
+			_getFolders(data, callback);
+		});
+	}
+
+	function _getFolders(data, callback) {
+		var count = 0;
+		var total = 0;
+		var assetPath = path.join(process.cwd(), 'assets/youtube');
+
+		function __readFolder(clip, chapterPath, i) {
+			var clipPath = path.join(chapterPath, i.toString());
+			if (!fs.existsSync(clipPath)) {
+				console.log("NO FOLDER");
+				return;
+			}
+			dir.files(clipPath, function(err, files) {
+				if (err) throw err;
+				clip['youtube'] = [];
+				_.each(files, function(absPath) {
+					var o = Object.create(null);
+					o['absPath'] = absPath;
+					o['path'] = absPath.split('/');
+					o['path'] = o['path'].splice(7, o['path'].length);
+					o['path'] = o['path'].join('/');
+					clip['youtube'].push(o);
+				});
+				count++;
+				if (total === count) {
+					callback(data);
+				}
+			});
+		}
+
+
+		_.each(data, function(chapter, index) {
+			var chapterPath = path.join(assetPath, index.toString());
+			if (!fs.existsSync(chapterPath)) {
+				console.log("NO FOLDER");
+				return;
+			}
+			total += chapter.length;
+			_.each(chapter, function(clip, i) {
+				__readFolder(clip, chapterPath, i);
+			});
+		});
+	}
+
+	//----------------------------
 	function start(callback) {
 		_callback = callback;
 		_parseManifest();
@@ -294,21 +354,21 @@ var RIPPER = (function() {
 		//clip has querys
 		function __ripClip() {
 			var clip = clips[clipIndex];
-			if(!clip){
+			if (!clip) {
 				console.log("ALL RIPPED");
 				return;
 			}
 			var savePath = clip['dir'];
 			var queryIndex = 0;
 
-			function ___onQueryRipsComplete(){
+			function ___onQueryRipsComplete() {
 				queryIndex++;
 				___ripQuery();
 			}
 
 			function ___ripQuery() {
 				var query = clip['querys'][queryIndex];
-				if(!query){
+				if (!query) {
 					clipIndex++;
 					__ripClip();
 					return;
@@ -369,7 +429,8 @@ var RIPPER = (function() {
 	}
 
 	return {
-		start: start
+		start: start,
+		getManifest: getManifest
 	}
 })();
 
