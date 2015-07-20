@@ -1,0 +1,15 @@
+{
+    "name": "rad-stop",
+    "version": "0.0.0",
+    "dependencies": {
+        "jquery": "1.10.2",
+        "normalize-css": "latest",
+        "q": "v1",
+        "lodash": "latest",
+        "marionette": "latest",
+        "backbone": "1.1.2",
+        "fastclick": "latest",
+        "stats.js": "latest",
+        "tweenjs":"latest"
+    }
+}

@@ -1,0 +1,57 @@
+/**
+ * Forms
+ */
+
+form {}
+
+fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+label {
+  color: var(--color-grey);
+  display: block;
+  font-family: var(--ff-proxima-reg);
+  font-size: 0.909em;
+}
+
+input[type="color"],
+input[type="date"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="email"],
+input[type="file"],
+input[type="month"],
+input[type="number"],
+input[type="password"],
+input[type="range"],
+input[type="search"],
+input[type="tel"],
+input[type="text"],
+input[type="time"],
+input[type="url"],
+input[type="week"],
+textarea,
+select {
+  background: var(--color-gold);
+  border-radius 3px;
+  border: none;
+  margin-bottom: 0.5em;
+  padding: 0.75em 1em;
+  width: 100%;
+  &:disabled {
+    cursor: not-allowed;
+    color: var(--color-grey);
+  }
+  &:focus {
+    outline: 0;
+  }
+  &:read-only {
+    user-select: none;
+  }
+  &:read-write {
+    user-select: text;
+  }
+}

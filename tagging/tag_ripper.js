@@ -24,8 +24,8 @@ var VIDEO_VO = {
 var RESOLUTIONS = ['480p', '360p'];
 var OPTIONS = {
 	maxRetries: 4,
-	searchDepth: 6,
-	videosPerKeyword: 1
+	searchDepth: 10,
+	videosPerKeyword: 30
 };
 
 var RIPPER = (function() {

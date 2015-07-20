@@ -1,0 +1,134 @@
+/**
+ * Variables
+ */
+
+
+ /*
+
+Z INDEXS
+
+MENU-LOCALE = 1
+MENU-ITEM = 2
+NAV = 3
+
+
+ */
+:root {
+  /* paths */
+  --path-img:'../img/';
+
+  /* colours */
+  --color-white:             #ffffff;
+  --color-black:             #000000;
+  --color-grey-product-carousel: #b4b4b4;
+  --color-grey-lightest:     #e2e1e1;
+  --color-grey-lighter:      #becece;
+  --color-grey-light:        #88a1ae;
+  --color-grey-lightmist:    #b8b8b8;
+  --color-grey-lightwhite:   #585458;
+  --color-grey:              #464449;
+  --color-grey-dark:         #3a383d;
+  --color-grey-blue:         #394451;
+  --color-grey-darker:       #2d2b31;
+  --color-grey-darkest:      #1c1a1f;
+  --color-grey-darkesty:     #292b30;
+  --color-grey-darkestest:   #333333;
+  --color-gold:              #f4b42b;
+  --color-gold-dark:         #e4a700;
+  --color-yellow:            #fcc607;
+  --color-yellowbright:      #fed536;
+  --color-green:             #8bba40;
+  --color-teal:              #66a4b8;
+  --color-steel-blue:        #395d68;
+  --color-dark-blue:         #2d4e59;
+  --color-facebook:          #3c5999;
+  --color-twitter:           #25aae2;
+  --color-pinterest:         #cd2227;
+  --color-text-dark:         #333b41;
+
+  /* maxmodules */
+  --maxmodule-height:     50px;
+  /* playlist */
+  --playlistitem-thumbwidth:     140px;
+  --playlistitem-height:     106px;
+  --playlistitem-progresscolor:     #b4497e;
+
+  /* blocks */
+  --blockvo-bgcolor:    #b27259;
+  --blockvo-attribgcolor:    #636c41;
+  --blocks-height:       500px;
+  --blockvo-height:     40px;
+  /* search */
+  --search-bgcolor:     #9EAB7D;
+  --search-textcolor:   #DCD3F5;
+  --search-height:     50px;
+  --search-controlsbgcolor:     #5983A8;
+  --search-submitbgcolor:     #5CE06B;
+  --search-submitoverbgcolor:     #E05CD1;
+  --search-controlsheight:     150px;
+
+  /* playlist controls */
+  --playlistitem-loopcontrolscolor:     #3A5C4B;
+  --playlistitem-controlscolor:     #ACB5EB;
+  --playlistitem-iconcolor:     #ACEBD9;
+  --playlistitem-iconhovercolor:     #EBACBE;
+
+  /* settings */
+  --settings-bgcolor:     #9AAB71;
+  --settings-textcolor:   #8271AB;
+
+
+  /* fonts */
+  --ff-proxima-semibold:  'ProximaNova-Semibold', sans-serif;
+  --ff-proxima-bold:      'ProximaNova-Bold', sans-serif;
+  --ff-proxima-reg:       'ProximaNova-Regular', sans-serif;
+  --ff-proxima-light:     'ProximaNova-Light', sans-serif;
+  --ff-proxima-lightit:   'ProximaNova-LightIt', sans-serif;
+  --ff-proxima-extrabold: 'ProximaNova-ExtraBold', sans-serif;
+  --ff-icon:              'icomoon', sans-serif;
+
+  /* sizes */
+
+  --s-playlist-controlsheight: 50px;
+
+  /* font sizes */
+  --fs-root: 10px;
+  --fs-root-large: 12px;
+
+  --fs-playlist-info: 14px;
+  --fs-playlist-controls: 12px;
+  --fs-playlist-controlsicon: 26px;
+
+  --fs-block-attribute: 12px;
+
+  --fs-search: 26px;
+  --fs-searchbutton: 14px;
+
+  --fs-settings: 16px;
+  --fs-settingsicon: 20px;
+
+  --fs-blockvo: 12px;
+  /* media queries: big breakpoints */
+  breakpoint---small:     screen and (min-width: 38em);
+  breakpoint---smallMed:  screen and (min-width: 50em);
+  breakpoint---medium:    screen and (min-width: 60em);
+  breakpoint---large:     screen and (min-width: 78em);
+  breakpoint---x-large:   screen and (min-width: 85em);
+  breakpoint---xx-large:  screen and (min-width: 100em);
+
+  --retina: screen and (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi);
+
+  /* measurement */
+  --root-line-height:       1.8;
+  --nav-width:              33.33%;
+  --block-width:            360;
+  --block-height:           270;
+  --chrome-max-width:       1920px;
+  --header-height:          70px;
+  --header-height-narrow:   53px;
+  --FilmInteractive-transition-options-item-height: 104px;
+
+  /* transition */
+  --transition-nav-duration: 500ms;
+  --transition-easing: cubic-bezier(0.425, 0, 0.000, 1.000);
+}

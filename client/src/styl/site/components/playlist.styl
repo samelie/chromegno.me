@@ -1,0 +1,60 @@
+/**
+ * Playlist
+ */
+
+.Playlist {
+	position: relative;
+}
+
+
+.PlaylistItem {
+	position: relative;
+	background-color: var(--color-gold-dark);
+	width: 100%;
+	min-width: 300px;
+	//height: var(--playlistitem-height);
+	min-height: var(--playlistitem-height);
+	border-bottom: 1px solid var(--color-grey-dark);
+	cursor: pointer;
+	font-size: 0;
+
+	img{
+		position: relative;
+		width: var(--playlistitem-thumbwidth);
+		max-height: var(--playlistitem-height);
+		display: inline-block;
+		vertical-align: top;
+		overflow: hidden;
+	}
+
+	.is-disabled &{
+		display: none;
+		visibility: hidden;
+	}
+}
+
+.PlaylistItem-info{
+	position: relative;
+	display: inline-block;
+	font-size: var(--fs-playlist-info);
+	width: calc(100% - var(--playlistitem-thumbwidth));
+	height: 100%;
+	padding: 5px;
+	pointer-events:none;
+}
+
+.PlaylistItem-progress{
+	position: absolute;
+	height: var(--playlistitem-height);
+	max-height: var(--playlistitem-height);
+	top:0;
+	left:var(--playlistitem-thumbwidth);
+	width: calc(100% - var(--playlistitem-thumbwidth));
+	max-width: calc(100% - var(--playlistitem-thumbwidth));
+	background-color: var(--playlistitem-progresscolor);
+	transition: width 0.05s linear;
+	&:hover{
+		background-color: var( --color-grey-dark);
+		color: var(--color-gold-dark);
+	}
+}
