@@ -2,9 +2,11 @@
 
 var Q = require('q');
 var aws = require('aws-sdk');
+var request = require('request');
 var mime = require('mime');
 var s3Upload = require('s3');
-var s3Stream = require('s3-upload-stream')(new aws.S3());
+var S3 = new aws.S3();
+var s3Stream = require('s3-upload-stream')(S3);
 var _ = require('lodash');
 var path = require('path');
 var dir = require('node-dir');
@@ -15,9 +17,10 @@ var XMLHttpRequest = require('xhr2');
 
 var SIDX = (function() {
 	'use strict';
-	var _clips;
+	var _clips, _parser;
 
-	function start(clips) {
+	function start(clips, callback) {
+		_parser = new xml2js.Parser();
 		var uploadClient = s3Upload.createClient({
 			s3Options: {
 				accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -25,91 +28,180 @@ var SIDX = (function() {
 			}
 		});
 		_clips = clips;
-		_uploadAll();
-		//console.log(clips);
+		_uploadAll().then(function() {
+			callback(_clips);
+		}).done();
 	}
 
 	function _uploadAll() {
 		var defer = Q.defer();
+		var index = 0;
 		var promises = [];
-		_clips[0]['dashed']
-		promises.push(_uploadClip(_clips[0]['dashed']));
-		/*_.each(_clips, function(clip) {
-			promises.push(_uploadClip(clip['dashed']));
-		});*/
+		_.each(_clips, function(clip) {
+			clip['defer'] = Q.defer();
+			promises.push(clip['defer'].promise);
+		});
+		/*_clips[0]['defer'] = Q.defer();
+		promises.push(_clips[0]['defer'].promise);*/
+
 		Q.all(promises)
 			.then(function(results) {
-				//defer.resolve(blockVo);
+				_clipSidx().then(function() {
+					defer.resolve();
+				}).done();
 			})
 			.catch(function(err) {})
 			.done();
+
+		function __ripClip() {
+			if (!_clips[index]) {
+				return;
+			}
+			_clips[index]['defer'].promise.then(function() {
+				index++;
+				__ripClip();
+			});
+			_uploadClip(_clips[index]);
+		}
+
+		__ripClip();
+
 		return defer.promise;
 	}
 
 	function _uploadClip(clipObj) {
+		var dashed = clipObj['dashed'];
 		var count = 0;
-		var total = clipObj.length;
-		var defer = Q.defer();
+		var total = dashed.length;
 
 		function __uploadVideo(obj) {
 			var p = obj['video'];
-			var read = fs.createReadStream(p);
 			var key = p.split('/');
-			var key = key.splice(5, key.length);
+			var key = key.splice(7, key.length);
 			key = key.join('/');
-			var upload = s3Stream.upload({
+
+			function ___upload() {
+				var read = fs.createReadStream(p);
+				console.log(p, key);
+				var upload = s3Stream.upload({
+					Bucket: process.env.S3_BUCKET,
+					Key: key,
+					ACL: 'public-read',
+					ContentType: mime.lookup(p)
+				});
+
+				upload.on('error', function(error) {
+					console.log(error);
+				});
+
+				upload.on('uploaded', function(details) {
+					obj['url'] = details['Location'];
+					count++;
+					if (count === total) {
+						clipObj['defer'].resolve();
+					}
+				});
+				read.pipe(upload);
+			}
+
+			var params = {
 				Bucket: process.env.S3_BUCKET,
-				Key: key,
-				ACL: 'public-read',
-				ContentType: mime.lookup(p)
-			});
+				Key: key
+			};
+			var url = S3.getSignedUrl('getObject', params);
 
-			upload.on('error', function(error) {
-				console.log(error);
-			});
-
-			upload.on('uploaded', function(details) {
-				obj['upload'] = details;
-				count++;
-				if (count === total) {
-					console.log(clipObj);
-					defer.resolve();
+			function __exististCallback(exists) {
+				if (exists) {
+					obj['url'] = url;
+					console.log(url);
+					count++;
+					if (count === total) {
+						clipObj['defer'].resolve();
+					}
+				} else {
+					___upload();
 				}
-			});
-			read.pipe(upload);
+			}
+			_checkExistance(url, __exististCallback);
 		}
 
-		_.each(clipObj, function(o) {
+		_.each(dashed, function(o) {
 			__uploadVideo(o);
 		});
-
-		return defer.promise;
 	}
 
-	function _sidxClip(obj) {
-
+	function _checkExistance(url, callback) {
+		request({
+			url: url
+		}, function(err, resp, body) {
+			callback(body.length > 1000);
+		});
 	}
 
-	function _sidxSeg(obj, url) {
-		var xhr = new XMLHttpRequest();
-		xhr.open('GET', url);
-		xhr.setRequestHeader("Range", "bytes=" + seg['clip']['mpd']['indexRange']);
-		xhr.send();
-		xhr.responseType = 'arraybuffer';
-		try {
-			xhr.addEventListener("readystatechange", function() {
-				if (xhr.readyState == xhr.DONE) { // wait for video to load
-					// Add response to buffer
-					seg['clip']['mpd']['sidx'] = require('../../common/sidx').parseSidx(xhr.response);
-					if (!seg['clip']['mpd']['sidx']) {
-						seg['clip']['dud'] = true;
-					}
-					defer.resolve(seg);
-				}
-			}, false);
-		} catch (e) {
-			defer.resolve(seg);
+	///-----------------------
+	//SIDX
+	///-----------------------
+
+	function _clipSidx() {
+		var defer = Q.defer();
+		var index = 0;
+		var promises = [];
+		_.each(_clips, function(clip) {
+			clip['defer'] = Q.defer();
+			promises.push(clip['defer'].promise);
+		});
+		/*_clips[0]['defer'] = Q.defer();
+		promises.push(_clips[0]['defer'].promise);*/
+
+		function __ripClip() {
+			if (!_clips[index]) {
+				return;
+			}
+			_clips[index]['defer'].promise.then(function() {
+				console.log("sidx ", index);
+				index++;
+				__ripClip();
+			});
+			_sidxSeg(_clips[index]);
 		}
+
+		__ripClip();
+
+		return Q.all(promises);
+	}
+
+	function _sidxSeg(clipObj) {
+		var count = 0;
+		var dashed = clipObj['dashed'];
+		var total = dashed.length;
+
+		function __getIndexRange(obj) {
+			var url = obj['url'];
+			var parsed = obj['parsedMpd'];
+			var xhr = new XMLHttpRequest();
+			console.log(url);
+			xhr.open('GET', url);
+			xhr.setRequestHeader("Range", "bytes=" + parsed['indexRange']);
+			xhr.send();
+			xhr.responseType = 'arraybuffer';
+			try {
+				xhr.addEventListener("readystatechange", function() {
+					if (xhr.readyState == xhr.DONE) {
+						obj['sidx'] = require('./parse_sidx').parseSidx(xhr.response);
+						if (!obj['sidx']) {
+
+						}
+						count++;
+						if (count === total) {
+							clipObj['defer'].resolve();
+						} else {
+							__getIndexRange(dashed[count]);
+						}
+					}
+				}, false);
+			} catch (e) {}
+		}
+		__getIndexRange(dashed[count]);
 	}
 
 	return {

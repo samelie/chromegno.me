@@ -67,7 +67,6 @@ var MP4BOX = (function() {
 				video: clip['dir'] + '/' + name + '_dashinit.mp4',
 				mpd: clip['dir'] + '/' + name + '_dash.mpd'
 			};
-			console.log(d);
 			clip['dashed'].push(d);
 			if (clip['dashed'].length === clip.videos.length) {
 				clipIndex++;
