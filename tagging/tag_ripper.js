@@ -162,6 +162,8 @@ var RIPPER = (function() {
 		chosenIds = [];
 		var defer = Q.defer();
 		var promises = [];
+		var voIndex = 0;
+		var VOs = [];
 		var searchPromises = [];
 
 		_.each(clips, function(clip) {
@@ -171,10 +173,23 @@ var RIPPER = (function() {
 			});
 		});
 
+		function __processVo(){
+			var vo = VOs[voIndex];
+			if(!vo){
+				console.log('All Done');
+				return;
+			}
+			vo['defer'].promise.then(function(){
+				console.log(voIndex);
+				voIndex++;
+				__processVo();
+			});
+			_chooseVideoItem(vo);
+		}
+
 		Q.all(searchPromises)
 			.then(function() {
 				searchPromises = null;
-				var count = 0;
 				_.each(clips, function(clip) {
 					console.log(clip);
 					_.each(clip['querys'], function(query) {
@@ -185,15 +200,13 @@ var RIPPER = (function() {
 							vo['results'] = query['youtubeResults'];
 							query['vos'].push(vo);
 							var p = vo['defer']['promise'];
-							p.then(function(v) {
-								count++;
-								console.log(count);
-							});
 							promises.push(p);
-							_chooseVideoItem(vo);
+							VOs.push(vo);
 						}
 					});
 				});
+
+				__processVo();
 
 				Q.all(promises)
 					.then(function(results) {
