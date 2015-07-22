@@ -68,14 +68,17 @@ var FFMPEG = (function() {
 			}
 
 			function __encodeMp4(framerate) {
-				output = clipInfo['index'] + "_" + frIndex + ".mp4";
-				if (fs.existsSync(output)) {
+				output = {
+					path:clipInfo['index'] + "_" + frIndex + ".mp4",
+					duration:framerate*IMGS_PER_CLIP
+				};
+				if (fs.existsSync(output['path'])) {
 					__encodeComplete();
 					return;
 				}
 				var br = '200k';
 				var scale = 160;
-				var command = "ffmpeg -framerate " + framerate + " -pattern_type glob -i \'*" + EXT + "\' -codec:v libx264 -b:v "+br+" -maxrate "+br+" -bufsize "+br+" -vf scale=-1:"+scale+" -threads 4 -r 24 -g 12 -codec:a libfdk_aac -b:a 128k -preset fast -profile:v baseline -pix_fmt yuv420p -y " + output;
+				var command = "ffmpeg -framerate " + framerate + " -pattern_type glob -i \'*" + EXT + "\' -codec:v libx264 -b:v "+br+" -maxrate "+br+" -bufsize "+br+" -vf scale=-1:"+scale+" -threads 4 -r 24 -g 12 -codec:a libfdk_aac -b:a 128k -preset fast -profile:v baseline -pix_fmt yuv420p -y " + output['path'];
 				console.log(command);
 				var ff = exec(command, function(error, stdout, stderr) {
 					if (error) {}

@@ -22,7 +22,11 @@ function _onOrganizationComplete() {
 
 function _onFFMPEGComplete(clips) {
 	process.chdir(path.join(process.cwd(), '../../../../'));
-	_onSIDXComplete(clips);
+	//we dont need SIDX
+	clips = _formatWithoutSidx(clips);
+	_saveVideos(clips);
+
+	/*IT FAILED ON SIDX PARSE! :(*/
 	//MP4BOX.start(clips, _onMP4BOXComplete);
 }
 
@@ -31,13 +35,14 @@ function _onMP4BOXComplete(clips) {
 }
 
 function _onSIDXComplete(clips) {
-	process.chdir(path.join(process.cwd(), '../../../../'));
+	//process.chdir(path.join(process.cwd(), '../../../../'));
 	var outputFilename = './videos_manifest.json';
 	var p = path.join(process.cwd(), 'client/assets/json/' + outputFilename);
+	console.log(p);
 	if (fs.existsSync(p)) {
 		fs.unlinkSync(p);
 	}
-	fs.writeFile(outputFilename, JSON.stringify(_format(clips), null, 4), function(err) {
+	fs.writeFile(p, JSON.stringify(_format(clips), null, 4), function(err) {
 		if (err) {
 			console.log(err);
 		} else {
@@ -59,18 +64,50 @@ function _onSIDXComplete(clips) {
 	});
 }
 
+function _saveVideos(clips) {
+	var outputFilename = './videos_manifest.json';
+	var p = path.join(process.cwd(), 'client/assets/json/' + outputFilename);
+	console.log(p);
+	if (fs.existsSync(p)) {
+		fs.unlinkSync(p);
+	}
+	fs.writeFile(p, JSON.stringify(clips), function(err) {
+		if (err) {
+			console.log(err);
+		} else {
+			console.log("JSON saved to " + p);
+		}
+	});
+}
+
+function _formatWithoutSidx(rawClips) {
+	var manifest = [];
+	_.each(rawClips, function(clip) {
+		var chapter = clip.chapter-1;
+		if (!manifest[chapter]) {
+			manifest[chapter] = Object.create(null);
+			manifest[chapter]['videos'] = [];
+		}
+		manifest[chapter]['videos'].push(clip);
+	});
+	return manifest;
+}
 
 function _format(clips) {
 	var manifest = [];
 	_.each(clips, function(chapter) {
 		var ch = Object.create(null);
 		ch['videos'] = [];
-		_.each(chapter['dashed'], function(clip) {
-			var c = Object.create(null);
-			c['path'] = clip['video']
-			c['sidx'] = clip['sidx']
-			ch['videos'].push(c)
-		});
+		if (chapter['dashed']) {
+			_.each(chapter['dashed'], function(clip) {
+				var c = Object.create(null);
+				c['path'] = clip['video']
+				c['sidx'] = clip['sidx']
+				ch['videos'].push(c)
+			});
+		} else {
+
+		}
 		manifest.push(ch);
 	});
 	return manifest;
