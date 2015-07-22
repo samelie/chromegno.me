@@ -6,6 +6,7 @@ var SHADERS_LIB = require('../common/shader_lib');
 var THREE_SCENE = require('../common/three_scene');
 var SCENE = require('../common/scene');
 var UTILS = require('../common/utils');
+var PLAYER = require('../common/player_controller');
 // app dependencies
 var NUM_COLUMNS = 2;
 var VIDEO_WIDTH = 480;
@@ -54,10 +55,36 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 		},
 		initialize: function(options) {
 			this.timeline = new TIMELINE();
-
-			App.reqres.request('reqres:manifest').then(function(manifest){
-				console.log(manifest);
-				this.timeline.start(manifest);
+			App.reqres.request('reqres:manifest').then(function(manifest) {
+				var finalManifest = [];
+				var newManifest = [];
+				_.each(manifest,function(clip){
+					newManifest = newManifest.concat(clip['videos']);
+				});
+				for (var i = 0; i < 4; i++) {
+					var ch = [];
+					for (var j = 0; j < 20; j++) {
+						var clip = Object.create(null);
+						clip['videos'] = [];
+						for (var k = 0; k < 3; k++) {
+							if(newManifest.length){
+								var item = newManifest.shift();
+								var sidx = item['sidx'];
+								var duration = 0;
+								_.each(sidx['references'],function(o){
+									duration += o['durationSec'];
+								});
+								item['duration'] = duration;
+								clip['videos'].push(item);
+							}
+						}
+						ch.push(clip)
+					}
+					finalManifest.push(ch);
+				}
+				console.log(finalManifest);
+				var routes = this.timeline.start(finalManifest);
+				console.log(routes);
 			}.bind(this)).done();
 		},
 		onRender: function() {
@@ -84,7 +111,7 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			}.bind(this));
 
 			gui.width = 300;
-
+			/*
 			this.videoElement = document.getElementById('myVideo');
 			this.videoElement.volume = 0;
 			this.videoElement.width = VIDEO_WIDTH;
@@ -98,7 +125,7 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			this.videoElement3 = document.getElementById('mixer');
 			this.videoElement3.volume = 0;
 			this.videoElement3.width = VIDEO_WIDTH;
-			this.videoElement3.height = VIDEO_HEIGHT;
+			this.videoElement3.height = VIDEO_HEIGHT;*/
 
 			this.gui = gui;
 			//this.setup3D();

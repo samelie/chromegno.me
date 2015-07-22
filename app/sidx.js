@@ -15,6 +15,9 @@ var exec = require('child_process').exec;
 var xml2js = require('xml2js');
 var XMLHttpRequest = require('xhr2');
 
+var ALL_UPLOADED = true;
+var BASE_URL = "https://gallery-viz.s3-eu-west-1.amazonaws.com/";
+
 var SIDX = (function() {
 	'use strict';
 	var _clips, _parser;
@@ -104,16 +107,9 @@ var SIDX = (function() {
 				read.pipe(upload);
 			}
 
-			var params = {
-				Bucket: process.env.S3_BUCKET,
-				Key: key
-			};
-			var url = S3.getSignedUrl('getObject', params);
-
 			function __exististCallback(exists) {
 				if (exists) {
 					obj['url'] = url;
-					console.log(url);
 					count++;
 					if (count === total) {
 						clipObj['defer'].resolve();
@@ -122,7 +118,22 @@ var SIDX = (function() {
 					___upload();
 				}
 			}
-			_checkExistance(url, __exististCallback);
+
+			if (!ALL_UPLOADED) {
+				var params = {
+					Bucket: process.env.S3_BUCKET,
+					Key: key
+				};
+				var url = S3.getSignedUrl('getObject', params);
+
+				_checkExistance(url, __exististCallback);
+			} else {
+				obj['url'] = BASE_URL + key;
+				count++;
+				if (count === total) {
+					clipObj['defer'].resolve();
+				}
+			}
 		}
 
 		_.each(dashed, function(o) {
@@ -180,13 +191,16 @@ var SIDX = (function() {
 			var parsed = obj['parsedMpd'];
 			var xhr = new XMLHttpRequest();
 			console.log(url);
-			xhr.open('GET', url);
-			xhr.setRequestHeader("Range", "bytes=" + parsed['indexRange']);
+			console.log(parsed);
+			console.log(parsed['indexRange']);
+			xhr.open('GET', 'https://radness.s3-eu-west-1.amazonaws.com/the_trouble_with_mom__munchausen__vice_shorts_fb4c9ff0-2a3e-11e5-91ba-cb7aa4fd8a7e.mp4');
+			xhr.setRequestHeader("Range", "bytes=0-1602");
 			xhr.send();
 			xhr.responseType = 'arraybuffer';
 			try {
 				xhr.addEventListener("readystatechange", function() {
 					if (xhr.readyState == xhr.DONE) {
+						//console.log(typeof xhr.response);
 						obj['sidx'] = require('./parse_sidx').parseSidx(xhr.response);
 						if (!obj['sidx']) {
 
@@ -195,13 +209,13 @@ var SIDX = (function() {
 						if (count === total) {
 							clipObj['defer'].resolve();
 						} else {
-							__getIndexRange(dashed[count]);
+							//__getIndexRange(dashed[count]);
 						}
 					}
 				}, false);
 			} catch (e) {}
 		}
-		__getIndexRange(dashed[count]);
+		__getIndexRange(dashed[3]);
 	}
 
 	return {

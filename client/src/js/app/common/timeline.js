@@ -24,6 +24,7 @@ var Timeline = function() {
             o['routes'] = [];
             _buildRoutes(o['routes'], chapter, i);
         });
+        return ALL;
     }
 
     function _buildRoutes(routes, chapter, chapterIndex) {
@@ -37,9 +38,10 @@ var Timeline = function() {
             var seed = Math.floor(Math.random() * chapter[0]['videos'].length);
             route.push([0, seed]);
             for (var i = 1; i < chapter.length; i++) {
+                var total = chapter[i]['videos'].length;
                 var factor = Perlin.getVal(i);
                 var min = Math.max(seed - 1, 0);
-                var max = Math.min(seed + 1, chapter[i]['videos'].length - 1);
+                var max = Math.min(seed + 1, total - 1);
                 var choices = [min, seed, max];
                 var choice;
                 var norm = i / chapter.length;
@@ -52,14 +54,14 @@ var Timeline = function() {
                     case 0:
                     case 3:
                         choiceFactor = (factor + Math.asin(norm)) / 2;
-                        choice = choices[Math.floor(choices.length * choiceFactor)];
+                        choice = choices[Math.floor(_clamp(choices.length * choiceFactor, 0,total))];
                         break;
                     case 1:
                     case 2:
-                        choice = choices[Math.floor(choices.length * factor)];
+                        choice = choices[Math.floor(_clamp(choices.length * factor, 0,total))];
                         break;
                 }
-                if(choice !== undefined){
+                if (choice !== undefined) {
                     totalDuration += chapter[i]['videos'][choice]['duration'];
                     route.push([i, choice]);
                     seed = choice;
@@ -72,6 +74,9 @@ var Timeline = function() {
         __createRoute();
     }
 
+    function _clamp(number, min, max) {
+        return Math.max(min, Math.min(number, max));
+    }
     //function _createRoute()
 
     return {

@@ -57,9 +57,10 @@ var MP4BOX = (function() {
 			__onMpdComplete();
 			return;
 		}
-		var dis = 1000;
+		var dis = 500;
+		var mp4Path = path.join(process.cwd(), '../../../../MP4Box');
 		var command = 'mp4box -dash ' + dis + ' -frag ' + dis + ' -rap -frag-rap -profile onDemand -mpd-title ' + name + ' ' + out;
-		//console.log(command);
+		console.log(command);
 		var ls = exec(command);
 
 		function __onMpdComplete() {
@@ -80,22 +81,34 @@ var MP4BOX = (function() {
 		});
 
 		ls.on('error', function(stdin, stderr) {
-			console.log(stderr);
+			//console.log(stderr);
 		});
 	}
 
 	function _parseMpd() {
 		var count = 0;
 		var total = 0;
+		var segObjs = [];
 		_.each(_clips, function(clip) {
 			_.each(clip['dashed'], function(obj) {
-				total++;
+				segObjs.push(obj);
 			});
 		});
 
+		total = segObjs.length;
 
 		function __doOne(obj) {
+			console.log(obj['mpd']);
 			fs.readFile(obj['mpd'], function(err, data) {
+				if(!data){
+					count++;
+					if (count === total) {
+						_callback(_clips);
+					}else{
+						__doOne(segObjs[count]);
+					}
+					return;
+				}
 				_parser.parseString(data, function(err, result) {
 					if (err || !result) {
 						console.log(err);
@@ -110,21 +123,14 @@ var MP4BOX = (function() {
 					count++;
 					if (count === total) {
 						_callback(_clips);
+					}else{
+						__doOne(segObjs[count]);
 					}
 				});
 			});
 		}
-
-		function __parse(clip) {
-			var dashed = clip['dashed'];
-			_.each(dashed, function(obj) {
-				__doOne(obj);
-			});
-		}
-
-		_.each(_clips, function(clip) {
-			__parse(clip);
-		});
+		//console.log(segObjs);
+		__doOne(segObjs[count]);
 
 	}
 

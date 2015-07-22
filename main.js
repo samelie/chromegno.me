@@ -22,7 +22,8 @@ function _onOrganizationComplete() {
 
 function _onFFMPEGComplete(clips) {
 	process.chdir(path.join(process.cwd(), '../../../../'));
-	MP4BOX.start(clips, _onMP4BOXComplete);
+	_onSIDXComplete(clips);
+	//MP4BOX.start(clips, _onMP4BOXComplete);
 }
 
 function _onMP4BOXComplete(clips) {
@@ -31,9 +32,12 @@ function _onMP4BOXComplete(clips) {
 
 function _onSIDXComplete(clips) {
 	process.chdir(path.join(process.cwd(), '../../../../'));
-	var outputFilename = 'videos_manifest.json';
+	var outputFilename = './videos_manifest.json';
 	var p = path.join(process.cwd(), 'client/assets/json/' + outputFilename);
-	fs.writeFile(p, JSON.stringify(_format(clips), null, 4), function(err) {
+	if (fs.existsSync(p)) {
+		fs.unlinkSync(p);
+	}
+	fs.writeFile(outputFilename, JSON.stringify(_format(clips), null, 4), function(err) {
 		if (err) {
 			console.log(err);
 		} else {
@@ -43,7 +47,10 @@ function _onSIDXComplete(clips) {
 
 	var outputFilename2 = 'blank_tags.json'
 	var p2 = path.join(process.cwd(), 'tagging/' + outputFilename2);
-	fs.writeFile(p, JSON.stringify(_createBlankTagManifest(clips), null, 4), function(err) {
+	if (fs.existsSync(p2)) {
+		fs.unlinkSync(p2);
+	}
+	fs.writeFile(p2, JSON.stringify(_createBlankTagManifest(clips), null, 4), function(err) {
 		if (err) {
 			console.log(err);
 		} else {

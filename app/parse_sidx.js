@@ -46,6 +46,7 @@ var SIDX = (function SIDX() {
 			}
 		}
 
+		console.log(data.byteLength);
 		sidxEnd = d.getUint32(pos, false) + pos;
 		if (sidxEnd > data.byteLength) {
 			throw "sidx terminates after array buffer";
