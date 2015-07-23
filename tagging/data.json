@@ -36,5 +36,46 @@
 		}, {
 			"q": "lsd trip"
 		}]
+	}],
+	[{
+		"querys": [{
+			"q": "croatia"
+		}, {
+			"q": "outlook festival"
+		}, {
+			"q": "cliff jump"
+		}]
+	}, {
+		"querys": [{
+			"q": "horse silly"
+		},{
+			"q": "grovel"
+		}]
+	}, {
+		"querys": [{
+			"q": "cooking"
+		}, {
+			"q": "crazy hug"
+		}]
+	}],[{
+		"querys": [{
+			"q": "croatia"
+		}, {
+			"q": "outlook festival"
+		}, {
+			"q": "cliff jump"
+		}]
+	}, {
+		"querys": [{
+			"q": "horse silly"
+		},{
+			"q": "grovel"
+		}]
+	}, {
+		"querys": [{
+			"q": "cooking"
+		}, {
+			"q": "crazy hug"
+		}]
 	}]
 ]

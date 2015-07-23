@@ -116,6 +116,7 @@ var RIPPER = (function() {
 
 	function _createFolders(data) {
 		var assetPath = path.join(process.cwd(), 'assets/youtube');
+		console.log(assetPath);
 		rimraf(assetPath, __onFolderDeleted);
 
 		function __onFolderDeleted() {
@@ -173,13 +174,13 @@ var RIPPER = (function() {
 			});
 		});
 
-		function __processVo(){
+		function __processVo() {
 			var vo = VOs[voIndex];
-			if(!vo){
+			if (!vo) {
 				console.log('All Done');
 				return;
 			}
-			vo['defer'].promise.then(function(){
+			vo['defer'].promise.then(function() {
 				console.log(voIndex);
 				voIndex++;
 				__processVo();
@@ -265,8 +266,13 @@ var RIPPER = (function() {
 					return;
 				}
 				var r = JSON.parse(body);
+				if (!r['items']) {
+					params['q'] = '';
+					_ytRequest(params);
+					return;
+				}
 				if (r['items'].length === 0) {
-					params['q'] = 'random';
+					params['q'] = '';
 					_ytRequest(params);
 					return;
 				}
@@ -275,7 +281,13 @@ var RIPPER = (function() {
 				youtubeSearchResults = youtubeSearchResults.concat(r['items']);
 				if (searchCount === OPTIONS['searchDepth']) {
 					query['youtubeResults'] = _.flattenDeep(youtubeSearchResults);
-					defer.resolve();
+					console.log(query['youtubeResults'].length );
+					if (query['youtubeResults'].length < 20) {
+						params['q'] = '';
+						_ytRequest(params);
+					} else {
+						defer.resolve();
+					}
 				} else {
 					_ytRequest(params);
 				}
@@ -328,7 +340,7 @@ var RIPPER = (function() {
 				UTILS.getFFMPEGProbe(videoVo, url)
 					.then(function(videoVo) {
 						UTILS.createSegments(videoVo);
-						if (!videoVo['segments']) {
+						if (videoVo['segments'].length === 0) {
 							_chooseVideoItem(videoVo);
 						} else {
 							chosenIds.push(videoVo['vid']);
@@ -386,7 +398,6 @@ var RIPPER = (function() {
 					__ripClip();
 					return;
 				}
-				console.log(query);
 				var vos = query['vos'];
 				_ripClipVideos(savePath, vos, ___onQueryRipsComplete);
 			}

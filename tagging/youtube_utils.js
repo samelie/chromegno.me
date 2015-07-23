@@ -41,10 +41,10 @@ module.exports = {
         //that annoying subscribe time ppl put at end, seconds, TODO!!!!!!!!
         var videoEndBuffer = Math.ceil(20 / options.segmentDuration);
         var dur = vo['duration'];
+        vo['segments'] = [];
         if (options.segmentDuration > dur) {
             return;
         }
-        vo['segments'] = [];
         //choose the slots
         var maxSegments = Math.floor(dur / options.segmentDuration);
         if (dur > 5) {
