@@ -14,7 +14,8 @@ var Organizer = (function() {
 	function start(callback) {
 		dir.subdirs(picsDir, function(err, dirs) {
 			//goes too deep if already organized
-			if (dirs.length > 4) {
+			console.log(dirs.length);
+			if (dirs.length > 20) {
 				console.log("SKIPPED");
 				callback();
 				return;
@@ -66,7 +67,6 @@ var Organizer = (function() {
 				var newPath = split.join('/');
 				index++;
 				if (name.indexOf(EXT) !== -1) {
-					//console.log(newPath);
 					//index++;
 					fs.move(p, path.join(newPath, count.toString(), name), function(err) {
 						if (index % 12 === 0) {

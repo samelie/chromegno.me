@@ -11,7 +11,7 @@ return __p
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class="ThreeView">\n\t<div id="three"></div>\n</div>';
+__p += '<div class="ThreeView">\n\t<video id="myVideo" controls autoplay ></video>\n\t<div id="three"></div>\n</div>';
 
 }
 return __p

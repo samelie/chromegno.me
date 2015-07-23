@@ -8,7 +8,7 @@ App.module('Entities', function(Entities, App, Backbone, Marionette, $, _) {
         var defer = Q.defer();
         Q($.ajax({
             type: 'GET',
-            url: 'assets/json/videos_manifest2.json'
+            url: 'assets/json/videos_manifest.json'
         })).then(function(data) {
             defer.resolve(data);
         });

@@ -38,7 +38,7 @@ var MP4BOX = (function() {
 		var name = clip['index'] + '_';
 
 		function __doRip() {
-			var name = clip['videos'][clip['dashed'].length];
+			var name = clip['videos'][clip['dashed'].length]['path'];
 			name = name.substring(0, name.length - 4);
 			_createClipMPD(clip, name, __doRip);
 		}
@@ -49,7 +49,7 @@ var MP4BOX = (function() {
 	function _createClipMPD(clip, name, callback) {
 		//dir = dir.replace('\ ');
 		process.chdir(clip['dir']);
-		//console.log(process.cwd());
+		console.log(process.cwd());
 		var out = name + '.mp4';
 		//output of dashed mp4
 		var dashedName = name + '_dashed.mp4';
@@ -77,11 +77,12 @@ var MP4BOX = (function() {
 			}
 		}
 		ls.on('exit', function(code) {
+			console.log("complete");
 			__onMpdComplete();
 		});
 
 		ls.on('error', function(stdin, stderr) {
-			//console.log(stderr);
+			console.log(stderr);
 		});
 	}
 
@@ -98,7 +99,7 @@ var MP4BOX = (function() {
 		total = segObjs.length;
 
 		function __doOne(obj) {
-			console.log(obj['mpd']);
+			//console.log(obj['mpd']);
 			fs.readFile(obj['mpd'], function(err, data) {
 				if(!data){
 					count++;

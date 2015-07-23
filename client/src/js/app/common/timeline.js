@@ -23,8 +23,9 @@ var Timeline = function() {
             ALL.push(o);
             o['routes'] = [];
             _buildRoutes(o['routes'], chapter, i);
+
         });
-        return ALL;
+        return _replaceRoute(clipsManifest, ALL);
     }
 
     function _buildRoutes(routes, chapter, chapterIndex) {
@@ -72,6 +73,27 @@ var Timeline = function() {
         }
 
         __createRoute();
+    }
+
+    function _replaceRoute(manifest, routes){
+        var replacedManifest = [];
+        _.each(routes,function(routeObj, chapterIndex){
+            var videos = manifest[chapterIndex];
+            var ch = [];
+            _.each(routeObj['routes'],function(route){
+                _.each(route,function(data, i){
+                    var o = Object.create(null);
+                    var item = videos[data[0]];
+                    o['chapter'] = chapterIndex;
+                    o['index'] = i;
+                    o['dir'] = item['dir'];
+                    o['clip'] = item['dashed'][data[1]];
+                    ch.push(o);
+                });
+            });
+            replacedManifest.push(ch);
+        });
+        return replacedManifest;
     }
 
     function _clamp(number, min, max) {

@@ -15,7 +15,7 @@ var exec = require('child_process').exec;
 var xml2js = require('xml2js');
 var XMLHttpRequest = require('xhr2');
 
-var ALL_UPLOADED = true;
+var ALL_UPLOADED = false;
 var BASE_URL = "https://gallery-viz.s3-eu-west-1.amazonaws.com/";
 
 var SIDX = (function() {
@@ -190,11 +190,9 @@ var SIDX = (function() {
 			var url = obj['url'];
 			var parsed = obj['parsedMpd'];
 			var xhr = new XMLHttpRequest();
-			console.log(url);
-			console.log(parsed);
-			console.log(parsed['indexRange']);
-			xhr.open('GET', 'https://radness.s3-eu-west-1.amazonaws.com/the_trouble_with_mom__munchausen__vice_shorts_fb4c9ff0-2a3e-11e5-91ba-cb7aa4fd8a7e.mp4');
-			xhr.setRequestHeader("Range", "bytes=0-1602");
+			parsed['indexRange']
+			xhr.open('GET', url);
+			xhr.setRequestHeader("Range", "bytes=0-"+ parsed['indexRange']);
 			xhr.send();
 			xhr.responseType = 'arraybuffer';
 			try {
@@ -209,13 +207,13 @@ var SIDX = (function() {
 						if (count === total) {
 							clipObj['defer'].resolve();
 						} else {
-							//__getIndexRange(dashed[count]);
+							__getIndexRange(dashed[count]);
 						}
 					}
 				}, false);
 			} catch (e) {}
 		}
-		__getIndexRange(dashed[3]);
+		__getIndexRange(dashed[count]);
 	}
 
 	return {

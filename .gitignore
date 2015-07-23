@@ -99,3 +99,4 @@ data/**/*.jpg
 MP4Box
 *.mov
 envvars
+tagging/assets/**/*

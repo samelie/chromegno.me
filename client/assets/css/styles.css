@@ -1188,15 +1188,10 @@ button {
   position: absolute;
   left: 0;
   top: 0;
-  display: none;
 }
 
 .YoutubeThree input {
   color: #222;
-}
-
-.ThreeView video {
-  display: none;
 }
 
 #three {

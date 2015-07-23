@@ -21,7 +21,10 @@ var PlayerController = function() {
 		previousCurrentTime = 0,
 		segmentIndex = 0,
 		totalSegments = 0,
-		skipCount = 0;
+		skipCount = 0,
+
+		chapterIndex = 0,
+		currentChapter = 0;
 
 	//callback
 	var onNewVo, needMoreSegments;
@@ -34,12 +37,11 @@ var PlayerController = function() {
 	var sourceBuffer;
 
 	//ref to proto
+	var _manifest;
 	var playlist;
 	var boundUpdate;
 
 	function init(vEl) {
-
-		playlist = this.prototype.playlist;
 
 		videoElement = vEl;
 
@@ -54,7 +56,7 @@ var PlayerController = function() {
 
 	function _onSourceOpen(e) {
 		mediaSource.removeEventListener('sourceopen', _onSourceOpen);
-		sourceBuffer = mediaSource.addSourceBuffer('video/mp4; codecs="avc1.42c01f,mp4a.40.2"');
+		sourceBuffer = mediaSource.addSourceBuffer('video/mp4; codecs="avc1.42c01e"');
 		sourceBuffer.addEventListener('updatestart', onBufferUpdateStart);
 		sourceBuffer.addEventListener('updateend', onBufferUpdateEnd);
 		starting = false;
@@ -84,26 +86,27 @@ var PlayerController = function() {
 		sourceBuffer.addEventListener('updateend', onBufferUpdateEnd);*/
 		updatedStarted = false;
 		locked = false;
-	}
+	}	
 
 	////-----------------
 	//UPDATE
 	////-----------------
 
 	function onUpdate() {
-		totalSegments = playlist.length;
 		if (totalSegments > 0) {
 			if (segmentIndex < totalSegments) {
 				if (!updatedStarted || !locked) {
+					//console.log(videoElement.currentTime ,(playOffset - segDuration * .8), segDuration);
 					if (videoElement.currentTime >= (playOffset - segDuration * .8)) {
 						locked = true;
 						enterFrameCounter = 0;
-						var data = playlist[segmentIndex];
+						var data = currentChapter[segmentIndex];
 						if (data) {
-							console.log(data['durationSec']);
-							playOffset += data['durationSec'];
-							segDuration = data['durationSec'];
-							playSegment(data);
+							var clip = data['clip'];
+							playOffset += clip['duration'];
+							segDuration = clip['duration'];
+							console.warn(segDuration)
+							playSegment(clip);
 						} else {
 							console.log('No more at', segmentIndex);
 						}
@@ -143,8 +146,9 @@ var PlayerController = function() {
 
 	function playSegment(data) {
 		var self = this;
+		var url = 'assets/videos/'+data['relPath'];
 		var xhr = new XMLHttpRequest();
-		xhr.open('GET', data['url']);
+		xhr.open('GET', url);
 		xhr.setRequestHeader("Range", "bytes=" + data['mediaRange']);
 		xhr.send();
 		xhr.responseType = 'arraybuffer';
@@ -170,14 +174,15 @@ var PlayerController = function() {
 					if (mediaSource.readyState === 'open') {
 						sourceBuffer.removeEventListener('updateend', __onInitAdded);
 						sourceBuffer.addEventListener('updateend', onBufferUpdateEnd);
-						var ts = sourceBuffer.timestampOffset - data['startTimeSec'];
+						//var ts = sourceBuffer.timestampOffset - data['startTimeSec'];
 						//sourceBuffer.timestampOffset = ts;
 						sourceBuffer.appendBuffer(segResp);
+						console.log(segmentIndex, '/', totalSegments);
 						segmentIndex++;
 
-						if (onNewVo) {
+						/*if (onNewVo) {
 							onNewVo(data);
-						}
+						}*/
 					}
 				}
 				initialRequest(data, __addInit);
@@ -187,9 +192,10 @@ var PlayerController = function() {
 
 
 	function initialRequest(data, callback) {
+		var url = 'assets/videos/'+data['relPath'];
 		var xhr = new XMLHttpRequest();
 		var range = "bytes=0-" + (data['firstOffset'] - 1);
-		xhr.open('GET', data['url']);
+		xhr.open('GET', url);
 		xhr.setRequestHeader("Range", range);
 		xhr.send();
 		xhr.responseType = 'arraybuffer';
@@ -234,6 +240,14 @@ var PlayerController = function() {
 
 	}
 
+	function _onChapterComplete(){
+		chapterIndex++;
+		if(chapterIndex > _manifest.length -1){
+			chapterIndex = 0;
+		}
+		currentChapter = _manifest[chapterIndex];
+		totalSegments = currentChapter.length;
+	}
 	///---------------
 	//API
 	///---------------
@@ -242,12 +256,17 @@ var PlayerController = function() {
 		onNewVo = callback;
 	}
 
+	function setEntireManifest(manifest){
+		_manifest = manifest;
+		currentChapter = _manifest[chapterIndex];
+		totalSegments = currentChapter.length;
+	}
+
 	return {
 		init: init,
-		addRoute: addRoute
+		setOnNewVo: setOnNewVo,
+		setEntireManifest: setEntireManifest
 	}
 };
-var playerController = new PlayerController();
-playerController.prototype = require('./player_manager');
 
-module.exports = playerController;
+module.exports = PlayerController;

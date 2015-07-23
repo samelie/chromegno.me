@@ -56,7 +56,8 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 		initialize: function(options) {
 			this.timeline = new TIMELINE();
 			App.reqres.request('reqres:manifest').then(function(manifest) {
-				var finalManifest = [];
+				console.log(manifest);
+				/*var finalManifest = [];
 				var newManifest = [];
 				_.each(manifest,function(clip){
 					newManifest = newManifest.concat(clip['videos']);
@@ -83,8 +84,9 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 					finalManifest.push(ch);
 				}
 				console.log(finalManifest);
-				var routes = this.timeline.start(finalManifest);
-				console.log(routes);
+				*/
+				this.manifest =  this.timeline.start(manifest);
+				this.setupPlayer();
 			}.bind(this)).done();
 		},
 		onRender: function() {
@@ -111,6 +113,7 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			}.bind(this));
 
 			gui.width = 300;
+
 			/*
 			this.videoElement = document.getElementById('myVideo');
 			this.videoElement.volume = 0;
@@ -130,7 +133,13 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			this.gui = gui;
 			//this.setup3D();
 		},
-
+		setupPlayer:function(){
+			this.videoElement = document.getElementById('myVideo');
+			this.playerController = new PLAYER();
+			this.playerController.init(this.videoElement);
+			console.log(this.manifest);
+			this.playerController.setEntireManifest(this.manifest);
+		},
 		////------------------------
 		//3D
 		////------------------------
