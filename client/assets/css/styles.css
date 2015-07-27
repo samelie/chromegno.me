@@ -1194,6 +1194,10 @@ button {
   color: #222;
 }
 
+.ThreeView video {
+  display: none;
+}
+
 #three {
   position: absolute;
   top: 0;

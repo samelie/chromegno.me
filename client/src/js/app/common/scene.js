@@ -1,5 +1,6 @@
 'use strict';
 var UTILS = require('./utils');
+var EFFECTS = require('./effects_scene')
 
 var Scene = function(renderer, clearColor, cameraZ) {
 	var fbo;
@@ -26,13 +27,16 @@ var Scene = function(renderer, clearColor, cameraZ) {
 	fbo.minFilter = THREE.LinearFilter;
 	fbo.magFilter = THREE.LinearFilter;
 
+	var fx = new EFFECTS(_scene, _camera, renderer, fbo);
+
 	function render(rtt) {
-		renderer.setClearColor(_clearColor);
-		if (rtt) {
+		//renderer.setClearColor(_clearColor);
+		fx.render();
+		/*if (rtt) {
 			renderer.render(_scene, _camera, fbo, true);
 		} else {
 			renderer.render(_scene, _camera);
-		}
+		}*/
 	}
 
 	function createPlane(w, h, material) {
@@ -52,10 +56,15 @@ var Scene = function(renderer, clearColor, cameraZ) {
 		//fbo.setSize(w, h);
 	}
 
+	function updateUniforms(uniforms){
+		fx.updateUniforms(uniforms);
+	}
+
 	return {
 		resize: resize,
 		render: render,
 		fbo: fbo,
+		updateUniforms: updateUniforms,
 		createPlane: createPlane
 	}
 };

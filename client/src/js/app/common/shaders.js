@@ -145,5 +145,21 @@ module.exports = {
                     
                     fragmentShader:glslify('../../../glsl/cave.frag'),
                     vertexShader:glslify('../../../glsl/displacement.vert')
-                }
+                },
+                bleach:require('./shaders/BleachBypassShader'),
+                bokah:require('./shaders/BokehShader2'),
+                convolution:require('./shaders/ConvolutionShader'),
+                edge:require('./shaders/EdgeShader2'),
+                film:require('./shaders/FilmShader'),
+                focus:require('./shaders/FocusShader'),
+                fxxa:require('./shaders/FXAAShader'),
+                hBlur:require('./shaders/HorizontalBlurShader'),
+                vBlur:require('./shaders/VerticalBlurShader'),
+                kaleido:require('./shaders/KaleidoShader'),
+                mirror:require('./shaders/MirrorShader'),
+                rgb:require('./shaders/RGBShiftShader'),
+                sepia:require('./shaders/SepiaShader'),
+                glitch:require('./shaders/DigitalGlitch'),
+                dot:require('./shaders/DotScreenShader'),
+                copy:require('./shaders/CopyShader')
     };

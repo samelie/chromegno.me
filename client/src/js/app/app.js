@@ -18,6 +18,7 @@ App.addInitializer(function() {
     require('./views/app_view');
     require('./views/shaders_view');
     require('./views/composer_view');
+    require('./views/effect_view');
     require('./controllers/app_controller');
 });
 

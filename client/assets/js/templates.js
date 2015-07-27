@@ -2,7 +2,7 @@ this.JST = {"app": function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class="App">\n\t<button class="btn btn-default js-shader">Shader</button>\n\t<button class="btn btn-default js-composer">Composer</button>\n\t<div id="#content"></div>\n</div>';
+__p += '<div class="App">\n\t<button class="btn btn-default js-shader">Shader</button>\n\t<button class="btn btn-default js-composer">Composer</button>\n\t<button class="btn btn-default js-fx">FX</button>\n\t<div id="#content"></div>\n</div>';
 
 }
 return __p
@@ -12,6 +12,15 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<div class="ThreeView">\n\t<video id="myVideo" controls autoplay ></video>\n\t<div id="three"></div>\n</div>';
+
+}
+return __p
+},
+"effect_view": function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class="ThreeView">\n\t<video id="myVideo" src="assets/videos/0/0/0_4.mp4" loop controls autoplay ></video>\n\t<video id="myVideo2" src="assets/videos/1/0/0_4.mp4" loop controls autoplay ></video>\n\t<video id="mixer" src="assets/videos/2/0/0_4.mp4" loop controls autoplay ></video>\n\t\n\t<div id="three"></div>\n</div>';
 
 }
 return __p
