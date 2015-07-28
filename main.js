@@ -2,6 +2,13 @@
 require('dotenv').config({
 	path: './envvars'
 });
+var program = require('commander');
+program
+	.option('-n, --noupload', 'noupload')
+	.option('-s, --skip', 'Skip')
+	.parse(process.argv);
+
+process.customArgs = program;
 var fs = require('fs-extra');
 var _ = require('lodash');
 var path = require('path');
@@ -14,12 +21,15 @@ var SIDX = require('./app/sidx');
 var NUM_CHAPTERS = 4;
 
 function start() {
-	///console.log(Organizer);
-	Organizer.start(_onOrganizationComplete);
+	if (!process.customArgs.skip) {
+		Organizer.start(_onOrganizationComplete);
+	} else {
+		_readAndCopy();
+	}
 }
 
 function _onOrganizationComplete() {
-	setTimeout(function(){
+	setTimeout(function() {
 		FFMPEG.start(_onFFMPEGComplete);
 	}, 2000);
 }
@@ -40,11 +50,9 @@ function _onMP4BOXComplete(clips) {
 
 function _onSIDXComplete(clips) {
 	var n = _restructure(clips);
-	console.log(n);
 	process.chdir(path.join(process.cwd(), '../../../../'));
 	var outputFilename = './videos_manifest.json';
 	var p = path.join(process.cwd(), 'client/assets/json/' + outputFilename);
-	console.log(p);
 	if (fs.existsSync(p)) {
 		fs.unlinkSync(p);
 	}
@@ -56,7 +64,7 @@ function _onSIDXComplete(clips) {
 		}
 	});
 
-	/*var outputFilename2 = 'blank_tags.json'
+	var outputFilename2 = 'blank_tags.json'
 	var p2 = path.join(process.cwd(), 'tagging/' + outputFilename2);
 	if (fs.existsSync(p2)) {
 		fs.unlinkSync(p2);
@@ -67,7 +75,9 @@ function _onSIDXComplete(clips) {
 		} else {
 			console.log("JSON saved to " + p2);
 		}
-	});*/
+	});
+
+	_copyDashedVideo(n);
 }
 
 
@@ -94,7 +104,7 @@ function _restructure(clips) {
 function _prepVideosManifest(newManifest) {
 	_.each(newManifest, function(chapter, chIndex) {
 		_.each(chapter, function(vid) {
-			_.each(vid['dashed'],function(clip, i){
+			_.each(vid['dashed'], function(clip, i) {
 				var references = clip['sidx']['references'];
 				var totalDuration = 0;
 				_.each(references, function(ref, iRef) {
@@ -109,7 +119,7 @@ function _prepVideosManifest(newManifest) {
 				clip['chapter'] = chIndex;
 				clip['index'] = i;
 				var p = clip['video'].split('/');
-				var relPath =  p[p.length - 3] + '/' +  p[p.length - 2] + '/' + p[p.length - 1];
+				var relPath = p[p.length - 3] + '/' + p[p.length - 2] + '/' + p[p.length - 1];
 				clip['relPath'] = relPath;
 			});
 		});
@@ -117,73 +127,60 @@ function _prepVideosManifest(newManifest) {
 	return newManifest;
 }
 
+function _copyDashedVideo(clips) {
 
-
-//NO LONGER
-function _saveVideos(clips) {
-	var outputFilename = './videos_manifest.json';
-	var p = path.join(process.cwd(), 'client/assets/json/' + outputFilename);
-	console.log(p);
-	if (fs.existsSync(p)) {
-		fs.unlinkSync(p);
+	function __doCopy(from, to) {
+		var p = path.join(process.cwd(), 'client/assets/videos/', to);
+		fs.copy(from, p, {
+			replace: true
+		}, function(err) {
+			if (err) {
+				// i.e. file already exists or can't write to directory 
+				throw err;
+			}
+		});
 	}
-	fs.writeFile(p, JSON.stringify(clips), function(err) {
-		if (err) {
-			console.log(err);
-		} else {
-			console.log("JSON saved to " + p);
-		}
-	});
-}
 
-function _formatWithoutSidx(rawClips) {
-	var manifest = [];
-	_.each(rawClips, function(clip) {
-		var chapter = clip.chapter - 1;
-		if (!manifest[chapter]) {
-			manifest[chapter] = Object.create(null);
-			manifest[chapter]['videos'] = [];
-		}
-		manifest[chapter]['videos'].push(clip);
-	});
-	return manifest;
-}
-
-function _format(clips) {
-	var manifest = [];
-	_.each(clips, function(chapter) {
-		var ch = Object.create(null);
-		ch['videos'] = [];
-		if (chapter['dashed']) {
-			_.each(chapter['dashed'], function(clip) {
-				var c = Object.create(null);
-				c['path'] = clip['video']
-				c['sidx'] = clip['sidx']
-				ch['videos'].push(c)
+	_.each(clips, function(chapter, chIndex) {
+		_.each(chapter, function(vid) {
+			_.each(vid['dashed'], function(clip, i) {
+				__doCopy(clip['video'], clip['relPath']);
 			});
-		} else {
-
-		}
-		manifest.push(ch);
+		});
 	});
-	return manifest;
 }
 
 
 function _createBlankTagManifest(clips) {
-	var manifest = [];
-	_.each(clips, function(chapter, cI) {
-		var ch = Object.create(null);
-		ch['youtube'] = [];
-		_.each(chapter['dashed'], function(clip, kI) {
-			var c = Object.create(null);
-			c['chapter'] = cI;
-			c['index'] = kI;
-			ch['videos'].push(c)
-		});
-		manifest.push(ch);
+	if (clips.length < 10) {
+		return _prepVideosManifest(clips);
+	}
+
+	var newManifest = [];
+	for (var i = 0; i < NUM_CHAPTERS; i++) {
+		newManifest[i] = [];
+	}
+	_.each(clips, function(clip) {
+		delete clip['defer'];
+		var split = clip['dir'].split('/');
+		var chapter = clip['chapter'];
+		var index = clip['index'];
+		newManifest[chapter][index] = {
+			tags: ""
+		};
 	});
-	return manifest;
+	return newManifest;
+}
+
+function _readAndCopy() {
+	var outputFilename = './videos_manifest.json';
+	var p = path.join(process.cwd(), 'client/assets/json/' + outputFilename);
+	fs.readFile(p, function(err, data) {
+		if (err) {
+			console.log(err);
+		}
+		_copyDashedVideo(JSON.parse(data));
+	});
 }
 
 start();

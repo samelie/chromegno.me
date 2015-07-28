@@ -93,6 +93,8 @@ mobile/build/**/*
 *.JPG
 *.jpg
 data/**/*.JPG
+data/**/*.MOV
+data/**/*.png
 *.mpd
 *.flv
 data/**/*.jpg

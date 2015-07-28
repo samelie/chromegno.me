@@ -15,7 +15,6 @@ var exec = require('child_process').exec;
 var xml2js = require('xml2js');
 var XMLHttpRequest = require('xhr2');
 
-var ALL_UPLOADED = false;
 var BASE_URL = "https://gallery-viz.s3-eu-west-1.amazonaws.com/";
 
 var SIDX = (function() {
@@ -119,7 +118,7 @@ var SIDX = (function() {
 				}
 			}
 
-			if (!ALL_UPLOADED) {
+			if (process.customArgs.noupload) {
 				var params = {
 					Bucket: process.env.S3_BUCKET,
 					Key: key

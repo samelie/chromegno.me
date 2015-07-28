@@ -1,10 +1,7 @@
 'use strict';
 var SHADERS = require('../common/shaders');
-THREE.CopyShader = SHADERS.copy;
-THREE.MaskPass = require('./post/MaskPass');
-THREE.RenderPass = require('./post/RenderPass');
-THREE.ShaderPass = require('./post/ShaderPass');
-require('./post/EffectComposer');
+var SETTINGS = require('../common/shader_settings');
+
 var Effects = function(scene, camera, renderer, fbo) {
 
 	//var scene = new THREE.Scene();
@@ -34,6 +31,7 @@ var Effects = function(scene, camera, renderer, fbo) {
 	var composer = new THREE.EffectComposer(renderer, fbo);
 	composer.addPass(renderPass);
 	//composer.addPass(effects.glitch);
+	composer.addPass(effects.dot);
 	composer.addPass(effects.kaleido);
 	composer.addPass(effects.bleach);
 	composer.addPass(effects.copy);
@@ -49,8 +47,9 @@ var Effects = function(scene, camera, renderer, fbo) {
 
 	function updateUniforms(uniforms){
 		var effect = effects[uniforms['shader']];
+		effect.enabled = uniforms['enabled'];
+		var settings = SETTINGS[uniforms['shader']];
 		_.forIn(uniforms['uniforms'],function(val, key){
-			console.log(effect['uniforms'][key]);
 			effect['uniforms'][key].value = val;
 		});
 	}

@@ -14,7 +14,7 @@ var UTILS = (function() {
 		w = w || window.innerWidth;
 		h = h || window.innerHeight;
 		var containerRatio = w / h;
-		var elRatio = 1280 / 720;
+		var elRatio = W / H;
 		var scale = 1,
 			x, y;
 
@@ -38,15 +38,15 @@ var UTILS = (function() {
 		if (containerRatio === elRatio) {
 			x = y = 0;
 		} else {
-			x = (w - 1280 * scale) * 0.5 / scale;
-			y = (h - 720 * scale) * 0.5 / scale;
+			x = (w - W * scale) * 0.5 / scale;
+			y = (h - H * scale) * 0.5 / scale;
 		}
-
+		scale = Math.max(scale, 1);
 		// fixed
 		//x = Number(x.toFixed(1));
 		//y = Number(y.toFixed(1));
-		obj['w'] = 1280 * scale;
-		obj['h'] = 720 * scale;
+		obj['w'] = W * scale;
+		obj['h'] = H * scale;
 		obj['scale'] = scale;
 		obj['x'] = x;
 		obj['y'] = y;

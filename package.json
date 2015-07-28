@@ -16,6 +16,7 @@
 		"xml2js": "latest",
 		"xhr2": "latest",
 		"dotenv": "1.1.0",
+		"commander": "latest",
 		"aws-sdk": "latest",
 		"mime": "latest",
 		"s3": "latest",

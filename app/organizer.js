@@ -6,7 +6,7 @@ var dir = require('node-dir');
 var fs = require('fs-extra');
 
 var IMGS_PER_CLIP = 12;
-var EXT = 'JPG';
+var EXT = 'png';
 
 var Organizer = (function() {
 	var picsDir = path.join(process.cwd(), 'data/pics');
@@ -22,9 +22,8 @@ var Organizer = (function() {
 			}
 			_.each(dirs, function(path) {
 				//only choose the folders just at the root level
-				if (path.length === 44) {
+				console.log(path.length);
 					_createFolders(path, callback);
-				}
 			});
 		});
 	}

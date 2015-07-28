@@ -10,7 +10,7 @@ var exec = require('child_process').exec;
 //var FRAME_RATES = ['3','2','1', (1 / 2).toFixed(3).toString(), (1 / 3).toFixed(3).toString(), (1 / 4).toFixed(3).toString()];
 var FRAME_RATES = ['3', '2', '1', (1 / 2).toFixed(3).toString(), (1 / 3).toFixed(3).toString(), (1 / 4).toFixed(3).toString()];
 var IMGS_PER_CLIP = 12;
-var EXT = '.JPG';
+var EXT = '.png';
 
 var FFMPEG = (function() {
 	var picsDir = path.join(process.cwd(), 'data/pics');
@@ -44,7 +44,7 @@ var FFMPEG = (function() {
 
 	function _createClips(clips, callback) {
 		var index = 0;
-
+		console.log(clips);
 		function __ripClip() {
 			var clipInfo = clips[index];
 			if (!clipInfo) {
@@ -55,6 +55,7 @@ var FFMPEG = (function() {
 			var frIndex = 0;
 			var output;
 			process.chdir(clipInfo['dir']);
+			console.log('\t',clipInfo['dir']);
 
 			function __encodeComplete() {
 				clipInfo['videos'].push(output);
@@ -77,8 +78,8 @@ var FFMPEG = (function() {
 					__encodeComplete();
 					return;
 				}
-				var br = '100k';
-				var scale = 480;
+				var br = '2000k';
+				var scale = 720;
 				var command = "ffmpeg -framerate " + framerate + " -pattern_type glob -i \'*" + EXT + "\' -codec:v libx264 -b:v "+br+" -maxrate "+br+" -bufsize "+br+" -vf scale=-1:"+scale+" -threads 4 -r 24 -g 12 -codec:a libfdk_aac -b:a 128k -preset fast -profile:v baseline -pix_fmt yuv420p -y " + output['path'];
 				console.log(command);
 				var ff = exec(command, function(error, stdout, stderr) {
@@ -86,7 +87,9 @@ var FFMPEG = (function() {
 				});
 				ff.on('exit', function(code) {
 					console.log("DONE");
-					__encodeComplete();
+					setTimeout(function(){
+						__encodeComplete();
+					}, 1000);
 				});
 			}
 			__encodeMp4(FRAME_RATES[frIndex])

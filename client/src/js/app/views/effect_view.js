@@ -8,8 +8,8 @@ var UTILS = require('../common/utils');
 var FX_OPTIONS = require('../common/shader_options');
 // app dependencies
 var NUM_COLUMNS = 2;
-var VIDEO_WIDTH = 480;
-var VIDEO_HEIGHT = 360;
+var VIDEO_WIDTH = 1280;
+var VIDEO_HEIGHT = 853;
 var MAX_ASPECT = 2.31;
 
 var statsEnabled = true;
@@ -83,12 +83,13 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			_.forIn(options, function(obj, key) {
 				var f = optionsA.addFolder(key);
 				optnsFolder.push(f);
+				obj['enabled'] = false;
 				_.forIn(obj, function(v, k) {
 					var b = Object.create(null);
 					b['uniforms'] = obj;
 					b['shader'] = key;
-					f.add(obj, k, 0.0, 10.0).onChange(function(val) {
-						sceneB.updateUniforms(this);
+					f.add(obj, k, 0.01, 10.0).onChange(function(val) {
+						sceneA.updateUniforms(this);
 					}.bind(b));
 				});
 			});
@@ -103,14 +104,12 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 					var b = Object.create(null);
 					b['uniforms'] = obj;
 					b['shader'] = key;
-					f.add(obj, k, 0.0, 10.0).onChange(function(val) {
-						sceneA.updateUniforms(this);
+					f.add(obj, k, 0.01, 10.0).onChange(function(val) {
+						sceneB.updateUniforms(this);
 					}.bind(b));
 				});
 			});
 			//optionsA.
-
-
 
 			gui.width = 300;
 
@@ -215,13 +214,15 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			var w = window.innerWidth;
 			var h = window.innerHeight;
 			camera.aspect = w / h;
-			console.log(camera.aspect);
-			var scale = 0;
-			if (w / h > MAX_ASPECT) {
+			console.log(UTILS.onAspectResize(w, h));
+			var scale = 1;
+			scale = UTILS.onAspectResize(w, h).scale
+			/*if (w / h > MAX_ASPECT) {
 				scale = 1 + w / h / MAX_ASPECT;
 			} else {
 				scale = 1
-			}
+			}*/
+			scale = 1;
 			this.quad.scale.x = this.quad.scale.y = scale;
 			renderer.setSize(w, h)
 			sceneA.resize(w, h, scale);
@@ -243,14 +244,14 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			videoMaterial.uniforms.uMixRatio.value = this.guiOptions['uMixRatio'];
 			videoMaterial.uniforms.uThreshold.value = this.guiOptions['uThreshold'];
 			if (this.guiOptions['uMixRatio'] == 0) {
-				sceneB.render(false);
+				sceneB.render();
 			} else if (this.guiOptions['uMixRatio'] == 1) {
-				sceneA.render(false);
+				sceneA.render();
 			} else {
-				sceneA.render(true);
-				sceneB.render(true);
-				renderer.render(scene, camera, null, true);
+				sceneA.render();
+				sceneB.render();
 			}
+			renderer.render(scene, camera, null, true);
 		}
 
 	});

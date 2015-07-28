@@ -1,6 +1,6 @@
 module.exports = {
 	bleach: {
-		opacity: .51
+		opacity: 0.01
 	},
 	bokah: {
 		"threshold": 0.51,
@@ -19,8 +19,8 @@ module.exports = {
 		"col_s": 0.05
 	},
 	dot: {
-		"angle": 1.57,
-		"scale": 1.01
+		"angle": 0.01,
+		"scale": 0.01
 	},
 	kaleido: {
 		"sides": 0.01,

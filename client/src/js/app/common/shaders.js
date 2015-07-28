@@ -1,4 +1,9 @@
 var glslify = require('glslify');
+THREE.CopyShader = require('./shaders/CopyShader');
+THREE.MaskPass = require('./post/MaskPass');
+THREE.RenderPass = require('./post/RenderPass');
+THREE.ShaderPass = require('./post/ShaderPass');
+require('./post/EffectComposer');
 /*var source = glslify({
     vertex: '../../../glsl/displacement.vert',
     fragment: '../../../glsl/mega.frag',
@@ -161,5 +166,5 @@ module.exports = {
                 sepia:require('./shaders/SepiaShader'),
                 glitch:require('./shaders/DigitalGlitch'),
                 dot:require('./shaders/DotScreenShader'),
-                copy:require('./shaders/CopyShader')
+                copy:THREE.CopyShader
     };
