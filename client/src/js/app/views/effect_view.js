@@ -6,6 +6,8 @@ var THREE_SCENE = require('../common/three_scene');
 var SCENE = require('../common/scene');
 var UTILS = require('../common/utils');
 var FX_OPTIONS = require('../common/shader_options');
+var TIMELINE = require('../common/timeline');
+var PLAYER = require('../common/player_controller');
 // app dependencies
 var NUM_COLUMNS = 2;
 var VIDEO_WIDTH = 1280;
@@ -52,7 +54,19 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 		events: {
 			'click .js-go': 'startProcess'
 		},
-		initialize: function(options) {},
+		initialize: function(options) {
+			this.timeline = new TIMELINE();
+			App.reqres.request('reqres:manifest').then(function(manifest) {
+				this.manifest =  this.timeline.start(manifest);
+				this.setupPlayer();
+			}.bind(this)).done();
+		},
+		setupPlayer:function(){
+			this.videoElement = document.getElementById('myVideo');
+			this.playerController = new PLAYER();
+			this.playerController.init(this.videoElement);
+			this.playerController.setEntireManifest(this.manifest);
+		},
 		onRender: function() {
 			this.updateCounter = 0;
 			this.guiOptions = Object.create(null);

@@ -1163,6 +1163,10 @@ button {
   visibility: hidden;
 }
 
+#stats {
+  z-index: 10;
+}
+
 .YoutubeMix {
   width: 100%;
   maxWidth: 1280px;
