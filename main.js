@@ -6,11 +6,13 @@ var program = require('commander');
 program
 	.option('-n, --noupload', 'noupload')
 	.option('-s, --skip', 'Skip')
+	.option('-c, --clean', 'Clean')
 	.parse(process.argv);
 
 process.customArgs = program;
 var fs = require('fs-extra');
 var _ = require('lodash');
+var dir = require('node-dir');
 var path = require('path');
 var shell = require('shelljs');
 var Organizer = require('./app/organizer');
@@ -21,10 +23,14 @@ var SIDX = require('./app/sidx');
 var NUM_CHAPTERS = 4;
 
 function start() {
-	if (!process.customArgs.skip) {
-		Organizer.start(_onOrganizationComplete);
-	} else {
-		_readAndCopy();
+	if(process.customArgs.clean){
+		_cleanOutFolder();
+	}else{
+		if (!process.customArgs.skip) {
+			Organizer.start(_onOrganizationComplete);
+		} else {
+			_readAndCopy();
+		}
 	}
 }
 
@@ -171,6 +177,20 @@ function _createBlankTagManifest(clips) {
 	});
 	return newManifest;
 }
+
+function _cleanOutFolder() {
+	var p = path.join(process.cwd(), 'data/pics');
+	dir.files(p, function(err, files) {
+		if (err) throw err;
+		console.log(files);
+		_.each(files,function(file){
+			if(file.indexOf('dashinit')===-1){
+				fs.unlinkSync(file);
+			}
+		});
+	});
+}
+
 
 function _readAndCopy() {
 	var outputFilename = './videos_manifest.json';

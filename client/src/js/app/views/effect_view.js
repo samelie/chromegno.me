@@ -83,7 +83,6 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			_.forIn(options, function(obj, key) {
 				var f = optionsA.addFolder(key);
 				optnsFolder.push(f);
-				obj['enabled'] = false;
 				_.forIn(obj, function(v, k) {
 					var b = Object.create(null);
 					b['uniforms'] = obj;
@@ -105,6 +104,7 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 					b['uniforms'] = obj;
 					b['shader'] = key;
 					f.add(obj, k, 0.01, 10.0).onChange(function(val) {
+						console.log(val);
 						sceneB.updateUniforms(this);
 					}.bind(b));
 				});

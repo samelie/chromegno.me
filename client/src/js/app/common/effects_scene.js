@@ -1,5 +1,6 @@
 'use strict';
 var SHADERS = require('../common/shaders');
+var OPTIONS = require('../common/shader_options');
 var SETTINGS = require('../common/shader_settings');
 
 var Effects = function(scene, camera, renderer, fbo) {
@@ -24,6 +25,11 @@ var Effects = function(scene, camera, renderer, fbo) {
 		kaleido:new THREE.ShaderPass(SHADERS.kaleido)
 	};
 
+
+	_.forIn(effects,function(effect, key){
+		effect['enabled'] = OPTIONS[key]['enabled'];
+	});
+
 	var renderPass = new THREE.RenderPass(scene, camera);
 	var effectCopy = new THREE.ShaderPass(SHADERS.copy);
 	effectCopy.renderToScreen = true;
@@ -47,10 +53,12 @@ var Effects = function(scene, camera, renderer, fbo) {
 
 	function updateUniforms(uniforms){
 		var effect = effects[uniforms['shader']];
-		effect.enabled = uniforms['enabled'];
+		effect.enabled = uniforms['uniforms']['enabled'];
 		var settings = SETTINGS[uniforms['shader']];
 		_.forIn(uniforms['uniforms'],function(val, key){
-			effect['uniforms'][key].value = val;
+			if(effect['uniforms'][key]){
+				effect['uniforms'][key].value = val;
+			}
 		});
 	}
 
