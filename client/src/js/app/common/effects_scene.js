@@ -18,15 +18,15 @@ var Effects = function(scene, camera, renderer, fbo) {
 
 	//el.appendChild(webGLRenderer.domElement);
 	var effects = {
-		bleach:new THREE.ShaderPass(SHADERS.bleach),
-		glitch:new THREE.ShaderPass(SHADERS.glitch),
-		copy:new THREE.ShaderPass(SHADERS.copy),
-		dot:new THREE.ShaderPass(SHADERS.dot),
-		kaleido:new THREE.ShaderPass(SHADERS.kaleido)
+		bleach: new THREE.ShaderPass(SHADERS.bleach),
+		glitch: new THREE.ShaderPass(SHADERS.glitch),
+		copy: new THREE.ShaderPass(SHADERS.copy),
+		dot: new THREE.ShaderPass(SHADERS.dot),
+		kaleido: new THREE.ShaderPass(SHADERS.kaleido)
 	};
 
 
-	_.forIn(effects,function(effect, key){
+	_.forIn(effects, function(effect, key) {
 		effect['enabled'] = OPTIONS[key]['enabled'];
 	});
 
@@ -51,20 +51,22 @@ var Effects = function(scene, camera, renderer, fbo) {
 		composer.render();
 	}
 
-	function updateUniforms(uniforms){
+	function updateUniforms(uniforms) {
+		var obj = uniforms['uniforms'];
 		var effect = effects[uniforms['shader']];
-		effect.enabled = uniforms['uniforms']['enabled'];
-		var settings = SETTINGS[uniforms['shader']];
-		_.forIn(uniforms['uniforms'],function(val, key){
-			if(effect['uniforms'][key]){
-				effect['uniforms'][key].value = val;
+		effect.enabled = obj['enabled'];
+		_.forIn(obj, function(val, key) {
+			if (_.isObject(val)) {
+				if (effect['uniforms'][key]) {
+					effect['uniforms'][key].value = val[key];
+				}
 			}
 		});
 	}
 
 	return {
-		updateUniforms:updateUniforms,
-		render:render
+		updateUniforms: updateUniforms,
+		render: render
 	}
 
 };

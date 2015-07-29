@@ -57,11 +57,11 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 		initialize: function(options) {
 			this.timeline = new TIMELINE();
 			App.reqres.request('reqres:manifest').then(function(manifest) {
-				this.manifest =  this.timeline.start(manifest);
+				this.manifest = this.timeline.start(manifest);
 				this.setupPlayer();
 			}.bind(this)).done();
 		},
-		setupPlayer:function(){
+		setupPlayer: function() {
 			this.videoElement = document.getElementById('myVideo');
 			this.playerController = new PLAYER();
 			this.playerController.init(this.videoElement);
@@ -91,6 +91,7 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			main.add(this.guiOptions, 'uSaturation', 0, 10.).onChange(function() {
 				videoMaterial.uniforms["uSaturation"].value = this.guiOptions['uSaturation'];
 			}.bind(this));
+
 			var optionsA = gui.addFolder('sceneA');
 			var optnsFolder = [];
 			var options = _.cloneDeep(FX_OPTIONS);
@@ -101,12 +102,23 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 					var b = Object.create(null);
 					b['uniforms'] = obj;
 					b['shader'] = key;
-					f.add(obj, k, 0.01, 10.0).onChange(function(val) {
-						sceneA.updateUniforms(this);
-					}.bind(b));
+					if (_.isObject(v)) {
+						_.forIn(v, function(vv, kk) {
+							if (kk === k) {
+								console.log(v,k);
+								f.add(v, k, v['min'], v['max']).onChange(function(val) {
+									sceneA.updateUniforms(this);
+								}.bind(b));
+							}
+						});
+					} else {
+						f.add(obj, k).onChange(function(val) {
+							sceneA.updateUniforms(this);
+						}.bind(b));
+					}
 				});
 			});
-
+			/*
 			var optnsFolder2 = [];
 			var optionsB = gui.addFolder('sceneB');
 			var options = _.cloneDeep(FX_OPTIONS);
@@ -122,7 +134,7 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 						sceneB.updateUniforms(this);
 					}.bind(b));
 				});
-			});
+			});*/
 			//optionsA.
 
 			gui.width = 300;
