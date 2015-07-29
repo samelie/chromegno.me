@@ -22,11 +22,31 @@ module.exports = {
 	},
 	color: {
 		enabled: false,
-		uSaturation: 0.01,
-		uContrast: 0.01,
-		uDesaturate: 0.01,
-		uBrightness: 0.01,
-		uHue: 0.01
+		uSaturation: {
+			uSaturation: 1.01,
+			min: 1,
+			max: 10
+		},
+		uContrast: {
+			uContrast: 1.01,
+			min: -6,
+			max: 6
+		},
+		uDesaturate: {
+			uDesaturate: 0,
+			min: 0,
+			max: 4
+		},
+		uBrightness: {
+			uBrightness: 0.05,
+			min: -1,
+			max: 1.3
+		},
+		uHue: {
+			uHue: 0.05,
+			min: 0,
+			max: 4
+		}
 	},
 	glitch: {
 		enabled: false,
@@ -35,32 +55,32 @@ module.exports = {
 			min: 0,
 			max: 4
 		},
-		"angle":  {
+		"angle": {
 			angle: 0.05,
 			min: 0,
 			max: Math.PI * 2
 		},
-		"seed":  {
+		"seed": {
 			seed: 0.05,
 			min: 0,
 			max: 4
 		},
-		"seed_x":  {
+		"seed_x": {
 			seed_x: 0.05,
 			min: 0,
 			max: 4
 		},
-		"seed_y":  {
+		"seed_y": {
 			seed_y: 0.05,
 			min: 0,
 			max: 4
 		},
-		"distortion_x":  {
+		"distortion_x": {
 			distortion_x: 0.05,
 			min: 0,
 			max: 4
 		},
-		"distortion_y":  {
+		"distortion_y": {
 			distortion_y: 0.05,
 			min: 0,
 			max: 4
@@ -102,7 +122,7 @@ module.exports = {
 		"angle": {
 			angle: 0.01,
 			min: 0,
-			max: Math.PI *2
+			max: Math.PI * 2
 		}
 	}
 };

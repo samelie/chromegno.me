@@ -20,36 +20,40 @@ var Effects = function(scene, camera, renderer, fbo) {
 	var _otherFbo;
 
 	var effects = {
+		bit: new THREE.ShaderPass(SHADERS.bit),
 		bleach: new THREE.ShaderPass(SHADERS.bleach),
-		color:new THREE.ShaderPass(SHADERS.color),
-		glitch: new THREE.ShaderPass(SHADERS.glitch),
+		blend: new THREE.ShaderPass(SHADERS.blend),
+		color: new THREE.ShaderPass(SHADERS.color),
 		copy: new THREE.ShaderPass(SHADERS.copy),
 		dot: new THREE.ShaderPass(SHADERS.dot),
-		bit: new THREE.ShaderPass(SHADERS.bit),
+		edge: new THREE.ShaderPass(SHADERS.edge),
+		glitch: new THREE.ShaderPass(SHADERS.glitch),
 		kaleido: new THREE.ShaderPass(SHADERS.kaleido)
 	};
 
 
 	_.forIn(effects, function(effect, key) {
-		effect['enabled'] = OPTIONS[key]['enabled'];
+		if (OPTIONS[key]) {
+			effect['enabled'] = OPTIONS[key]['enabled'];
+		}
 	});
 
 	var renderPass = new THREE.RenderPass(scene, camera);
 	var effectCopy = new THREE.ShaderPass(SHADERS.copy);
 	effectCopy.renderToScreen = true;
 
-	effects.glitch['uniforms']['tDisp'].value = new THREE.ImageUtils.loadTexture('assets/img/hero.jpg');
+	//effects.glitch['uniforms']['tDisp'].value = new THREE.ImageUtils.loadTexture('assets/img/hero.jpg');
 
 	var composer = new THREE.EffectComposer(renderer, fbo);
 	composer.addPass(renderPass);
-	composer.addPass(effects.blend);
-	composer.addPass(effects.color);
-	composer.addPass(effects.dot);
-	composer.addPass(effects.edge);
-	//composer.addPass(effects.fxxa);
-	composer.addPass(effects.kaleido);
+	//composer.addPass(effects.blend);
 	composer.addPass(effects.bleach);
 	composer.addPass(effects.bit);
+	composer.addPass(effects.color);
+	/*composer.addPass(effects.dot);
+	composer.addPass(effects.edge);
+	*/
+	composer.addPass(effects.kaleido);
 	composer.addPass(effects.copy);
 
 	/*function animate() {
@@ -57,10 +61,10 @@ var Effects = function(scene, camera, renderer, fbo) {
 		window.requestAnimationFrame(animate);
 	}*/
 
-	function _updateEffects(){
+	function _updateEffects() {
 		//effects.blend['uniforms']['tDiffuse1'].value = fbo;
-		if(_otherFbo){
-			effects.blend['uniforms']['tDiffuse2'].value = _otherFbo;
+		if (_otherFbo) {
+			//effects.blend['uniforms']['tDiffuse2'].value = _otherFbo;
 		}
 	}
 
@@ -68,13 +72,14 @@ var Effects = function(scene, camera, renderer, fbo) {
 		composer.render();
 	}
 
-	function setOtherFbo(f){
+	function setOtherFbo(f) {
 		_otherFbo = f;
 
 		_updateEffects();
 	}
 
-	function updateUniforms(uniforms){
+	function updateUniforms(uniforms) {
+		var obj = uniforms['uniforms'];
 		var effect = effects[uniforms['shader']];
 		effect.enabled = obj['enabled'];
 		_.forIn(obj, function(val, key) {
@@ -87,9 +92,9 @@ var Effects = function(scene, camera, renderer, fbo) {
 	}
 
 	return {
-		updateUniforms:updateUniforms,
-		setOtherFbo:setOtherFbo,
-		render:render
+		updateUniforms: updateUniforms,
+		setOtherFbo: setOtherFbo,
+		render: render
 	}
 
 };
