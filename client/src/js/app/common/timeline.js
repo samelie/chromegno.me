@@ -4,6 +4,7 @@ var _ = require('lodash');
 //seconds
 var INTERVAL = 0.5;
 var SEQUENCIAL_REFS = false;
+var CHAPTER_DURATION = 45; //mins
 
 var flattendData = [];
 
@@ -32,7 +33,7 @@ var Timeline = function() {
         var totalDuration = 0;
 
         function __createRoute() {
-            if (totalDuration > 2700) {
+            if (totalDuration > (CHAPTER_DURATION * 60)) {
                 return;
             }
             var route = [];

@@ -6,6 +6,7 @@ var SHADERS_LIB = require('../common/shader_lib');
 var THREE_SCENE = require('../common/three_scene');
 var SCENE = require('../common/scene');
 var UTILS = require('../common/utils');
+var AUDIO = require('../common/audio_analyser');
 var PLAYER = require('../common/player_controller');
 // app dependencies
 var NUM_COLUMNS = 2;
@@ -113,6 +114,8 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			}.bind(this));
 
 			gui.width = 300;
+			this.aa = new AUDIO();
+			this.aa.addTrack('assets/audio/girl.mp3');
 
 			/*
 			this.videoElement = document.getElementById('myVideo');
