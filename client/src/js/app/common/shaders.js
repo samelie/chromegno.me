@@ -173,6 +173,7 @@ module.exports = {
                     vertexShader:glslify('../../../glsl/displacement.vert')
                 },
                 bleach:require('./shaders/BleachBypassShader'),
+                bit:require('./shaders/BitShader'),
                 blend:require('./shaders/BlendShader'),
                 brightness:require('./shaders/BrightnessContrastShader'),
                 colorify:require('./shaders/ColorifyShader'),

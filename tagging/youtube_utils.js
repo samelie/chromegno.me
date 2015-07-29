@@ -74,6 +74,7 @@ module.exports = {
     getFFMPEGProbe: function(vo, url) {
         var defer = Q.defer();
         ffmpeg.ffprobe(url, function(err, info) {
+            console.log("ANSWER");
             if (err || !info) {
                 if (err) {
                     console.log("Error on probe");

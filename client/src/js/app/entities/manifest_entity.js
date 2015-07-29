@@ -15,7 +15,19 @@ App.module('Entities', function(Entities, App, Backbone, Marionette, $, _) {
         return defer.promise;
     }
 
-   App.reqres.setHandler('reqres:manifest', _getManifest);
+    function _getEffects() {
+        var defer = Q.defer();
+        Q($.ajax({
+            type: 'GET',
+            url: 'assets/json/effect_durations.json'
+        })).then(function(data) {
+            defer.resolve(data);
+        });
+        return defer.promise;
+    }
+
+    App.reqres.setHandler('reqres:effects', _getEffects);
+    App.reqres.setHandler('reqres:manifest', _getManifest);
 
 });
 

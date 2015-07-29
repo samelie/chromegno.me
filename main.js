@@ -1,4 +1,7 @@
 'use strict';
+
+var TEMP_TAGS = [];
+
 require('dotenv').config({
 	path: './envvars'
 });
@@ -23,9 +26,9 @@ var SIDX = require('./app/sidx');
 var NUM_CHAPTERS = 4;
 
 function start() {
-	if(process.customArgs.clean){
+	if (process.customArgs.clean) {
 		_cleanOutFolder();
-	}else{
+	} else {
 		if (!process.customArgs.skip) {
 			Organizer.start(_onOrganizationComplete);
 		} else {
@@ -57,12 +60,17 @@ function _onMP4BOXComplete(clips) {
 function _onSIDXComplete(clips) {
 	var n = _restructure(clips);
 	process.chdir(path.join(process.cwd(), '../../../../'));
+	_saveManifests(n);
+	_copyDashedVideo(n);
+}
+
+function _saveManifests(clips) {
 	var outputFilename = './videos_manifest.json';
 	var p = path.join(process.cwd(), 'client/assets/json/' + outputFilename);
 	if (fs.existsSync(p)) {
 		fs.unlinkSync(p);
 	}
-	fs.writeFile(p, JSON.stringify(n, null, 4), function(err) {
+	fs.writeFile(p, JSON.stringify(clips, null, 4), function(err) {
 		if (err) {
 			console.log(err);
 		} else {
@@ -82,8 +90,6 @@ function _onSIDXComplete(clips) {
 			console.log("JSON saved to " + p2);
 		}
 	});
-
-	_copyDashedVideo(n);
 }
 
 
@@ -183,8 +189,8 @@ function _cleanOutFolder() {
 	dir.files(p, function(err, files) {
 		if (err) throw err;
 		console.log(files);
-		_.each(files,function(file){
-			if(file.indexOf('dashinit')===-1){
+		_.each(files, function(file) {
+			if (file.indexOf('dashinit') === -1) {
 				fs.unlinkSync(file);
 			}
 		});
@@ -199,7 +205,48 @@ function _readAndCopy() {
 		if (err) {
 			console.log(err);
 		}
-		_copyDashedVideo(JSON.parse(data));
+		var p = JSON.parse(data);
+		_copyDashedVideo(p);
+
+		_.each(p, function(chapter, chIndex) {
+			_.each(chapter, function(vid) {
+				delete vid['videos'];
+				delete vid['dir'];
+				delete vid['dashed'];
+				delete vid['mediaRange'];
+				delete vid['codec'];
+				delete vid['duration'];
+				delete vid['firstOffset'];
+				delete vid['relPath'];
+				delete vid['url'];
+				delete vid['parsedMpd'];
+				delete vid['mpd'];
+				delete vid['video'];
+				vid['tag'] = ""
+			});
+		});
+
+		var outputFilename2 = 'blank_tags.json'
+		var p2 = path.join(process.cwd(), 'tagging/' + outputFilename2);
+		if (fs.existsSync(p2)) {
+			fs.unlinkSync(p2);
+		}
+		fs.writeFile(p2, JSON.stringify(p, null, 4), function(err) {
+			if (err) {
+				console.log(err);
+			} else {
+
+				fs.copy(p2, path.join(process.cwd(), 'tagging/' + 'edit_' + outputFilename2), {
+					replace: false
+				}, function(err) {
+					if (err) {
+						// i.e. file already exists or can't write to directory 
+						throw err;
+					}
+				});
+				console.log("JSON saved to " + p2);
+			}
+		});
 	});
 }
 

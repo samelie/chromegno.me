@@ -7,6 +7,7 @@ var SCENE = require('../common/scene');
 var UTILS = require('../common/utils');
 var FX_OPTIONS = require('../common/shader_options');
 var TIMELINE = require('../common/timeline');
+var WEBCAM = require('../common/webcam');
 var PLAYER = require('../common/player_controller');
 // app dependencies
 var NUM_COLUMNS = 2;
@@ -22,7 +23,7 @@ var camera, scene, renderer;
 var geometry;
 var planes;
 var videoPlane, videoMaterial, textMaterial, textMaterialSide, textMaterialFront, textMaterialArray, textColor = new THREE.Color(0xFF000);
-var texture1, texture2, texture3, video, sceneA, sceneB;
+var texture1, texture2, texture3, video, sceneA, sceneB, mixer;
 var planesGroup;
 
 //Normal map shader
@@ -57,11 +58,11 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 		initialize: function(options) {
 			this.timeline = new TIMELINE();
 			App.reqres.request('reqres:manifest').then(function(manifest) {
-				this.manifest =  this.timeline.start(manifest);
+				this.manifest = this.timeline.start(manifest);
 				this.setupPlayer();
 			}.bind(this)).done();
 		},
-		setupPlayer:function(){
+		setupPlayer: function() {
 			this.videoElement = document.getElementById('myVideo');
 			this.playerController = new PLAYER();
 			this.playerController.init(this.videoElement);
@@ -91,22 +92,59 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			main.add(this.guiOptions, 'uSaturation', 0, 10.).onChange(function() {
 				videoMaterial.uniforms["uSaturation"].value = this.guiOptions['uSaturation'];
 			}.bind(this));
+
 			var optionsA = gui.addFolder('sceneA');
 			var optnsFolder = [];
 			var options = _.cloneDeep(FX_OPTIONS);
 			_.forIn(options, function(obj, key) {
-				var f = optionsA.addFolder(key);
+				var f = optionsA.addFolder('sceneA-'+key);
 				optnsFolder.push(f);
 				_.forIn(obj, function(v, k) {
 					var b = Object.create(null);
 					b['uniforms'] = obj;
 					b['shader'] = key;
-					f.add(obj, k, 0.01, 10.0).onChange(function(val) {
-						sceneA.updateUniforms(this);
-					}.bind(b));
+					if (_.isObject(v)) {
+						_.forIn(v, function(vv, kk) {
+							if (kk === k) {
+								f.add(v, k, v['min'], v['max']).onChange(function(val) {
+									sceneA.updateUniforms(this);
+								}.bind(b));
+							}
+						});
+					} else {
+						f.add(obj, k).onChange(function(val) {
+							sceneA.updateUniforms(this);
+						}.bind(b));
+					}
 				});
 			});
 
+			var optionsB = gui.addFolder('sceneB');
+			var optnsFolder = [];
+			var options = _.cloneDeep(FX_OPTIONS);
+			_.forIn(options, function(obj, key) {
+				var f = optionsB.addFolder('sceneB-'+key);
+				optnsFolder.push(f);
+				_.forIn(obj, function(v, k) {
+					var b = Object.create(null);
+					b['uniforms'] = obj;
+					b['shader'] = key;
+					if (_.isObject(v)) {
+						_.forIn(v, function(vv, kk) {
+							if (kk === k) {
+								f.add(v, k, v['min'], v['max']).onChange(function(val) {
+									sceneB.updateUniforms(this);
+								}.bind(b));
+							}
+						});
+					} else {
+						f.add(obj, k).onChange(function(val) {
+							sceneB.updateUniforms(this);
+						}.bind(b));
+					}
+				});
+			});
+			/*
 			var optnsFolder2 = [];
 			var optionsB = gui.addFolder('sceneB');
 			var options = _.cloneDeep(FX_OPTIONS);
@@ -122,7 +160,7 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 						sceneB.updateUniforms(this);
 					}.bind(b));
 				});
-			});
+			});*/
 			//optionsA.
 
 			gui.width = 300;
@@ -138,6 +176,7 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			this.videoElement2.height = VIDEO_HEIGHT;
 
 			this.videoElement3 = document.getElementById('mixer');
+			this.webcam = new WEBCAM(this.videoElement3);
 			this.videoElement3.volume = 0;
 			this.videoElement3.width = VIDEO_WIDTH;
 			this.videoElement3.height = VIDEO_HEIGHT;
@@ -178,7 +217,6 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			texture3.minFilter = THREE.LinearFilter;
 			texture3.magFilter = THREE.LinearFilter;
 
-			//texture3 = new THREE.ImageUtils.loadTexture('../img1.jpg');
 			var scaleObj = UTILS.onAspectResize();
 
 			sceneA = new SCENE(renderer, 0xffffff, Z_DIS);

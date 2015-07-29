@@ -20,21 +20,17 @@ var Effects = function(scene, camera, renderer, fbo) {
 	var _otherFbo;
 
 	var effects = {
-		bleach:new THREE.ShaderPass(SHADERS.bleach),
+		bleach: new THREE.ShaderPass(SHADERS.bleach),
 		color:new THREE.ShaderPass(SHADERS.color),
-		brightness:new THREE.ShaderPass(SHADERS.brightness),
-		blend:new THREE.ShaderPass(SHADERS.blend),
-		convolution:new THREE.ShaderPass(SHADERS.convolution),
-		edge:new THREE.ShaderPass(SHADERS.edge),
-		fxxa:new THREE.ShaderPass(SHADERS.fxxa),
-		glitch:new THREE.ShaderPass(SHADERS.glitch),
-		copy:new THREE.ShaderPass(SHADERS.copy),
-		dot:new THREE.ShaderPass(SHADERS.dot),
-		kaleido:new THREE.ShaderPass(SHADERS.kaleido)
+		glitch: new THREE.ShaderPass(SHADERS.glitch),
+		copy: new THREE.ShaderPass(SHADERS.copy),
+		dot: new THREE.ShaderPass(SHADERS.dot),
+		bit: new THREE.ShaderPass(SHADERS.bit),
+		kaleido: new THREE.ShaderPass(SHADERS.kaleido)
 	};
 
 
-	_.forIn(effects,function(effect, key){
+	_.forIn(effects, function(effect, key) {
 		effect['enabled'] = OPTIONS[key]['enabled'];
 	});
 
@@ -53,7 +49,7 @@ var Effects = function(scene, camera, renderer, fbo) {
 	//composer.addPass(effects.fxxa);
 	composer.addPass(effects.kaleido);
 	composer.addPass(effects.bleach);
-	composer.addPass(effects.glitch);
+	composer.addPass(effects.bit);
 	composer.addPass(effects.copy);
 
 	/*function animate() {
@@ -80,11 +76,12 @@ var Effects = function(scene, camera, renderer, fbo) {
 
 	function updateUniforms(uniforms){
 		var effect = effects[uniforms['shader']];
-		effect.enabled = uniforms['uniforms']['enabled'];
-		var settings = SETTINGS[uniforms['shader']];
-		_.forIn(uniforms['uniforms'],function(val, key){
-			if(effect['uniforms'][key]){
-				effect['uniforms'][key].value = val;
+		effect.enabled = obj['enabled'];
+		_.forIn(obj, function(val, key) {
+			if (_.isObject(val)) {
+				if (effect['uniforms'][key]) {
+					effect['uniforms'][key].value = val[key];
+				}
 			}
 		});
 	}

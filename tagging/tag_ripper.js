@@ -28,6 +28,8 @@ var OPTIONS = {
 	videosPerKeyword: 30
 };
 
+var TAG_MANIFEST = './edit_blank_tags.json';
+
 var RIPPER = (function() {
 
 	'use strict';
@@ -39,7 +41,7 @@ var RIPPER = (function() {
 	//API
 	//-----------------------
 	function getManifest(callback) {
-		var path = './data.json';
+		var path = TAG_MANIFEST;
 		fs.readFile(path, 'utf8', function(err, data) {
 			if (err) {
 				console.log('Error: ' + err);
@@ -57,8 +59,9 @@ var RIPPER = (function() {
 
 		function __readFolder(clip, chapterPath, i) {
 			var clipPath = path.join(chapterPath, i.toString());
+			console.log(clipPath);
 			if (!fs.existsSync(clipPath)) {
-				console.log("NO FOLDER");
+				//fs.mkdirSync(clipPath);
 				return;
 			}
 			dir.files(clipPath, function(err, files) {
@@ -100,7 +103,7 @@ var RIPPER = (function() {
 	}
 
 	function _parseManifest() {
-		var path = './data.json';
+		var path = TAG_MANIFEST;
 		fs.readFile(path, 'utf8', function(err, data) {
 			if (err) {
 				console.log('Error: ' + err);
@@ -150,11 +153,14 @@ var RIPPER = (function() {
 		_.each(data, function(chapter, index) {
 			_.each(chapter, function(clip, i) {
 				clips.push(clip);
-				console.log(clip);
 			});
 		});
 
 		_startYoutube(clips).then(function(r) {
+			_.each(clips,function(clip){
+				delete clip['youtubeResults'];
+			})
+			//console.log(clips);
 			_download(clips);
 		});
 	}
@@ -168,10 +174,13 @@ var RIPPER = (function() {
 		var searchPromises = [];
 
 		_.each(clips, function(clip) {
-			_.each(clip['querys'], function(query) {
+			clip['youtubeResults'] = Object.create(null);
+			searchPromises.push(_search(clip['tag'], clip));
+			/*_.each(clip['querys'], function(query) {
+
 				query['youtubeResults'] = Object.create(null);
 				searchPromises.push(_search(query['q'], query));
-			});
+			});*/
 		});
 
 		function __processVo() {
@@ -181,7 +190,7 @@ var RIPPER = (function() {
 				return;
 			}
 			vo['defer'].promise.then(function() {
-				console.log(voIndex);
+				console.log(vo['segments']);
 				voIndex++;
 				__processVo();
 			});
@@ -192,19 +201,16 @@ var RIPPER = (function() {
 			.then(function() {
 				searchPromises = null;
 				_.each(clips, function(clip) {
-					console.log(clip);
-					_.each(clip['querys'], function(query) {
-						query['vos'] = [];
-						for (var i = 0; i < OPTIONS.videosPerKeyword; i++) {
-							var vo = _.clone(VIDEO_VO);
-							vo['defer'] = Q.defer();
-							vo['results'] = query['youtubeResults'];
-							query['vos'].push(vo);
-							var p = vo['defer']['promise'];
-							promises.push(p);
-							VOs.push(vo);
-						}
-					});
+					clip['vos'] = [];
+					for (var i = 0; i < OPTIONS.videosPerKeyword; i++) {
+						var vo = _.clone(VIDEO_VO);
+						vo['defer'] = Q.defer();
+						vo['results'] = clip['youtubeResults'];
+						clip['vos'].push(vo);
+						var p = vo['defer']['promise'];
+						promises.push(p);
+						VOs.push(vo);
+					}
 				});
 
 				__processVo();
@@ -241,7 +247,7 @@ var RIPPER = (function() {
 
 		var youtubeSearchResults = [];
 		var searchCount = 0;
-
+		console.log(keyword);
 		var params = {
 			part: part,
 			//use the title
@@ -281,7 +287,7 @@ var RIPPER = (function() {
 				youtubeSearchResults = youtubeSearchResults.concat(r['items']);
 				if (searchCount === OPTIONS['searchDepth']) {
 					query['youtubeResults'] = _.flattenDeep(youtubeSearchResults);
-					console.log(query['youtubeResults'].length );
+					console.log(query['youtubeResults'].length);
 					if (query['youtubeResults'].length < 20) {
 						params['q'] = '';
 						_ytRequest(params);
@@ -302,6 +308,7 @@ var RIPPER = (function() {
 	function _chooseVideoItem(videoVo) {
 		var item = _chooseRandomVideo(videoVo['results']);
 		if (chosenIds.indexOf(item['id']['videoId']) !== -1) {
+			console.log("failed");
 			_chooseVideoItem(videoVo);
 			return;
 		}
@@ -312,6 +319,7 @@ var RIPPER = (function() {
 		console.log('\t', colors.green('Started: ', videoVo['title'], item['id']['videoId']));
 		UTILS.getInfo(item['id']['videoId'])
 			.then(function(data) {
+				console.log('\t\t', colors.green('got', item['id']['videoId']));
 				videoVo['vid'] = data['video_id'];
 				var choice = [];
 				//get only mp4s
@@ -337,22 +345,18 @@ var RIPPER = (function() {
 				}
 				var url = choice[0]['url'];
 				videoVo['path'] = url;
-				UTILS.getFFMPEGProbe(videoVo, url)
-					.then(function(videoVo) {
-						UTILS.createSegments(videoVo);
-						if (videoVo['segments'].length === 0) {
-							_chooseVideoItem(videoVo);
-						} else {
-							chosenIds.push(videoVo['vid']);
-							console.log('\t\t', colors.green('Success: ', videoVo['title']));
-							videoVo['defer'].resolve(videoVo);
-						}
-					})
-					.catch(function(videoVo) {
-						console.log(colors.blue('Bad probe'));
-						_chooseVideoItem(videoVo);
-					})
-					.done();
+				var dur = url.split('dur=')[1];
+				dur = dur.split('&')[0];
+				dur = parseInt(dur, 10);
+				videoVo['duration'] = dur;
+				UTILS.createSegments(videoVo);
+				if (videoVo['segments'].length === 0) {
+					_chooseVideoItem(videoVo);
+				} else {
+					chosenIds.push(videoVo['vid']);
+					console.log('\t\t', colors.green('Success: ', videoVo['title']));
+					videoVo['defer'].resolve(videoVo);
+				}
 			})
 			.catch(function(err) {
 				console.log(err);
@@ -377,28 +381,23 @@ var RIPPER = (function() {
 		var clipIndex = 0;
 
 		//clip has querys
+		console.log(clips.length);
 		function __ripClip() {
 			var clip = clips[clipIndex];
+			console.log(clip);
 			if (!clip) {
 				console.log("ALL RIPPED");
 				return;
 			}
 			var savePath = clip['dir'];
-			var queryIndex = 0;
 
 			function ___onQueryRipsComplete() {
-				queryIndex++;
-				___ripQuery();
+				clipIndex++;
+				__ripClip();
 			}
 
 			function ___ripQuery() {
-				var query = clip['querys'][queryIndex];
-				if (!query) {
-					clipIndex++;
-					__ripClip();
-					return;
-				}
-				var vos = query['vos'];
+				var vos = clip['vos'];
 				_ripClipVideos(savePath, vos, ___onQueryRipsComplete);
 			}
 
@@ -412,15 +411,16 @@ var RIPPER = (function() {
 	function _ripClipVideos(savePath, vos, callback) {
 		var videoIndex = 0;
 
+		console.log(vos.length);
 		function __ripVideo(vo) {
 			if (!vo) {
 				callback();
 				return;
 			}
+			delete vo['results'];
 			var name = vo['title'] + '.mp4';
 			//only one segment
 			var seg = vo['segments'][0];
-			console.log(seg);
 			var p = savePath + '/' + name;
 			ffmpeg(vo['path'])
 				.inputOptions('-threads 8')
@@ -440,10 +440,13 @@ var RIPPER = (function() {
 				})
 				.on('error', function(err) {
 					console.log('An error occurred: ' + err.message);
+					vo['savePath'] = "";
+					videoIndex+=1;
+					__ripVideo(vos[videoIndex]);
 				})
 				.on('end', function() {
 					vo['savePath'] = p;
-					videoIndex++;
+					videoIndex+=1;
 					__ripVideo(vos[videoIndex]);
 				})
 				.run();
