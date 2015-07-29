@@ -63,6 +63,7 @@ var Scene = function(renderer, clearColor, cameraZ) {
 	return {
 		resize: resize,
 		render: render,
+		fx: fx,
 		fbo: fbo,
 		updateUniforms: updateUniforms,
 		createPlane: createPlane

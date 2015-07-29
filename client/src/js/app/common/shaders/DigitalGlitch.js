@@ -16,7 +16,7 @@ module.exports = {
 
 		"tDiffuse":		{ type: "t", value: null },//diffuse texture
 		"tDisp":		{ type: "t", value: null },//displacement texture for digital glitch squares
-		"byp":			{ type: "i", value: 0 },//apply the glitch ?
+		"byp":			{ type: "i", value: 1 },//apply the glitch ?
 		"amount":		{ type: "f", value: 0.08 },
 		"angle":		{ type: "f", value: 0.02 },
 		"seed":			{ type: "f", value: 0.02 },

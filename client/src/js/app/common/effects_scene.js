@@ -17,8 +17,16 @@ var Effects = function(scene, camera, renderer, fbo) {
 	webGLRenderer.antialias = false;*/
 
 	//el.appendChild(webGLRenderer.domElement);
+	var _otherFbo;
+
 	var effects = {
 		bleach:new THREE.ShaderPass(SHADERS.bleach),
+		color:new THREE.ShaderPass(SHADERS.color),
+		brightness:new THREE.ShaderPass(SHADERS.brightness),
+		blend:new THREE.ShaderPass(SHADERS.blend),
+		convolution:new THREE.ShaderPass(SHADERS.convolution),
+		edge:new THREE.ShaderPass(SHADERS.edge),
+		fxxa:new THREE.ShaderPass(SHADERS.fxxa),
 		glitch:new THREE.ShaderPass(SHADERS.glitch),
 		copy:new THREE.ShaderPass(SHADERS.copy),
 		dot:new THREE.ShaderPass(SHADERS.dot),
@@ -34,12 +42,18 @@ var Effects = function(scene, camera, renderer, fbo) {
 	var effectCopy = new THREE.ShaderPass(SHADERS.copy);
 	effectCopy.renderToScreen = true;
 
+	effects.glitch['uniforms']['tDisp'].value = new THREE.ImageUtils.loadTexture('assets/img/hero.jpg');
+
 	var composer = new THREE.EffectComposer(renderer, fbo);
 	composer.addPass(renderPass);
-	//composer.addPass(effects.glitch);
+	composer.addPass(effects.blend);
+	composer.addPass(effects.color);
 	composer.addPass(effects.dot);
+	composer.addPass(effects.edge);
+	//composer.addPass(effects.fxxa);
 	composer.addPass(effects.kaleido);
 	composer.addPass(effects.bleach);
+	composer.addPass(effects.glitch);
 	composer.addPass(effects.copy);
 
 	/*function animate() {
@@ -47,8 +61,21 @@ var Effects = function(scene, camera, renderer, fbo) {
 		window.requestAnimationFrame(animate);
 	}*/
 
+	function _updateEffects(){
+		//effects.blend['uniforms']['tDiffuse1'].value = fbo;
+		if(_otherFbo){
+			effects.blend['uniforms']['tDiffuse2'].value = _otherFbo;
+		}
+	}
+
 	function render() {
 		composer.render();
+	}
+
+	function setOtherFbo(f){
+		_otherFbo = f;
+
+		_updateEffects();
 	}
 
 	function updateUniforms(uniforms){
@@ -64,6 +91,7 @@ var Effects = function(scene, camera, renderer, fbo) {
 
 	return {
 		updateUniforms:updateUniforms,
+		setOtherFbo:setOtherFbo,
 		render:render
 	}
 

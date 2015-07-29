@@ -191,6 +191,9 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 				map: texture2
 			}));
 
+			sceneA.fx.setOtherFbo(sceneB.fbo);
+			sceneB.fx.setOtherFbo(sceneA.fbo);
+
 			var d = SHADERS_LIB['mix']();
 			var shader = d['shader'];
 			var uniforms = d['uniforms'];

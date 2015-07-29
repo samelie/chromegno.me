@@ -35,6 +35,27 @@ module.exports = {
             fragmentShader:glslify('../../../glsl/mix.frag'),
             vertexShader:glslify('../../../glsl/basic.vert')
     },
+    'color' : {
+        uniforms: THREE.UniformsUtils.merge( [
+
+
+            {
+
+            "tDiffuse"     : { type: "t", value: null },
+
+            //color
+            "uSaturation": { type: "f", value: 1 },
+            "uContrast": { type: "f", value: 0 },
+            "uDesaturate": { type: "f", value: 0 },
+            "uBrightness": { type: "f", value: 0 },
+            "uHue": { type: "f", value: 0 }
+            }
+
+            ] ),
+            
+            fragmentShader:glslify('../../../glsl/color.frag'),
+            vertexShader:glslify('../../../glsl/basic.vert')
+        },
     'chroma' : {
         uniforms: THREE.UniformsUtils.merge( [
 
@@ -152,7 +173,14 @@ module.exports = {
                     vertexShader:glslify('../../../glsl/displacement.vert')
                 },
                 bleach:require('./shaders/BleachBypassShader'),
-                bokah:require('./shaders/BokehShader2'),
+                blend:require('./shaders/BlendShader'),
+                brightness:require('./shaders/BrightnessContrastShader'),
+                colorify:require('./shaders/ColorifyShader'),
+                hue:require('./shaders/HueSaturationShader'),
+                displacement:require('./shaders/NormalDisplacementShader'),
+                technicolor:require('./shaders/TechnicolorShader'),
+                tone:require('./shaders/ToneMapShader'),
+                bokah:require('./shaders/BokehShader2'), //bad
                 convolution:require('./shaders/ConvolutionShader'),
                 edge:require('./shaders/EdgeShader2'),
                 film:require('./shaders/FilmShader'),

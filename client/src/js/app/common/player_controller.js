@@ -99,7 +99,6 @@ var PlayerController = function() {
 					//console.log(videoElement.currentTime ,(playOffset - segDuration * .8), segDuration);
 					if (videoElement.currentTime >= (playOffset - segDuration * .8)) {
 						locked = true;
-						enterFrameCounter = 0;
 						var data = currentChapter[segmentIndex];
 						if (data) {
 							var clip = data['clip'];
@@ -112,31 +111,13 @@ var PlayerController = function() {
 						}
 					}
 				}
-				if (enterFrameCounter > (segDuration * 60 + 1000)) {
-					if (previousCurrentTime === videoElement.currentTime) {
-						//console.log("Skipping!", updatedStarted, locked, videoElement.currentTime > (playOffset - segDuration * .7));
-						console.log("Reseting!");
-						//resetMediasource();
-						/*skipCount++;
-	                        if (skipCount === 2) {
-	                            skipCount = 0;
-	                        } else {
-	                            videoElement.currentTime += 0.2;
-	                        }*/
-					}
-					enterFrameCounter = 0;
-				}
 			} else {
-				this.prototype.addRandomRange();
 				console.error("No More videos");
+				_onChapterComplete();
 			}
-		}
-		if (segmentIndex > totalSegments - 3) {
-			this.prototype.addRandomRange();
 		}
 
 		previousCurrentTime = videoElement.currentTime;
-		enterFrameCounter++;
 		requestId = window.requestAnimationFrame(boundUpdate);
 	}
 
@@ -245,6 +226,7 @@ var PlayerController = function() {
 		if(chapterIndex > _manifest.length -1){
 			chapterIndex = 0;
 		}
+		segmentIndex = 0;
 		currentChapter = _manifest[chapterIndex];
 		totalSegments = currentChapter.length;
 	}
