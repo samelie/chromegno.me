@@ -66,6 +66,14 @@ module.exports = {
 			max: 10
 		}
 	},
+	bit: {
+		enabled: false,
+		"bitSize": {
+			bitSize: 2.0,
+			min: 1.3,
+			max: 8
+		}
+	},
 	kaleido: {
 		enabled: false,
 		"sides": {

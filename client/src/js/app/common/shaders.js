@@ -153,6 +153,7 @@ module.exports = {
                 },
                 bleach:require('./shaders/BleachBypassShader'),
                 bokah:require('./shaders/BokehShader2'),
+                bit:require('./shaders/BitShader'),
                 convolution:require('./shaders/ConvolutionShader'),
                 edge:require('./shaders/EdgeShader2'),
                 film:require('./shaders/FilmShader'),

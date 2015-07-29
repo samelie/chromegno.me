@@ -22,6 +22,7 @@ var Effects = function(scene, camera, renderer, fbo) {
 		glitch: new THREE.ShaderPass(SHADERS.glitch),
 		copy: new THREE.ShaderPass(SHADERS.copy),
 		dot: new THREE.ShaderPass(SHADERS.dot),
+		bit: new THREE.ShaderPass(SHADERS.bit),
 		kaleido: new THREE.ShaderPass(SHADERS.kaleido)
 	};
 
@@ -40,6 +41,7 @@ var Effects = function(scene, camera, renderer, fbo) {
 	composer.addPass(effects.dot);
 	composer.addPass(effects.kaleido);
 	composer.addPass(effects.bleach);
+	composer.addPass(effects.bit);
 	composer.addPass(effects.copy);
 
 	/*function animate() {
