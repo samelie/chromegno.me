@@ -1,22 +1,19 @@
 'use strict';
+var TWEEN = require('tweenjs');
 var SHADERS = require('../common/shaders');
 var OPTIONS = require('../common/shader_options');
 var SETTINGS = require('../common/shader_settings');
 
 var Effects = function(scene, camera, renderer, fbo) {
 
-	//var scene = new THREE.Scene();
+	var updateCounter = 0;
+	var secondCounter = 0;
+	var currentEffectChapter = undefined;
+	var effectIndex = 0;
 
-	// create a camera, which defines where we're looking at.
-	//var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+	var changeEffects = undefined;
+	var currentEffectIndex = [];
 
-	/*var webGLRenderer = new THREE.WebGLRenderer();
-	webGLRenderer.setClearColor(new THREE.Color(0xaaaaff, 1.0));
-	webGLRenderer.setSize(window.innerWidth, window.innerHeight);
-	webGLRenderer.shadowMapEnabled = true;
-	webGLRenderer.antialias = false;*/
-
-	//el.appendChild(webGLRenderer.domElement);
 	var _otherFbo;
 
 	var effects = {
@@ -53,19 +50,15 @@ var Effects = function(scene, camera, renderer, fbo) {
 	composer.addPass(effects.pixelate);
 	composer.addPass(effects.bleach);
 	composer.addPass(effects.bit);
-	composer.addPass(effects.color);
-	/*composer.addPass(effects.dot);
+	composer.addPass(effects.dot);
 	composer.addPass(effects.edge);
-	*/
+	composer.addPass(effects.color);
 	composer.addPass(effects.kaleido);
 	composer.addPass(effects.twist);
 	composer.addPass(effects.rgbShift);
 	composer.addPass(effects.copy);
 
-	/*function animate() {
-		render();
-		window.requestAnimationFrame(animate);
-	}*/
+	changeEffects = [effects.bit, effects.pixelate, effects.bleach, effects.dot, effects.edge, effects.glitch, effects.kaleido, effects.twist, effects.rgbShift];
 
 	function _updateEffects() {
 		//effects.blend['uniforms']['tDiffuse1'].value = fbo;
@@ -74,13 +67,54 @@ var Effects = function(scene, camera, renderer, fbo) {
 		}
 	}
 
+	function _checkCurrentEffect() {
+		var currentEffect = currentEffectChapter[effectIndex];
+		if (secondCounter >= currentEffect[0]) {
+			effectIndex++;
+			_onNewEffect();
+		}
+	}
+
+	function _onNewEffect() {
+		var currentEffect = currentEffectChapter[effectIndex];
+		currentEffectIndex = [];
+		var i = 0;
+		for (i; i < currentEffect[1]; i++) {
+			var ran = Math.floor(Math.random() * changeEffects.length)
+			while (currentEffectIndex.indexOf(ran) !== -1) {
+				ran = Math.floor(Math.random() * changeEffects.length);
+			}
+			currentEffectIndex.push(ran);
+		}
+		_tweenDownEffects(currentEffectIndex.splice(0,2));
+		i = 0;
+		for (i; i < currentEffect[1]; i++) {}
+	}
+
+	function _tweenDownEffects(indexs) {
+		for (var i = 0; i < indexs.length; i++) {
+			var effect = changeEffects[indexs[i]];
+			var name;
+			for(var k in effect){
+				name = k;
+			}
+			var option = OPTIONS[name];
+			//TWEEN DOWN TO MIN VALUE THEN DISABLE
+		}
+	}
+
 	function render() {
+		updateCounter++;
+		if (updateCounter % 60 === 0) {
+			secondCounter++;
+			_onNewEffect();
+			updateCounter = 0;
+		}
 		composer.render();
 	}
 
 	function setOtherFbo(f) {
 		_otherFbo = f;
-
 		_updateEffects();
 	}
 
@@ -97,7 +131,13 @@ var Effects = function(scene, camera, renderer, fbo) {
 		});
 	}
 
+	function setEffectsManifest(manifest) {
+		currentEffectChapter = manifest.shift();
+		_onNewEffect();
+	}
+
 	return {
+		setEffectsManifest: setEffectsManifest,
 		updateUniforms: updateUniforms,
 		setOtherFbo: setOtherFbo,
 		render: render

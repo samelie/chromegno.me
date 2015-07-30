@@ -60,6 +60,9 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			App.reqres.request('reqres:manifest').then(function(manifest) {
 				this.manifest = this.timeline.start(manifest);
 				this.setupPlayer();
+				App.reqres.request('reqres:effects').then(function(effects) {
+					this.setupEffects(effects);
+				}.bind(this)).done();
 			}.bind(this)).done();
 		},
 		setupPlayer: function() {
@@ -104,7 +107,6 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 					b['uniforms'] = obj;
 					b['shader'] = key;
 					if (_.isObject(v)) {
-						console.log(v);
 						_.forIn(v, function(vv, kk) {
 							if (kk === k) {
 								f.add(v, k, v['min'], v['max']).onChange(function(val) {
@@ -265,6 +267,10 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			window.addEventListener('resize', this.onWindowResize.bind(this), false);
 
 			this.onWindowResize();
+		},
+		setupEffects:function(manifest){
+			sceneA.setEffectsManifest(manifest.splice(0,4));
+			sceneB.setEffectsManifest(manifest.splice(0,4));
 		},
 		onWindowResize: function() {
 			var w = window.innerWidth;

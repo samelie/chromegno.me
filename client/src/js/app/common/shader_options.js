@@ -17,6 +17,9 @@ module.exports = {
 		brightness: 0.01,
 		contrast: 0.01
 	},
+	edge: {
+		enabled: false,
+	},
 	copy: {
 		enabled: true,
 	},

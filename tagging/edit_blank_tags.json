@@ -16,7 +16,7 @@
             "chapter": "0",
             "index": "2",
             "skip": false,
-            "tag": "cathedrals"
+            "tag": "cathedrals monument"
         },
         {
             "chapter": "0",
@@ -34,7 +34,7 @@
             "chapter": "0",
             "index": "5",
             "skip": true,
-            "tag": "tunnel"
+            "tag": "tunnel underground"
         },
         {
             "chapter": "0",
@@ -126,7 +126,7 @@
             "chapter": "1",
             "index": "12",
             "skip": true,
-            "tag": "pagan"
+            "tag": "druid celts"
         },
         {
             "chapter": "1",
@@ -174,7 +174,7 @@
             "chapter": "1",
             "index": "20",
             "skip": true,
-            "tag": "4am"
+            "tag": "4am drunk"
         },
         {
             "chapter": "1",

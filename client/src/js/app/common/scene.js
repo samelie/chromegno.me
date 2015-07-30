@@ -60,12 +60,17 @@ var Scene = function(renderer, clearColor, cameraZ) {
 		fx.updateUniforms(uniforms);
 	}
 
+	function setEffectsManifest(manifest){
+		fx.setEffectsManifest(manifest);
+	}
+
 	return {
 		resize: resize,
 		render: render,
 		fx: fx,
 		fbo: fbo,
 		updateUniforms: updateUniforms,
+		setEffectsManifest: setEffectsManifest,
 		createPlane: createPlane
 	}
 };

@@ -55,12 +55,16 @@ var PlayerController = function() {
 	}
 
 	function _onSourceOpen(e) {
+		_newSourceBuffer();
+		starting = false;
+		console.log("source open");
+	}
+
+	function _newSourceBuffer() {
 		mediaSource.removeEventListener('sourceopen', _onSourceOpen);
 		sourceBuffer = mediaSource.addSourceBuffer('video/mp4; codecs="avc1.42c01e"');
 		sourceBuffer.addEventListener('updatestart', onBufferUpdateStart);
 		sourceBuffer.addEventListener('updateend', onBufferUpdateEnd);
-		starting = false;
-		console.log("source open");
 	}
 
 	////-----------------
@@ -86,7 +90,7 @@ var PlayerController = function() {
 		sourceBuffer.addEventListener('updateend', onBufferUpdateEnd);*/
 		updatedStarted = false;
 		locked = false;
-	}	
+	}
 
 	////-----------------
 	//UPDATE
@@ -127,7 +131,7 @@ var PlayerController = function() {
 
 	function playSegment(data) {
 		var self = this;
-		var url = 'assets/videos/'+data['relPath'];
+		var url = 'assets/videos/' + data['relPath'];
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', url);
 		xhr.setRequestHeader("Range", "bytes=" + data['mediaRange']);
@@ -144,7 +148,17 @@ var PlayerController = function() {
 					off = sourceBuffer.buffered.end(sourceBuffer.buffered.length - 1);
 				}
 				console.log(mediaSource.readyState);
-				sourceBuffer.timestampOffset = off || 0;
+				console.log(sourceBuffer.updating, off);
+				console.log(segResp.length);
+
+				function _trySettingOffset() {
+					try {
+						sourceBuffer.timestampOffset = off || 0;
+						initialRequest(data, __addInit);
+					} catch (e) {
+						resetMediasource();
+					}
+				}
 
 				function __addInit(initRes) {
 					sourceBuffer.removeEventListener('updateend', onBufferUpdateEnd);
@@ -168,14 +182,14 @@ var PlayerController = function() {
 						}*/
 					}
 				}
-				initialRequest(data, __addInit);
+				_trySettingOffset();
 			}
 		}, false);
 	}
 
 
 	function initialRequest(data, callback) {
-		var url = 'assets/videos/'+data['relPath'];
+		var url = 'assets/videos/' + data['relPath'];
 		var xhr = new XMLHttpRequest();
 		var range = "bytes=0-" + (data['firstOffset'] - 1);
 		xhr.open('GET', url);
@@ -185,7 +199,6 @@ var PlayerController = function() {
 		try {
 			xhr.addEventListener("readystatechange", function() {
 				if (xhr.readyState == xhr.DONE) { // wait for video to load
-					while(updatedStarted){}
 					callback(new Uint8Array(xhr.response));
 				}
 			}, false);
@@ -196,7 +209,7 @@ var PlayerController = function() {
 
 	//crash
 	function resetMediasource() {
-		window.cancelAnimationFrame(requestId);
+		console.error("RESETING");
 		sourceBuffer.removeEventListener('updateend', onBufferUpdateEnd);
 		sourceBuffer.removeEventListener('updatestart', onBufferUpdateStart);
 		mediaSource.removeSourceBuffer(sourceBuffer);
@@ -208,25 +221,12 @@ var PlayerController = function() {
 		videoElement.play();
 		videoElement.currentTime = 0;
 		segDuration = playOffset = 0;
-		//init();
-		/*sourceBuffer.addEventListener('updateend', __onDurationSet);
-        var duration = mediaSource.duration;
-
-        function __onDurationSet(e) {
-            sourceBuffer.removeEventListener('updateend', __onDurationSet);
-            sourceBuffer.addEventListener('updateend', onBufferUpdateEnd);
-            sourceBuffer.timestampOffset = 0;
-            sourceBuffer.remove(0, duration);
-            videoElement.currentTime = 0;
-            segDuration = playOffset = 0;
-            console.log("ZEROED");
-        }*/
-
+		init(videoElement);
 	}
 
-	function _onChapterComplete(){
+	function _onChapterComplete() {
 		chapterIndex++;
-		if(chapterIndex > _manifest.length -1){
+		if (chapterIndex > _manifest.length - 1) {
 			chapterIndex = 0;
 		}
 		segmentIndex = 0;
@@ -241,7 +241,7 @@ var PlayerController = function() {
 		onNewVo = callback;
 	}
 
-	function setEntireManifest(manifest){
+	function setEntireManifest(manifest) {
 		_manifest = manifest;
 		currentChapter = _manifest[chapterIndex];
 		totalSegments = currentChapter.length;

@@ -5,6 +5,7 @@ var NOISE = require('./noise');
 var CHAPTER_DURATION = 45; //mins
 var MAX_EFFECT_DURATION = 360 //seconds;
 var MIN_EFFECT_DURATION = 60 //seconds;
+var MAX_SIMULTANEOUS_EFFECTS = 6; //seconds;
 
 var choices = [];
 var SCREENS = 2;
@@ -41,7 +42,18 @@ function _buildRoutes(routes, chapterIndex) {
 			var total = MAX_EFFECT_DURATION;
 			var factor = NOISE.getVal(i+Math.floor(Math.random()*1000));
 			var v = Math.floor(_map(factor, 0, 1, MIN_EFFECT_DURATION, MAX_EFFECT_DURATION));
-			route.push(v)
+			var numEffects;
+			switch(chapterIndex){
+				case 0:
+				case 3:
+					numEffects = Math.ceil(Math.random() * Math.round(MAX_SIMULTANEOUS_EFFECTS*.5));
+				break;
+				case 1:
+				case 2:
+					numEffects = Math.ceil(Math.random() * MAX_SIMULTANEOUS_EFFECTS);
+				break;
+			}
+			route.push([v,numEffects])
 			totalDuration += v;
 		}
 		manifest.push(route);
