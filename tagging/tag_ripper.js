@@ -119,32 +119,43 @@ var RIPPER = (function() {
 
 	function _createFolders(data) {
 		var assetPath = path.join(process.cwd(), 'assets/youtube');
-		console.log(assetPath);
-		rimraf(assetPath, __onFolderDeleted);
+		var skips = [];
+		_.each(data, function(chapter) {
+			skips = skips.concat(_.where(chapter, {
+				skip: true
+			}));
+		});
 
-		function __onFolderDeleted() {
+		
+		console.log(skips);
 
-			fs.mkdirSync(assetPath);
-
-			_.each(data, function(chapter, index) {
-				var chapterPath = path.join(assetPath, index.toString());
-				fs.mkdirSync(chapterPath);
-				_.each(chapter, function(clip, i) {
-					var clipPath = path.join(chapterPath, i.toString());
-					fs.mkdirSync(clipPath);
-					clip['dir'] = clipPath;
-				});
-			});
-
-			_readTagJson();
-			_prepData(data);
-			//_callback(data);
+		/*function __onFolderDeleted(clipPath) {
+			fs.mkdirSync(clipPath);
+			clip['dir'] = clipPath;
 		}
+
+		if (!fs.existsSync(assetPath)) {
+			fs.mkdirSync(assetPath);
+		}
+
+		_.each(data, function(chapter, index) {
+			var chapterPath = path.join(assetPath, index.toString());
+			if (!fs.existsSync(chapterPath)) {
+				fs.mkdirSync(chapterPath);
+			}
+			_.each(chapter, function(clip, i) {
+				var clipPath = path.join(chapterPath, i.toString());
+				if (!clip['skip']) {
+					rimraf(clipPath, __onFolderDeleted, clipPath);
+				}
+			});
+		});
+
+		_prepData(data);*/
+		//_callback(data);
+		//}
 	}
 
-	function _readTagJson(data) {
-
-	}
 	//-----------------------
 	//QUERY
 	//-----------------------
@@ -157,7 +168,7 @@ var RIPPER = (function() {
 		});
 
 		_startYoutube(clips).then(function(r) {
-			_.each(clips,function(clip){
+			_.each(clips, function(clip) {
 				delete clip['youtubeResults'];
 			})
 			//console.log(clips);
@@ -382,6 +393,7 @@ var RIPPER = (function() {
 
 		//clip has querys
 		console.log(clips.length);
+
 		function __ripClip() {
 			var clip = clips[clipIndex];
 			console.log(clip);
@@ -412,6 +424,7 @@ var RIPPER = (function() {
 		var videoIndex = 0;
 
 		console.log(vos.length);
+
 		function __ripVideo(vo) {
 			if (!vo) {
 				callback();
@@ -441,12 +454,12 @@ var RIPPER = (function() {
 				.on('error', function(err) {
 					console.log('An error occurred: ' + err.message);
 					vo['savePath'] = "";
-					videoIndex+=1;
+					videoIndex += 1;
 					__ripVideo(vos[videoIndex]);
 				})
 				.on('end', function() {
 					vo['savePath'] = p;
-					videoIndex+=1;
+					videoIndex += 1;
 					__ripVideo(vos[videoIndex]);
 				})
 				.run();

@@ -104,6 +104,7 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 					b['uniforms'] = obj;
 					b['shader'] = key;
 					if (_.isObject(v)) {
+						console.log(v);
 						_.forIn(v, function(vv, kk) {
 							if (kk === k) {
 								f.add(v, k, v['min'], v['max']).onChange(function(val) {
@@ -111,7 +112,7 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 								}.bind(b));
 							}
 						});
-					} else {
+					} else if(typeof v === 'boolean'){
 						f.add(obj, k).onChange(function(val) {
 							sceneA.updateUniforms(this);
 						}.bind(b));

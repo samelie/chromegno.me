@@ -3,41 +3,49 @@
         {
             "chapter": "0",
             "index": "0",
+            "skip": true,
             "tag": "planes takeoff"
         },
         {
             "chapter": "0",
             "index": "1",
+            "skip": true,
             "tag": "urban brick"
         },
         {
             "chapter": "0",
             "index": "2",
+            "skip": false,
             "tag": "cathedrals"
         },
         {
             "chapter": "0",
             "index": "3",
+            "skip": true,
             "tag": "street art"
         },
         {
             "chapter": "0",
             "index": "4",
+            "skip": true,
             "tag": "canal sunset"
         },
         {
             "chapter": "0",
             "index": "5",
+            "skip": true,
             "tag": "tunnel"
         },
         {
             "chapter": "0",
             "index": "6",
+            "skip": true,
             "tag": "boat party river"
         },
         {
             "chapter": "0",
             "index": "7",
+            "skip": true,
             "tag": "cycling sunset"
         }
     ],
@@ -45,146 +53,175 @@
         {
             "chapter": "1",
             "index": "0",
+            "skip": true,
             "tag": "bus trip countryside"
         },
         {
             "chapter": "1",
             "index": "1",
+            "skip": true,
             "tag": "rural town europe"
         },
         {
             "chapter": "1",
             "index": "2",
+            "skip": true,
             "tag": "country town old"
         },
         {
             "chapter": "1",
             "index": "3",
+            "skip": true,
             "tag": "motel night bar"
         },
         {
             "chapter": "1",
             "index": "4",
+            "skip": true,
             "tag": "drunk night forest"
         },
         {
             "chapter": "1",
             "index": "5",
+            "skip": true,
             "tag": "driving fast narrow countryside"
         },
         {
             "chapter": "1",
             "index": "6",
+            "skip": true,
             "tag": "farm animals funny"
         },
         {
             "chapter": "1",
             "index": "7",
+            "skip": true,
             "tag": "nature program"
         },
         {
             "chapter": "1",
             "index": "8",
+            "skip": true,
             "tag": "festival setup"
         },
         {
             "chapter": "1",
             "index": "9",
+            "skip": true,
             "tag": "Transylvania"
         },
         {
             "chapter": "1",
             "index": "10",
+            "skip": true,
             "tag": "old castles"
         },
         {
             "chapter": "1",
             "index": "11",
+            "skip": true,
             "tag": "old archives"
         },
         {
             "chapter": "1",
             "index": "12",
+            "skip": true,
             "tag": "pagan"
         },
         {
             "chapter": "1",
             "index": "13",
+            "skip": true,
             "tag": "fire rituals"
         },
         {
             "chapter": "1",
             "index": "14",
+            "skip": true,
             "tag": "folk dancing"
         },
         {
             "chapter": "1",
             "index": "15",
+            "skip": true,
             "tag": "clouds"
         },
         {
             "chapter": "1",
             "index": "16",
+            "skip": true,
             "tag": "haze"
         },
         {
             "chapter": "1",
             "index": "17",
+            "skip": true,
             "tag": "old people"
         },
         {
             "chapter": "1",
             "index": "18",
+            "skip": true,
             "tag": "fire"
         },
         {
             "chapter": "1",
             "index": "19",
+            "skip": true,
             "tag": "rain"
         },
         {
             "chapter": "1",
             "index": "20",
+            "skip": true,
             "tag": "4am"
         },
         {
             "chapter": "1",
             "index": "21",
+            "skip": true,
             "tag": "stumbling drunk"
         },
         {
             "chapter": "1",
             "index": "22",
+            "skip": true,
             "tag": "shrines"
         },
         {
             "chapter": "1",
             "index": "23",
+            "skip": true,
             "tag": "helping dogs"
         },
         {
             "chapter": "1",
             "index": "24",
+            "skip": true,
             "tag": "campsite best"
         },
         {
             "chapter": "1",
             "index": "25",
+            "skip": true,
             "tag": "close up faces"
         },
         {
             "chapter": "1",
             "index": "26",
+            "skip": true,
             "tag": "chanting shaman"
         },
         {
             "chapter": "1",
             "index": "27",
+            "skip": true,
             "tag": "earth worms"
         },
         {
             "chapter": "1",
             "index": "28",
+            "skip": true,
             "tag": "departure"
         }
     ],
@@ -192,141 +229,169 @@
         {
             "chapter": "2",
             "index": "0",
+            "skip": true,
             "tag": "city cabs"
         },
         {
             "chapter": "2",
             "index": "1",
+            "skip": true,
             "tag": "open roads"
         },
         {
             "chapter": "2",
             "index": "2",
+            "skip": true,
             "tag": "villa mountains"
         },
         {
             "chapter": "2",
             "index": "3",
+            "skip": true,
             "tag": "pool side"
         },
         {
             "chapter": "2",
             "index": "4",
+            "skip": true,
             "tag": "cribs"
         },
         {
             "chapter": "2",
             "index": "5",
+            "skip": true,
             "tag": "snakes grass"
         },
         {
             "chapter": "2",
             "index": "6",
+            "skip": true,
             "tag": "fish"
         },
         {
             "chapter": "2",
             "index": "7",
+            "skip": true,
             "tag": "city scapes dusk"
         },
         {
             "chapter": "2",
             "index": "8",
+            "skip": true,
             "tag": "go kart"
         },
         {
             "chapter": "2",
             "index": "9",
+            "skip": true,
             "tag": "funny looking dogs"
         },
         {
             "chapter": "2",
             "index": "10",
+            "skip": true,
             "tag": "beach bar"
         },
         {
             "chapter": "2",
             "index": "11",
+            "skip": true,
             "tag": "river delta"
         },
         {
             "chapter": "2",
             "index": "12",
+            "skip": true,
             "tag": "fertile land"
         },
         {
             "chapter": "2",
             "index": "13",
+            "skip": true,
             "tag": "sunny beaches"
         },
         {
             "chapter": "2",
             "index": "14",
+            "skip": true,
             "tag": "vacation seaside"
         },
         {
             "chapter": "2",
             "index": "15",
+            "skip": true,
             "tag": "fancy boats"
         },
         {
             "chapter": "2",
             "index": "16",
+            "skip": true,
             "tag": "water sports"
         },
         {
             "chapter": "2",
             "index": "17",
+            "skip": true,
             "tag": "adults learning to swim"
         },
         {
             "chapter": "2",
             "index": "18",
+            "skip": true,
             "tag": "synchronised swimming"
         },
         {
             "chapter": "2",
             "index": "19",
+            "skip": true,
             "tag": "expensive restaurants"
         },
         {
             "chapter": "2",
             "index": "20",
+            "skip": true,
             "tag": "spending money"
         },
         {
             "chapter": "2",
             "index": "21",
+            "skip": true,
             "tag": "kingpin"
         },
         {
             "chapter": "2",
             "index": "22",
+            "skip": true,
             "tag": "empty court"
         },
         {
             "chapter": "2",
             "index": "23",
+            "skip": true,
             "tag": "fighting over food"
         },
         {
             "chapter": "2",
             "index": "24",
+            "skip": true,
             "tag": "sports day park"
         },
         {
             "chapter": "2",
             "index": "25",
+            "skip": true,
             "tag": "animals falling asleep"
         },
         {
             "chapter": "2",
             "index": "26",
+            "skip": true,
             "tag": "outer space"
         },
         {
             "chapter": "2",
             "index": "27",
+            "skip": true,
             "tag": "star scapes"
         }
     ],
@@ -334,61 +399,73 @@
         {
             "chapter": "3",
             "index": "0",
+            "skip": true,
             "tag": "cove"
         },
         {
             "chapter": "3",
             "index": "1",
+            "skip": true,
             "tag": "hunting underwater"
         },
         {
             "chapter": "3",
             "index": "2",
+            "skip": true,
             "tag": "outside spitroast"
         },
         {
             "chapter": "3",
             "index": "3",
+            "skip": true,
             "tag": "visualizations"
         },
         {
             "chapter": "3",
             "index": "4",
+            "skip": true,
             "tag": "clubbing"
         },
         {
             "chapter": "3",
             "index": "5",
+            "skip": true,
             "tag": "lazers bass dancing"
         },
         {
             "chapter": "3",
             "index": "6",
+            "skip": true,
             "tag": "tribal masks"
         },
         {
             "chapter": "3",
             "index": "7",
+            "skip": true,
             "tag": "comedown"
         },
         {
             "chapter": "3",
             "index": "8",
+            "skip": true,
             "tag": "people passed out"
         },
         {
             "chapter": "3",
             "index": "9",
+            "skip": true,
             "tag": "sardines"
         },
         {
             "chapter": "3",
             "index": "10",
+            "skip": true,
             "tag": "wanker"
         },
         {
             "chapter": "3",
             "index": "11",
+            "skip": true,
             "tag": "bitch slap"
         }
     ]

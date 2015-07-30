@@ -21,6 +21,7 @@ var Effects = function(scene, camera, renderer, fbo) {
 
 	var effects = {
 		bit: new THREE.ShaderPass(SHADERS.bit),
+		pixelate: new THREE.ShaderPass(SHADERS.pixelate),
 		bleach: new THREE.ShaderPass(SHADERS.bleach),
 		blend: new THREE.ShaderPass(SHADERS.blend),
 		color: new THREE.ShaderPass(SHADERS.color),
@@ -28,7 +29,9 @@ var Effects = function(scene, camera, renderer, fbo) {
 		dot: new THREE.ShaderPass(SHADERS.dot),
 		edge: new THREE.ShaderPass(SHADERS.edge),
 		glitch: new THREE.ShaderPass(SHADERS.glitch),
-		kaleido: new THREE.ShaderPass(SHADERS.kaleido)
+		kaleido: new THREE.ShaderPass(SHADERS.kaleido),
+		twist: new THREE.ShaderPass(SHADERS.twist),
+		rgbShift: new THREE.ShaderPass(SHADERS.rgbShift)
 	};
 
 
@@ -47,6 +50,7 @@ var Effects = function(scene, camera, renderer, fbo) {
 	var composer = new THREE.EffectComposer(renderer, fbo);
 	composer.addPass(renderPass);
 	//composer.addPass(effects.blend);
+	composer.addPass(effects.pixelate);
 	composer.addPass(effects.bleach);
 	composer.addPass(effects.bit);
 	composer.addPass(effects.color);
@@ -54,6 +58,8 @@ var Effects = function(scene, camera, renderer, fbo) {
 	composer.addPass(effects.edge);
 	*/
 	composer.addPass(effects.kaleido);
+	composer.addPass(effects.twist);
+	composer.addPass(effects.rgbShift);
 	composer.addPass(effects.copy);
 
 	/*function animate() {

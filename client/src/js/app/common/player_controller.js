@@ -143,6 +143,7 @@ var PlayerController = function() {
 				if (sourceBuffer.buffered.length > 0) {
 					off = sourceBuffer.buffered.end(sourceBuffer.buffered.length - 1);
 				}
+				console.log(mediaSource.readyState);
 				sourceBuffer.timestampOffset = off || 0;
 
 				function __addInit(initRes) {
@@ -157,8 +158,9 @@ var PlayerController = function() {
 						sourceBuffer.addEventListener('updateend', onBufferUpdateEnd);
 						//var ts = sourceBuffer.timestampOffset - data['startTimeSec'];
 						//sourceBuffer.timestampOffset = ts;
-						sourceBuffer.appendBuffer(segResp);
 						console.log(segmentIndex, '/', totalSegments);
+						console.log(mediaSource.readyState);
+						sourceBuffer.appendBuffer(segResp);
 						segmentIndex++;
 
 						/*if (onNewVo) {
@@ -183,6 +185,7 @@ var PlayerController = function() {
 		try {
 			xhr.addEventListener("readystatechange", function() {
 				if (xhr.readyState == xhr.DONE) { // wait for video to load
+					while(updatedStarted){}
 					callback(new Uint8Array(xhr.response));
 				}
 			}, false);

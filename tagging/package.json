@@ -16,6 +16,7 @@
 		"dotenv": "1.1.0",
 		"node-uuid":"latest",
 		"colors":"latest",
+		"commander":"latest",
 		"fluent-ffmpeg":"latest"
 	}
 }

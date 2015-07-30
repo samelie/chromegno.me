@@ -172,8 +172,39 @@ module.exports = {
                     fragmentShader:glslify('../../../glsl/cave.frag'),
                     vertexShader:glslify('../../../glsl/displacement.vert')
                 },
+                'twist' : {
+                uniforms: THREE.UniformsUtils.merge( [
+
+                        {
+                        "tDiffuse": { type: "t", value: null },
+                        "radius":    { type: "f", value: Math.PI },
+                        "angle":    { type: "f", value: 1.0 }
+                        }
+
+                    ] ),
+                    
+                    fragmentShader:glslify('../../../glsl/twist.frag'),
+                    vertexShader:glslify('../../../glsl/basic.vert')
+                },
+                 'rgbShift' : {
+                uniforms: THREE.UniformsUtils.merge( [
+
+                        {
+                        "tDiffuse": { type: "t", value: null },
+                        "tSize"    : { type: "v2", value: new THREE.Vector2( 128, 128 ) },
+                        "uRed":    { type: "i", value: 1 },
+                        "uGreen":    { type: "i", value: 1 },
+                        "uBlue":    { type: "i", value: 1 }
+                        }
+
+                    ] ),
+                    
+                    fragmentShader:glslify('../../../glsl/rgbShift.frag'),
+                    vertexShader:glslify('../../../glsl/basic.vert')
+                },
                 bleach:require('./shaders/BleachBypassShader'),
                 bit:require('./shaders/BitShader'),
+                pixelate:require('./shaders/PixelateShader'),
                 blend:require('./shaders/BlendShader'),
                 brightness:require('./shaders/BrightnessContrastShader'),
                 colorify:require('./shaders/ColorifyShader'),

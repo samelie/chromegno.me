@@ -20,6 +20,19 @@ module.exports = {
 	copy: {
 		enabled: true,
 	},
+	pixelate: {
+		enabled: false,
+		xAmount: {
+			xAmount: 0.01,
+			min: 0,
+			max: 1
+		},
+		yAmount: {
+			yAmount: 0.01,
+			min: 0,
+			max: 1
+		}
+	},
 	color: {
 		enabled: false,
 		uSaturation: {
@@ -116,13 +129,44 @@ module.exports = {
 		enabled: false,
 		"sides": {
 			sides: 0.01,
-			min: 0,
-			max: 10
+			min: 0.01,
+			max: 32
 		},
 		"angle": {
 			angle: 0.01,
 			min: 0,
 			max: Math.PI * 2
+		}
+	},
+	twist: {
+		enabled: false,
+		"radius": {
+			radius: 0.141,
+			min: 0.065,
+			max: 0.42
+		},
+		"angle": {
+			angle: 0.01,
+			min: -Math.PI * .5,
+			max: Math.PI * .5
+		}
+	},
+	rgbShift: {
+		enabled: false,
+		"uRed": {
+			uRed: 1,
+			min: 1,
+			max: 32
+		},
+		"uGreen": {
+			uGreen: 1,
+			min: 1,
+			max: 32
+		},
+		"uBue": {
+			uBue: 1,
+			min: 1,
+			max: 32
 		}
 	}
 };
