@@ -8,6 +8,7 @@ var EFFECT_FPS = 2;
 
 var Effects = function(scene, camera, renderer, fbo, name) {
 
+	var smallCounter = 0;
 	var updateCounter = 0;
 	var fpsCounter = 0;
 	var secondCounter = 0;
@@ -55,16 +56,16 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	var composer = new THREE.EffectComposer(renderer, fbo);
 	composer.addPass(renderPass);
 	//composer.addPass(effects.blend);
+	//composer.addPass(effects.dot);
 	composer.addPass(effects.rgb);
 	composer.addPass(effects.pixelate);
 	composer.addPass(effects.bleach);
 	composer.addPass(effects.bit);
-	composer.addPass(effects.dot);
-	composer.addPass(effects.edge);
+	//composer.addPass(effects.edge);
 	composer.addPass(effects.color);
-	composer.addPass(effects.kaleido);
-	composer.addPass(effects.twist);
-	composer.addPass(effects.rgbShift);
+	//composer.addPass(effects.kaleido);
+	//composer.addPass(effects.twist);
+	//composer.addPass(effects.rgbShift);
 	composer.addPass(effects.copy);
 
 	changeEffects = [
@@ -72,12 +73,12 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 		[effects.bit, 'bit'],
 		[effects.pixelate, 'pixelate'],
 		[effects.bleach, 'bleach'],
-		[effects.dot, 'dot'],
-		[effects.edge, 'edge'],
-		[effects.glitch, 'glitch'],
-		[effects.kaleido, 'kaleido'],
-		[effects.twist, 'twist'],
-		[effects.rgbShift, 'rgbShift']
+		//[effects.dot, 'dot'],
+		//[effects.edge, 'edge'],
+		//[effects.glitch, 'glitch'],
+		//[effects.kaleido, 'kaleido']
+		//[effects.twist, 'twist'],
+		//[effects.rgbShift, 'rgbShift']
 	];
 
 	function _updateEffects() {
@@ -90,6 +91,7 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	function _checkCurrentEffect() {
 		var currentEffect = currentEffectChapter[effectIndex];
 		if (secondCounter >= currentEffect[0]) {
+			secondCounter = 0;
 			effectIndex++;
 			_onNewEffect();
 		}
@@ -97,24 +99,23 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 
 	function _onNewEffect() {
 		currentEffectController = currentEffectChapter[effectIndex];
-		currentEffectIndexs = [];
 		randomOffsets = [];
 		var i = 0;
-		for (i; i < currentEffectController[1]; i++) {
+		var l = currentEffectIndexs.length;
+		for (i; i < l; i++) {
+			_disableEffect(currentEffectIndexs[i]);
+		}
+		i = 0;
+		l = currentEffectController[1];
+		currentEffectIndexs = [];
+		for (i; i < l; i++) {
 			var ran = Math.floor(Math.random() * changeEffects.length)
 			while (currentEffectIndexs.indexOf(ran) !== -1) {
 				ran = Math.floor(Math.random() * changeEffects.length);
 			}
-			ran = i;
 			_enableEffect(ran);
 			currentEffectIndexs.push(ran);
 		}
-		/*_tweenDownEffects(currentEffectIndexs.splice(0,
-			2));
-		i = 0;
-		for (i; i < currentEffectController[1]; i++) {
-
-		}*/
 	}
 
 	function _enableEffect(index) {
@@ -125,23 +126,36 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 		for (var k in option) {
 			var val = option[k];
 			if (typeof val === 'object') {
-				maxValues[changeEffects[index][1]].push([k, val['max']]);
-				randomOffsets.push(Math.floor(Math.random() * 1000));
+				if (val['enabled']) {
+					maxValues[changeEffects[index][1]].push([k, val['max'], val['min']]);
+					randomOffsets.push(Math.floor(Math.random() * 1000));
+				}
 			}
 		}
 	}
 
-	function _tweenDownEffects(indexs) {
-		for (var i = 0; i < indexs.length; i++) {
-			var effect = changeEffects[indexs[i]][0];
-			var name;
-			for (var k in effect) {
-				name = k;
+	function _disableEffect(index) {
+		var effect = changeEffects[index][0];
+		var option = OPTIONS[changeEffects[index][1]];
+		var obj = Object.create(null);
+		for (var k in option) {
+			var val = option[k];
+			if (typeof val === 'object') {
+				if (val['enabled']) {
+					obj[k] = Object.create(null);
+					obj[k].value = val['min'];
+				}
 			}
-			var option = OPTIONS[name];
-			//TWEEN DOWN TO MIN VALUE THEN DISABLE
 		}
+		new TWEEN.Tween(effect['uniforms'])
+			.to(obj, 2000)
+			.easing(TWEEN.Easing.Cubic.Out)
+			.onComplete(function() {
+				effect.enabled = false;
+			})
+			.start();
 	}
+
 
 	function _changeEffectValues() {
 		if (!currentEffectController) {
@@ -161,10 +175,13 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 			for (i2; i2 < l2; i2++) {
 				var seed = randomOffsets[i2 + previousL];
 				var max = values[i2][1];
-				var cos = Math.cos((fpsCounter) * factor);
-				effect['uniforms'][values[i2][0]].value = cos * max;
+				var min = values[i2][2];
+				var cos = Math.abs(Math.cos((smallCounter + seed) * factor));
+				var val = _map(cos, 0, 1, min, max);
+				effect['uniforms'][values[i2][0]].value = val;
 				if (i2 === 0 && name === 'two') {
-					console.log(cos);
+					//console.log(cos);
+					//console.log(smallCounter);
 					//console.log(effect['uniforms'][values[i2][0]].value);
 				}
 			}
@@ -172,15 +189,14 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	}
 
 	function render() {
+		smallCounter += 0.001;
 		updateCounter++;
-		if (updateCounter % EFFECT_FPS === 0) {
-			fpsCounter++;
-			if (updateCounter % 60 === 0) {
-				secondCounter++;
-				_checkCurrentEffect();
-			}
-			_changeEffectValues();
+		if (updateCounter % 60 === 0) {
+			secondCounter++;
+			_checkCurrentEffect();
 		}
+		_changeEffectValues();
+		TWEEN.update();
 		composer.render();
 	}
 
@@ -205,6 +221,10 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	function setEffectsManifest(manifest) {
 		currentEffectChapter = manifest.shift();
 		_onNewEffect();
+	}
+
+	function _map(v, a, b, x, y) {
+		return (v === a) ? x : (v - a) * (y - x) / (b - a) + x;
 	}
 
 	return {

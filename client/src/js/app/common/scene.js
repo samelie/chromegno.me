@@ -40,7 +40,7 @@ var Scene = function(renderer, clearColor, cameraZ, name) {
 	}
 
 	function createPlane(w, h, material) {
-		var geometry = new THREE.PlaneGeometry(1280, 720, 4, 4);
+		var geometry = new THREE.PlaneGeometry(1280, 720, 256, 144);
 		geometry.center();
 		_mesh = new THREE.Mesh(geometry, material);
 		//_mesh.position.z = -200;

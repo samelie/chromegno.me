@@ -453,6 +453,7 @@ var RIPPER = (function() {
 				})
 				.on('error', function(err) {
 					console.log('An error occurred: ' + err.message);
+					fs.unlinkSync(p);
 					vo['savePath'] = "";
 					videoIndex+=1;
 					__ripVideo(vos[videoIndex]);

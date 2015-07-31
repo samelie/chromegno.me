@@ -108,7 +108,6 @@ var PlayerController = function() {
 							var clip = data['clip'];
 							playOffset += clip['duration'];
 							segDuration = clip['duration'];
-							console.warn(segDuration)
 							playSegment(clip);
 						} else {
 							console.log('No more at', segmentIndex);
@@ -147,9 +146,6 @@ var PlayerController = function() {
 				if (sourceBuffer.buffered.length > 0) {
 					off = sourceBuffer.buffered.end(sourceBuffer.buffered.length - 1);
 				}
-				console.log(mediaSource.readyState);
-				console.log(sourceBuffer.updating, off);
-				console.log(segResp.length);
 
 				function _trySettingOffset() {
 					try {
@@ -173,7 +169,6 @@ var PlayerController = function() {
 						//var ts = sourceBuffer.timestampOffset - data['startTimeSec'];
 						//sourceBuffer.timestampOffset = ts;
 						console.log(segmentIndex, '/', totalSegments);
-						console.log(mediaSource.readyState);
 						sourceBuffer.appendBuffer(segResp);
 						segmentIndex++;
 

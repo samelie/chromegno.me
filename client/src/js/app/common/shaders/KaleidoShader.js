@@ -15,7 +15,7 @@ module.exports = {
 	uniforms: {
 
 		"tDiffuse": { type: "t", value: null },
-		"sides":    { type: "f", value: 6.0 },
+		"sides":    { type: "f", value: 0.01 },
 		"angle":    { type: "f", value: 0.0 }
 
 	},
