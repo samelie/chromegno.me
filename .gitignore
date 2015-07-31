@@ -97,6 +97,7 @@ data/**/*.MOV
 data/**/*.png
 *.mpd
 *.flv
+data/**/*
 data/**/*.jpg
 MP4Box
 *.mov

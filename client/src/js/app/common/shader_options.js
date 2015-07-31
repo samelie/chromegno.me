@@ -154,22 +154,55 @@ module.exports = {
 			max: Math.PI * .5
 		}
 	},
+	rgb: {
+		enabled: false,
+		"amount": {
+			amount: 0.01,
+			min: 0,
+			max: 1
+		},
+		"angle": {
+			angle: 0,
+			min: 0,
+			max: Math.PI * 2
+		}
+	},
 	rgbShift: {
 		enabled: false,
-		"uRed": {
-			uRed: 1,
-			min: 1,
-			max: 32
+		"amount": {
+			amount: 0.01,
+			min: 0,
+			max: 1
 		},
-		"uGreen": {
-			uGreen: 1,
-			min: 1,
-			max: 32
+		"uRedX": {
+			uRedX: 1,
+			min: -512,
+			max: 512
 		},
-		"uBue": {
-			uBue: 1,
-			min: 1,
-			max: 32
+		"uRedY": {
+			uRedY: 1,
+			min: -512,
+			max: 512
+		},
+		"uGreenX": {
+			uGreenX: 1,
+			min: -512,
+			max: 512
+		},
+		"uGreenY": {
+			uGreenY: 1,
+			min: -512,
+			max: 512
+		},
+		"uBlueX": {
+			uBlueX: 1,
+			min: -512,
+			max: 512
+		},
+		"uBlueY": {
+			uBlueY: 1,
+			min: -512,
+			max: 512
 		}
 	}
 };

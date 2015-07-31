@@ -192,9 +192,13 @@ module.exports = {
                         {
                         "tDiffuse": { type: "t", value: null },
                         "tSize"    : { type: "v2", value: new THREE.Vector2( 128, 128 ) },
-                        "uRed":    { type: "i", value: 1 },
-                        "uGreen":    { type: "i", value: 1 },
-                        "uBlue":    { type: "i", value: 1 }
+                        "amount":    { type: "f", value: 0.01 },
+                        "uRedX":    { type: "i", value: 1 },
+                        "uRedY":    { type: "i", value: 1 },
+                        "uGreenX":    { type: "i", value: 1 },
+                        "uGreenY":    { type: "i", value: 1 },
+                        "uBlueX":    { type: "i", value: 1 },
+                        "uBlueY":    { type: "i", value: 1 }
                         }
 
                     ] ),

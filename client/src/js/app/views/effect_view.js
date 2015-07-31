@@ -222,12 +222,12 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 
 			var scaleObj = UTILS.onAspectResize();
 
-			sceneA = new SCENE(renderer, 0xffffff, Z_DIS);
+			sceneA = new SCENE(renderer, 0xffffff, Z_DIS, 'one');
 			sceneA.createPlane(scaleObj.w, scaleObj.h, new THREE.MeshBasicMaterial({
 				map: texture1
 			}));
 
-			sceneB = new SCENE(renderer, 0x000000, Z_DIS);
+			sceneB = new SCENE(renderer, 0x000000, Z_DIS, 'two');
 			sceneB.createPlane(scaleObj.w, scaleObj.h, new THREE.MeshBasicMaterial({
 				map: texture2
 			}));

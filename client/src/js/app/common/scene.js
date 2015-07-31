@@ -2,7 +2,7 @@
 var UTILS = require('./utils');
 var EFFECTS = require('./effects_scene')
 
-var Scene = function(renderer, clearColor, cameraZ) {
+var Scene = function(renderer, clearColor, cameraZ, name) {
 	var fbo;
 
 	var _scene, _camera, _clearColor, _mesh;
@@ -27,7 +27,7 @@ var Scene = function(renderer, clearColor, cameraZ) {
 	fbo.minFilter = THREE.LinearFilter;
 	fbo.magFilter = THREE.LinearFilter;
 
-	var fx = new EFFECTS(_scene, _camera, renderer, fbo);
+	var fx = new EFFECTS(_scene, _camera, renderer, fbo, name);
 
 	function render(rtt) {
 		//renderer.setClearColor(_clearColor);
