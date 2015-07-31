@@ -125,7 +125,7 @@ var AudioAnalyser = function() {
         if (ac == -1) {} else {
             pitch = ac;
             var note = _noteFromPitch(pitch);
-            console.log(note);
+            console.log(noteStrings[note%12]);
         }
 
         rafID = window.requestAnimationFrame(_updatePitch);

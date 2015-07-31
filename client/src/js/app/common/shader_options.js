@@ -162,7 +162,7 @@ module.exports = {
 		"bitSize": {
 			enabled: true,
 			bitSize: 2.0,
-			min: 1.3,
+			min: 0.7,
 			max: 8
 		}
 	},
@@ -202,7 +202,7 @@ module.exports = {
 			enabled: true,
 			amount: 0.01,
 			min: 0,
-			max: 1
+			max: 0.2
 		},
 		"angle": {
 			enabled: true,
@@ -217,7 +217,7 @@ module.exports = {
 			enabled: true,
 			amount: 0.01,
 			min: 0,
-			max: 1
+			max: .4
 		},
 		"uRedX": {
 			enabled: true,

@@ -26,6 +26,18 @@ App.module('Entities', function(Entities, App, Backbone, Marionette, $, _) {
         return defer.promise;
     }
 
+    function _getYoutube() {
+        var defer = Q.defer();
+        Q($.ajax({
+            type: 'GET',
+            url: 'assets/json/youtube_manifest.json'
+        })).then(function(data) {
+            defer.resolve(data);
+        });
+        return defer.promise;
+    }
+
+    App.reqres.setHandler('reqres:youtube', _getYoutube);
     App.reqres.setHandler('reqres:effects', _getEffects);
     App.reqres.setHandler('reqres:manifest', _getManifest);
 

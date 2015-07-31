@@ -33,11 +33,13 @@ var PlayerController = function() {
 	////-----------------
 
 	var videoElement;
+	var youtubeVideoElement;
 	var mediaSource;
 	var sourceBuffer;
 
 	//ref to proto
 	var _manifest;
+	var youtubeManifest;
 	var playlist;
 	var boundUpdate;
 
@@ -109,6 +111,7 @@ var PlayerController = function() {
 							playOffset += clip['duration'];
 							segDuration = clip['duration'];
 							playSegment(clip);
+							_setYoutubeVideo();
 						} else {
 							console.log('No more at', segmentIndex);
 						}
@@ -228,9 +231,30 @@ var PlayerController = function() {
 		currentChapter = _manifest[chapterIndex];
 		totalSegments = currentChapter.length;
 	}
+
+	function _setYoutubeVideo(){
+		if(!youtubeManifest){
+			return;
+		}
+		var chapter = youtubeManifest[chapterIndex];
+		if(chapter){
+			var i = segmentIndex % chapter.length-1;
+			var clips = chapter[i];
+			if(clips){
+				var ran = Math.floor(Math.random()*clips.length-1);
+				youtubeVideoElement.src = clips[ran];
+				console.log(youtubeVideoElement.src);
+			}
+		}
+	}
 	///---------------
 	//API
 	///---------------
+
+	function setYoutubeManifest(videoEl, manifest) {
+		youtubeVideoElement = videoEl;
+		youtubeManifest = manifest;
+	}
 
 	function setOnNewVo(callback) {
 		onNewVo = callback;
@@ -245,7 +269,8 @@ var PlayerController = function() {
 	return {
 		init: init,
 		setOnNewVo: setOnNewVo,
-		setEntireManifest: setEntireManifest
+		setEntireManifest: setEntireManifest,
+		setYoutubeManifest: setYoutubeManifest
 	}
 };
 

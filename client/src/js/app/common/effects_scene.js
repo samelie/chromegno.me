@@ -62,19 +62,19 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	//composer.addPass(effects.blend);
 	//composer.addPass(effects.dot);
 	//composer.addPass(effects.mega);
+	composer.addPass(effects.color);
 	composer.addPass(effects.rgb);
 	composer.addPass(effects.pixelate);
 	composer.addPass(effects.bleach);
 	composer.addPass(effects.bit);
 	//composer.addPass(effects.edge);
-	composer.addPass(effects.color);
 	//composer.addPass(effects.kaleido);
 	//composer.addPass(effects.twist);
 	//composer.addPass(effects.rgbShift);
 	composer.addPass(effects.copy);
 
 	changeEffects = [
-		[effects.mega, 'mega'],
+		//[effects.mega, 'mega'],
 		[effects.rgb, 'rgb'],
 		[effects.bit, 'bit'],
 		[effects.pixelate, 'pixelate'],

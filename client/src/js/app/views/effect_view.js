@@ -9,6 +9,7 @@ var FX_OPTIONS = require('../common/shader_options');
 var TIMELINE = require('../common/timeline');
 var WEBCAM = require('../common/webcam');
 var PLAYER = require('../common/player_controller');
+var AUDIO = require('../common/audio_analyser');
 // app dependencies
 var NUM_COLUMNS = 2;
 var VIDEO_WIDTH = 1280;
@@ -60,15 +61,20 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			App.reqres.request('reqres:manifest').then(function(manifest) {
 				this.manifest = this.timeline.start(manifest);
 				this.setupPlayer();
-				App.reqres.request('reqres:effects').then(function(effects) {
-					this.setupEffects(effects);
+				App.reqres.request('reqres:youtube').then(function(youtube) {
+					this.playerController.setYoutubeManifest(document.getElementById('myVideo'), youtube);
+					App.reqres.request('reqres:effects').then(function(effects) {
+						this.setupEffects(effects);
+						this.audio = new AUDIO();
+						this.audio.addTrack('assets/audio/rome.mp3');
+
+					}.bind(this)).done();
 				}.bind(this)).done();
 			}.bind(this)).done();
 		},
 		setupPlayer: function() {
-			this.videoElement = document.getElementById('myVideo');
 			this.playerController = new PLAYER();
-			this.playerController.init(this.videoElement);
+			this.playerController.init(document.getElementById('myVideo2'));
 			this.playerController.setEntireManifest(this.manifest);
 		},
 		onRender: function() {
@@ -100,7 +106,7 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			var optnsFolder = [];
 			var options = _.cloneDeep(FX_OPTIONS);
 			_.forIn(options, function(obj, key) {
-				var f = optionsA.addFolder('sceneA-'+key);
+				var f = optionsA.addFolder('sceneA-' + key);
 				optnsFolder.push(f);
 				_.forIn(obj, function(v, k) {
 					var b = Object.create(null);
@@ -114,7 +120,7 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 								}.bind(b));
 							}
 						});
-					} else if(typeof v === 'boolean'){
+					} else if (typeof v === 'boolean') {
 						f.add(obj, k).onChange(function(val) {
 							sceneA.updateUniforms(this);
 						}.bind(b));
@@ -126,7 +132,7 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			var optnsFolder = [];
 			var options = _.cloneDeep(FX_OPTIONS);
 			_.forIn(options, function(obj, key) {
-				var f = optionsB.addFolder('sceneB-'+key);
+				var f = optionsB.addFolder('sceneB-' + key);
 				optnsFolder.push(f);
 				_.forIn(obj, function(v, k) {
 					var b = Object.create(null);
@@ -268,9 +274,9 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 
 			this.onWindowResize();
 		},
-		setupEffects:function(manifest){
-			sceneA.setEffectsManifest(manifest.splice(0,4));
-			sceneB.setEffectsManifest(manifest.splice(0,4));
+		setupEffects: function(manifest) {
+			sceneA.setEffectsManifest(manifest.splice(0, 4));
+			sceneB.setEffectsManifest(manifest.splice(0, 4));
 		},
 		onWindowResize: function() {
 			var w = window.innerWidth;
