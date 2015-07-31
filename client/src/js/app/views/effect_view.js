@@ -232,13 +232,15 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 				map: texture2
 			}));
 
-			sceneA.fx.setOtherFbo(sceneB.fbo);
-			sceneB.fx.setOtherFbo(sceneA.fbo);
+			//sceneA.fx.setOtherFbo(sceneB.fbo);
+			sceneA.fx.setOtherTexture(texture2);
+			//sceneB.fx.setOtherFbo(sceneA.fbo);
+			sceneB.fx.setOtherTexture(texture1);
 
 			var d = SHADERS_LIB['mix']();
 			var shader = d['shader'];
 			var uniforms = d['uniforms'];
-			uniforms["tOne"].value = sceneA.fbo;
+			uniforms["tDiffuse"].value = sceneA.fbo;
 			uniforms["tTwo"].value = sceneB.fbo;
 			uniforms["tMix"].value = texture3;
 			uniforms["uMixRatio"].value = this.guiOptions['uMixRatio'];
@@ -257,8 +259,6 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			scene = new THREE.Scene();
 
 			this.quad = new THREE.Mesh(quadgeometry, videoMaterial);
-			scene.add(this.quad);
-
 			scene.add(this.quad);
 
 			this.boundAnimate = this.animate.bind(this);

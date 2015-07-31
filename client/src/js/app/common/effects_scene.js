@@ -22,9 +22,13 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	var currentEffectIndexs = [];
 
 	var _otherFbo;
+	var _otherTexture;
 
 	var effects = {
 		bit: new THREE.ShaderPass(SHADERS.bit),
+		chroma: new THREE.ShaderPass(SHADERS.chroma),
+		mega: new THREE.ShaderPass(SHADERS.mega),
+		displacement: new THREE.ShaderPass(SHADERS.displacement),
 		pixelate: new THREE.ShaderPass(SHADERS.pixelate),
 		bleach: new THREE.ShaderPass(SHADERS.bleach),
 		blend: new THREE.ShaderPass(SHADERS.blend),
@@ -57,6 +61,7 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	composer.addPass(renderPass);
 	//composer.addPass(effects.blend);
 	//composer.addPass(effects.dot);
+	//composer.addPass(effects.mega);
 	composer.addPass(effects.rgb);
 	composer.addPass(effects.pixelate);
 	composer.addPass(effects.bleach);
@@ -69,10 +74,11 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	composer.addPass(effects.copy);
 
 	changeEffects = [
+		[effects.mega, 'mega'],
 		[effects.rgb, 'rgb'],
 		[effects.bit, 'bit'],
 		[effects.pixelate, 'pixelate'],
-		[effects.bleach, 'bleach'],
+		[effects.bleach, 'bleach']
 		//[effects.dot, 'dot'],
 		//[effects.edge, 'edge'],
 		//[effects.glitch, 'glitch'],
@@ -82,9 +88,8 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	];
 
 	function _updateEffects() {
-		//effects.blend['uniforms']['tDiffuse1'].value = fbo;
-		if (_otherFbo) {
-			//effects.blend['uniforms']['tDiffuse2'].value = _otherFbo;
+		if (_otherTexture) {
+		
 		}
 	}
 
@@ -202,8 +207,14 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 
 	function setOtherFbo(f) {
 		_otherFbo = f;
+		//_updateEffects();
+	}
+
+	function setOtherTexture(t) {
+		_otherTexture = t;
 		_updateEffects();
 	}
+
 
 	function updateUniforms(uniforms) {
 		var obj = uniforms['uniforms'];
@@ -230,6 +241,7 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	return {
 		setEffectsManifest: setEffectsManifest,
 		updateUniforms: updateUniforms,
+		setOtherTexture: setOtherTexture,
 		setOtherFbo: setOtherFbo,
 		render: render
 	}

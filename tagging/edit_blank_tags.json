@@ -15,7 +15,7 @@
         {
             "chapter": "0",
             "index": "2",
-            "skip": false,
+            "skip": true,
             "tag": "cathedrals monument"
         },
         {
@@ -337,61 +337,61 @@
         {
             "chapter": "2",
             "index": "18",
-            "skip": true,
+            "skip": false,
             "tag": "synchronised swimming"
         },
         {
             "chapter": "2",
             "index": "19",
-            "skip": true,
+            "skip": false,
             "tag": "expensive restaurants"
         },
         {
             "chapter": "2",
             "index": "20",
-            "skip": true,
+            "skip": false,
             "tag": "spending money"
         },
         {
             "chapter": "2",
             "index": "21",
-            "skip": true,
+            "skip": false,
             "tag": "kingpin"
         },
         {
             "chapter": "2",
             "index": "22",
-            "skip": true,
+            "skip": false,
             "tag": "empty court"
         },
         {
             "chapter": "2",
             "index": "23",
-            "skip": true,
+            "skip": false,
             "tag": "fighting over food"
         },
         {
             "chapter": "2",
             "index": "24",
-            "skip": true,
+            "skip": false,
             "tag": "sports day park"
         },
         {
             "chapter": "2",
             "index": "25",
-            "skip": true,
+            "skip": false,
             "tag": "animals falling asleep"
         },
         {
             "chapter": "2",
             "index": "26",
-            "skip": true,
+            "skip": false,
             "tag": "outer space"
         },
         {
             "chapter": "2",
             "index": "27",
-            "skip": true,
+            "skip": false,
             "tag": "star scapes"
         }
     ],
@@ -399,74 +399,74 @@
         {
             "chapter": "3",
             "index": "0",
-            "skip": true,
+            "skip": false,
             "tag": "cove"
         },
         {
             "chapter": "3",
             "index": "1",
-            "skip": true,
+            "skip": false,
             "tag": "hunting underwater"
         },
         {
             "chapter": "3",
             "index": "2",
-            "skip": true,
+            "skip": false,
             "tag": "outside spitroast"
         },
         {
             "chapter": "3",
             "index": "3",
-            "skip": true,
+            "skip": false,
             "tag": "visualizations"
         },
         {
             "chapter": "3",
             "index": "4",
-            "skip": true,
+            "skip": false,
             "tag": "clubbing"
         },
         {
             "chapter": "3",
             "index": "5",
-            "skip": true,
+            "skip": false,
             "tag": "lazers bass dancing"
         },
         {
             "chapter": "3",
             "index": "6",
-            "skip": true,
+            "skip": false,
             "tag": "tribal masks"
         },
         {
             "chapter": "3",
             "index": "7",
-            "skip": true,
+            "skip": false,
             "tag": "comedown"
         },
         {
             "chapter": "3",
             "index": "8",
-            "skip": true,
+            "skip": false,
             "tag": "people passed out"
         },
         {
             "chapter": "3",
             "index": "9",
-            "skip": true,
+            "skip": false,
             "tag": "sardines"
         },
         {
             "chapter": "3",
             "index": "10",
-            "skip": true,
+            "skip": false,
             "tag": "wanker"
         },
         {
             "chapter": "3",
             "index": "11",
-            "skip": true,
-            "tag": "bitch slap"
+            "skip": false,
+            "tag": "bitch slap fight"
         }
     ]
 ]

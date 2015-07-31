@@ -17,6 +17,9 @@ console.log(myShader);*/
 module.exports = {
     'mix' : {
         uniforms: THREE.UniformsUtils.merge( [
+             THREE.UniformsLib[ "fog" ],
+            THREE.UniformsLib[ "lights" ],
+            THREE.UniformsLib[ "shadowmap" ],
 
             {
 
@@ -24,9 +27,53 @@ module.exports = {
             "uThreshold"   : { type: "f", value: 0.5 },
             "uSaturation"   : { type: "f", value: 1. },
 
-            "tOne"     : { type: "t", value: null },
+            "tDiffuse"     : { type: "t", value: null },
+            "tDisplacement"     : { type: "t", value: null },
             "tTwo"     : { type: "t", value: null },
             "tMix"     : { type: "t", value: null },
+
+            "enableAO"        : { type: "i", value: 0 },
+            "enableDiffuse"   : { type: "i", value: 0 },
+            "enableSpecular"  : { type: "i", value: 0 },
+            "enableReflection": { type: "i", value: 0 },
+            "enableDisplacement": { type: "i", value: 0 },
+            "enableAberation": { type: "i", value: 0 },
+            "enableColor": { type: "i", value: 0 },
+
+            "tDisplacement": { type: "t", value: null }, // must go first as this is vertex texture
+            "tCube"        : { type: "t", value: null },
+            "tNormal"      : { type: "t", value: null },
+            "tSpecular"    : { type: "t", value: null },
+            "tAO"          : { type: "t", value: null },
+
+            "uNormalScale": { type: "v2", value: new THREE.Vector2( 1, 1 ) },
+
+            "uDisplacementBias": { type: "f", value: 0.0 },
+            "uDisplacementScale": { type: "f", value: 100.0 },
+
+            "uDiffuseColor": { type: "c", value: new THREE.Color( 0xffffff ) },
+            "uSpecularColor": { type: "c", value: new THREE.Color( 0x111111 ) },
+            "uAmbientColor": { type: "c", value: new THREE.Color( 0xffffff ) },
+            "uShininess": { type: "f", value: 30 },
+            "uOpacity": { type: "f", value: 1 },
+
+            //color
+            "uSaturation": { type: "f", value: 1 },
+            "uContrast": { type: "f", value: 1 },
+            "uDesaturate": { type: "f", value: 0 },
+            "uBrightness": { type: "f", value: 0 },
+            "uHue": { type: "f", value: 0 },
+
+            "uTime": { type: "f", value: 1 },
+
+            "useRefract": { type: "i", value: 0 },
+            "uRefractionRatio": { type: "f", value: 0.98 },
+            "uReflectivity": { type: "f", value: 0.5 },
+
+            "uOffset" : { type: "v2", value: new THREE.Vector2( 0, 0 ) },
+            "uRepeat" : { type: "v2", value: new THREE.Vector2( 1, 1 ) },
+
+            "wrapRGB"  : { type: "v3", value: new THREE.Vector3( 1, 1, 1 ) }
 
             }
 
@@ -34,6 +81,66 @@ module.exports = {
             
             fragmentShader:glslify('../../../glsl/mix.frag'),
             vertexShader:glslify('../../../glsl/basic.vert')
+    },
+    'mega' : {
+        uniforms: THREE.UniformsUtils.merge( [
+
+            THREE.UniformsLib[ "fog" ],
+            THREE.UniformsLib[ "lights" ],
+            THREE.UniformsLib[ "shadowmap" ],
+
+            {
+
+            "enableAO"        : { type: "i", value: 0 },
+            "enableDiffuse"   : { type: "i", value: 0 },
+            "enableSpecular"  : { type: "i", value: 0 },
+            "enableReflection": { type: "i", value: 0 },
+            "enableDisplacement": { type: "i", value: 0 },
+            "enableAberation": { type: "i", value: 0 },
+            "enableColor": { type: "i", value: 0 },
+
+            "tDisplacement": { type: "t", value: null }, // must go first as this is vertex texture
+            "tDiffuse"     : { type: "t", value: null },
+            "tCube"        : { type: "t", value: null },
+            "tNormal"      : { type: "t", value: null },
+            "tSpecular"    : { type: "t", value: null },
+            "tAO"          : { type: "t", value: null },
+
+            "uNormalScale": { type: "v2", value: new THREE.Vector2( 1, 1 ) },
+
+            "uDisplacementBias": { type: "f", value: 0.0 },
+            "uDisplacementScale": { type: "f", value: 1.0 },
+
+            "uDiffuseColor": { type: "c", value: new THREE.Color( 0xffffff ) },
+            "uSpecularColor": { type: "c", value: new THREE.Color( 0x111111 ) },
+            "uAmbientColor": { type: "c", value: new THREE.Color( 0xffffff ) },
+            "uShininess": { type: "f", value: 30 },
+            "uOpacity": { type: "f", value: 1 },
+
+            //color
+            "uSaturation": { type: "f", value: 1 },
+            "uContrast": { type: "f", value: 1 },
+            "uDesaturate": { type: "f", value: 0 },
+            "uBrightness": { type: "f", value: 0 },
+            "uHue": { type: "f", value: 0 },
+
+            "uTime": { type: "f", value: 1 },
+
+            "useRefract": { type: "i", value: 0 },
+            "uRefractionRatio": { type: "f", value: 0.98 },
+            "uReflectivity": { type: "f", value: 0.5 },
+
+            "uOffset" : { type: "v2", value: new THREE.Vector2( 0, 0 ) },
+            "uRepeat" : { type: "v2", value: new THREE.Vector2( 1, 1 ) },
+
+            "wrapRGB"  : { type: "v3", value: new THREE.Vector3( 1, 1, 1 ) }
+
+            }
+
+        ] ),
+        
+        fragmentShader:glslify('../../../glsl/mega.frag'),
+        vertexShader:glslify('../../../glsl/displacement.vert')
     },
     'color' : {
         uniforms: THREE.UniformsUtils.merge( [

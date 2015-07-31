@@ -4,7 +4,7 @@
             uniform float uMixRatio;
             uniform float uSaturation;
 
-            uniform sampler2D tOne;
+            uniform sampler2D tDiffuse;
             uniform sampler2D tTwo;
             uniform sampler2D tMix;
 
@@ -14,7 +14,7 @@
             }
 
             void main() {
-                vec4 texOne = texture2D(tOne, vUv);
+                vec4 texOne = texture2D(tDiffuse, vUv);
                 vec4 texTwo = texture2D(tTwo, vUv);
                 vec4 texMix = texture2D(tMix, vUv);
 

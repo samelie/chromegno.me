@@ -2,7 +2,7 @@ this.JST = {"app": function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class="App">\n\t<button class="btn btn-default js-shader">Shader</button>\n\t<button class="btn btn-default js-composer">Composer</button>\n\t<button class="btn btn-default js-fx">FX</button>\n\t<div id="#content"></div>\n</div>';
+__p += '<div class="App">\n\t<button class="btn btn-default js-three">Three</button>\n\t<button class="btn btn-default js-shader">Shader</button>\n\t<button class="btn btn-default js-composer">Composer</button>\n\t<button class="btn btn-default js-fx">FX</button>\n\t<div id="#content"></div>\n</div>';
 
 }
 return __p

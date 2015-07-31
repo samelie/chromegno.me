@@ -99,14 +99,39 @@ var RIPPER = (function() {
 	//----------------------------
 	//----------------------------
 	function fromExisting(callback) {
-		var path = TAG_MANIFEST;
-		fs.readFile(path, 'utf8', function(err, data) {
+		var assetPath = path.join(process.cwd(), 'assets/youtube');
+
+		function deleteUnwanted(path) {
+			rimraf(path, function() {
+				fs.mkdirSync(path);
+			});
+		}
+
+		fs.readFile(TAG_MANIFEST, 'utf8', function(err, data) {
 			if (err) {
 				console.log('Error: ' + err);
 				return;
 			}
-
 			data = JSON.parse(data);
+			var clips = [];
+			_.each(data, function(chapter, cI) {
+				var chapterPath = path.join(assetPath, cI.toString());
+				_.each(chapter, function(clip, yI) {
+					var clipPath = path.join(chapterPath, yI.toString());
+					if (!clip['skip']) {
+						clip['dir'] = clipPath;
+						clips.push(clip);
+						deleteUnwanted(clipPath);
+					}
+				});
+			});
+
+			_startYoutube(clips).then(function(r) {
+				_.each(clips, function(clip) {
+					delete clip['youtubeResults'];
+				})
+				_download(clips);
+			});
 		});
 	}
 
@@ -170,7 +195,7 @@ var RIPPER = (function() {
 		});
 
 		_startYoutube(clips).then(function(r) {
-			_.each(clips,function(clip){
+			_.each(clips, function(clip) {
 				delete clip['youtubeResults'];
 			})
 			//console.log(clips);
@@ -188,7 +213,10 @@ var RIPPER = (function() {
 
 		_.each(clips, function(clip) {
 			clip['youtubeResults'] = Object.create(null);
-			searchPromises.push(_search(clip['tag'], clip));
+			if (!clip['skip']) {
+				console.log(clip);
+				searchPromises.push(_search(clip['tag'], clip));
+			}
 			/*_.each(clip['querys'], function(query) {
 
 				query['youtubeResults'] = Object.create(null);
@@ -395,6 +423,7 @@ var RIPPER = (function() {
 
 		//clip has querys
 		console.log(clips.length);
+
 		function __ripClip() {
 			var clip = clips[clipIndex];
 			console.log(clip);
@@ -425,6 +454,7 @@ var RIPPER = (function() {
 		var videoIndex = 0;
 
 		console.log(vos.length);
+
 		function __ripVideo(vo) {
 			if (!vo) {
 				callback();
@@ -453,14 +483,13 @@ var RIPPER = (function() {
 				})
 				.on('error', function(err) {
 					console.log('An error occurred: ' + err.message);
-					fs.unlinkSync(p);
 					vo['savePath'] = "";
-					videoIndex+=1;
+					videoIndex += 1;
 					__ripVideo(vos[videoIndex]);
 				})
 				.on('end', function() {
 					vo['savePath'] = p;
-					videoIndex+=1;
+					videoIndex += 1;
 					__ripVideo(vos[videoIndex]);
 				})
 				.run();

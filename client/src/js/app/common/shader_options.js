@@ -40,6 +40,24 @@ module.exports = {
 			max: 0.2
 		}
 	},
+	mega: {
+		enabled: false,
+		uDisplacementScale: {
+			enabled: true,
+			uDisplacementScale: 1,
+			min: 1,
+			max: 300
+		}
+	},
+	chroma: {
+		enabled: false,
+		uDisplacementScale: {
+			enabled: true,
+			uDisplacementScale: 1,
+			min: 1,
+			max: 300
+		}
+	},
 	color: {
 		enabled: false,
 		uSaturation: {

@@ -8,6 +8,7 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
             contentz:'#content'
         },
         events: {
+            'click .js-three': 'onThree',
             'click .js-shader': 'onShader',
             'click .js-composer': 'onComposer',
             'click .js-fx': 'onFx'
@@ -16,6 +17,11 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
         },
         onRender: function() {},
         onShow: function() {
+        },
+        onThree: function() {
+            this.shaderView = new App.Views.YoutubeThreeView();
+            App.Regions.show('content', this.shaderView);
+            //this.contentz.show(this.shaderView);
         },
         onShader: function() {
             this.shaderView = new App.Views.ShaderView();
