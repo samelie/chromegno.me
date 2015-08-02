@@ -94,6 +94,9 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	}
 
 	function _checkCurrentEffect() {
+		if(!currentEffectChapter){
+			return;
+		}
 		var currentEffect = currentEffectChapter[effectIndex];
 		if (secondCounter >= currentEffect[0]) {
 			secondCounter = 0;

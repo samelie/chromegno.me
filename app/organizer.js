@@ -6,7 +6,7 @@ var dir = require('node-dir');
 var fs = require('fs-extra');
 
 var IMGS_PER_CLIP = 12;
-var EXT = 'png';
+var EXT = 'JPG';
 
 var Organizer = (function() {
 	var picsDir = path.join(process.cwd(), 'data/pics');
@@ -14,7 +14,6 @@ var Organizer = (function() {
 	function start(callback) {
 		dir.subdirs(picsDir, function(err, dirs) {
 			//goes too deep if already organized
-			console.log(dirs.length);
 			if (dirs.length > 20) {
 				console.log("SKIPPED");
 				callback();
@@ -23,7 +22,7 @@ var Organizer = (function() {
 			_.each(dirs, function(path) {
 				//only choose the folders just at the root level
 				console.log(path.length);
-					_createFolders(path, callback);
+				_createFolders(path, callback);
 			});
 		});
 	}
@@ -33,13 +32,16 @@ var Organizer = (function() {
 		var numImages = 0,
 			count = 0,
 			index = 0;
+
 		dir.files(folderPath, function(err, files) {
+			console.log(files);
 			_.each(files, function(file) {
 				if (file.indexOf(EXT) !== -1) {
 					numImages++;
 				}
 			});
 			var numVideos = Math.floor(numImages / IMGS_PER_CLIP);
+			console.log(numVideos);
 			var i = 0;
 			for (i; i < numVideos; i++) {
 				var newFolder = path.join(folderPath, i.toString());
