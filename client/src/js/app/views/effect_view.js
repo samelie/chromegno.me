@@ -43,7 +43,6 @@ var mouseX = 0;
 var mouseY = 0;
 
 var controls;
-var _previousPitch = 0;
 var _pitchArray = [];
 
 var windowHalfX = window.innerWidth / 2;
@@ -321,7 +320,7 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 				var fft = this.audio.getFFT();
 				var pitch = this.audio.getPitch();
 				this._updateWithPitch(pitch);
-
+				videoMaterial.uniforms["uSaturation"].value = this._map(fft[4], 0, 1, 1, 3);
 				//console.log(fft);
 				sceneA.fx.fftUpdate(fft);
 				sceneB.fx.fftUpdate(fft);
@@ -334,16 +333,15 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 		_updateWithPitch: function(pitch) {
 			if (pitch) {
 				var p = this._storeAndGetPitch(pitch);
-				//var p = (_previousPitch + pitch) / 2;
 				videoMaterial.uniforms["uMixRatio"].value = p - .3;
-				console.log(videoMaterial.uniforms["uMixRatio"].value);
-				//console.log(videoMaterial.uniforms["uMixRatio"].value);
-				//videoMaterial.uniforms["uSaturation"].value = 10 * pitch;
-				_previousPitch = pitch;
 			}
 			if (sceneA) {
 				videoMaterial.uniforms["uThreshold"].value = .5 * sceneA.fx.getCos();
 			}
+		},
+
+		_map: function(v, a, b, x, y) {
+			return (v === a) ? x : (v - a) * (y - x) / (b - a) + x;
 		},
 
 		_storeAndGetPitch: function(p) {

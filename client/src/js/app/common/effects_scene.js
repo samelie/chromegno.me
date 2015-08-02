@@ -70,7 +70,7 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	composer.addPass(effects.bleach);
 	composer.addPass(effects.bit);
 	//composer.addPass(effects.edge);
-	composer.addPass(effects.kaleido);
+	//composer.addPass(effects.kaleido);
 	//composer.addPass(effects.twist);
 	//composer.addPass(effects.rgbShift);
 	composer.addPass(effects.copy);
@@ -94,19 +94,23 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	function fftUpdate(data) {
 		data[0] *= 2; //more bass
 		var con = 1;
+		var sat = _map(data[1], 0, 1, 0, 5);
 		if (name === 'one') {
-			//con = _map(data[0], 0, 1, 1, 2);
+			sat*=.5;
+			con = _map(data[0], 0, 1, 1, 5);
 		} else {
 			con = _map(data[0], 0, 1, 1, 4);
 		}
-		var sat = _map(data[1], 0, 1, 0, 6);
 		data[2] *= 2.4;
-		var hue = _map(data[2], 0, 1, 0, 4);
+		if (name === 'one') {
+			//sat *= -1;
+		}
+		var hue = _map(data[2], 0, 1, 0, 1);
 		effects.color['uniforms']['uContrast'].value = con;
 		effects.color['uniforms']['uSaturation'].value = sat;
 		effects.color['uniforms']['uHue'].value = hue;
 
-		var bit = _map(data[1], 0, 1, 0.5, 7);
+		var bit = _map(data[1], 0, 1, 0.3, 7);
 		effects.bit['uniforms']['bitSize'].value = bit;
 	}
 
