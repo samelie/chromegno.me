@@ -20,17 +20,12 @@ var AudioAnalyser = function() {
     audioContext = new AudioContext();
     offlineContext = new window.OfflineAudioContext(1, 2, 44100);
 
-    function _onTrackLoaded() {
-        if (isPlaying) {
-            //stop playing and return
-            sourceNode.stop(0);
-            sourceNode = null;
-            analyser = null;
-            isPlaying = false;
-            window.cancelAnimationFrame(rafID);
-            return "start";
-        }
 
+    var _sonoSound;
+    var _sonoAnalyzer;
+    var _fftData = [];
+
+    function _setupPitch() {
         sourceNode = audioContext.createBufferSource();
         sourceNode.buffer = theBuffer;
         sourceNode.loop = true;
@@ -42,9 +37,6 @@ var AudioAnalyser = function() {
         sourceNode.start(0);
         isPlaying = true;
         isLiveInput = false;
-
-        _updatePitch();
-
     }
 
 
@@ -118,34 +110,68 @@ var AudioAnalyser = function() {
     }
 
 
-    function _updatePitch(time) {
-        var cycles = new Array;
-        analyser.getFloatTimeDomainData(buf);
+    function getPitch() {
+        if(!_sonoAnalyzer){
+            return undefined;
+        }
+        //var n = undefined;
+        _sonoAnalyzer.getFloatTimeDomainData(buf);
         var ac = _autoCorrelate(buf, audioContext.sampleRate);
-        if (ac == -1) {} else {
+        if (ac !== -1) {
             pitch = ac;
             var note = _noteFromPitch(pitch);
-            console.log(noteStrings[note%12]);
+            //n = noteStrings[note % 12];
+        }else{
+            return undefined;
         }
+        return _map(note % 12, 0, 11, 0, 1);
+    }
 
-        rafID = window.requestAnimationFrame(_updatePitch);
+    function getFFT() {
+        _fftData.length = 0;
+        var magnitude, percent;
+        var freqByteData = _sonoAnalyzer.getFrequencies();
+        var groupL = Math.floor((freqByteData.length - 1) / 3);
+        var totalIn = 0;
+        var totalP = 0;
+        for (var i = 0, l = freqByteData.length; i < l; i++) {
+            magnitude = freqByteData[i];
+            percent = magnitude / 128;
+            totalP += percent;
+            totalIn += percent;
+
+            if (i % groupL === 0) {
+                _fftData.push(Math.max(_map(totalP / groupL, 0.001, 0.55, 0, 1),0));
+                totalP = 0;
+            }
+        }
+        _fftData.push(totalIn / freqByteData.length);
+        return _fftData;
+    }
+
+    function setupSono(url) {
+        _sonoSound = sono.createSound(url);
+        _sonoSound.loop = true;
+        _sonoSound.play();
+        _sonoAnalyzer = _sonoSound.effect.analyser({
+            fftSize: 2048,
+            smoothingTimeConstant: 0.7,
+            float: false
+        });
     }
 
     function addTrack(url) {
-        var request = new XMLHttpRequest();
-        request.open("GET", url, true);
-        request.responseType = "arraybuffer";
-        request.onload = function() {
-            audioContext.decodeAudioData(request.response, function(buffer) {
-                theBuffer = buffer;
-                _onTrackLoaded();
-            });
-        }
-        request.send();
+        setupSono(url);
+    }
+
+    function _map(v, a, b, x, y) {
+        return (v === a) ? x : (v - a) * (y - x) / (b - a) + x;
     }
 
     return {
-        addTrack: addTrack
+        addTrack: addTrack,
+        getPitch: getPitch,
+        getFFT: getFFT
     }
 }
 

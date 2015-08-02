@@ -20,9 +20,11 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	var randomOffsets = [];
 	var maxValues = Object.create(null);
 	var currentEffectIndexs = [];
+	var constantEffects = undefined;
 
 	var _otherFbo;
 	var _otherTexture;
+	var _cos = 0;
 
 	var effects = {
 		bit: new THREE.ShaderPass(SHADERS.bit),
@@ -68,7 +70,7 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	composer.addPass(effects.bleach);
 	composer.addPass(effects.bit);
 	//composer.addPass(effects.edge);
-	//composer.addPass(effects.kaleido);
+	composer.addPass(effects.kaleido);
 	//composer.addPass(effects.twist);
 	//composer.addPass(effects.rgbShift);
 	composer.addPass(effects.copy);
@@ -76,7 +78,7 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	changeEffects = [
 		//[effects.mega, 'mega'],
 		[effects.rgb, 'rgb'],
-		[effects.bit, 'bit'],
+		//[effects.bit, 'bit'],
 		[effects.pixelate, 'pixelate'],
 		[effects.bleach, 'bleach']
 		//[effects.dot, 'dot'],
@@ -87,14 +89,41 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 		//[effects.rgbShift, 'rgbShift']
 	];
 
+	constantEffects = [effects.color, effects.bit];
+
+	function fftUpdate(data) {
+		data[0] *= 1.8; //more bass
+		var con = 1;
+		if(name === 'one'){
+			//con = _map(data[0], 0, 1, -4, -0.02);
+		}else{
+			con = _map(data[0], 0, 1, 1, 4);
+		}
+		var sat = _map(data[1], 0, 1, 0, 6);
+		var hue = _map(data[2], 0, 1, 0, 4);
+		effects.color['uniforms']['uContrast'].value = con;
+		effects.color['uniforms']['uSaturation'].value = sat;
+		effects.color['uniforms']['uHue'].value = hue;
+
+		var bit = _map(data[1], 0, 1, 0.5, 7);
+		effects.bit['uniforms']['bitSize'].value = bit;
+	}
+
+	function _changeEffectValue(name, val) {
+		effects[name]['uniforms']['bitSize'].value *= (1+val);
+		if(name === 'one'){
+			//console.log((1+val));
+		}
+	}
+
 	function _updateEffects() {
 		if (_otherTexture) {
-		
+
 		}
 	}
 
 	function _checkCurrentEffect() {
-		if(!currentEffectChapter){
+		if (!currentEffectChapter) {
 			return;
 		}
 		var currentEffect = currentEffectChapter[effectIndex];
@@ -184,8 +213,9 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 				var seed = randomOffsets[i2 + previousL];
 				var max = values[i2][1];
 				var min = values[i2][2];
-				var cos = Math.abs(Math.cos((smallCounter + seed) * factor));
-				var val = _map(cos, 0, 1, min, max);
+				_cos = Math.abs(Math.cos((smallCounter + seed) * factor));
+				_changeEffectValue('bit', _cos);
+				var val = _map(_cos, 0, 1, min, max);
 				effect['uniforms'][values[i2][0]].value = val;
 				if (i2 === 0 && name === 'two') {
 					//console.log(cos);
@@ -215,7 +245,7 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 
 	function setOtherTexture(t) {
 		_otherTexture = t;
-		_updateEffects();
+		//_updateEffects();
 	}
 
 
@@ -241,11 +271,17 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 		return (v === a) ? x : (v - a) * (y - x) / (b - a) + x;
 	}
 
+	function getCos(){
+		return _cos;
+	}
+
 	return {
 		setEffectsManifest: setEffectsManifest,
 		updateUniforms: updateUniforms,
 		setOtherTexture: setOtherTexture,
 		setOtherFbo: setOtherFbo,
+		fftUpdate: fftUpdate,
+		getCos: getCos,
 		render: render
 	}
 

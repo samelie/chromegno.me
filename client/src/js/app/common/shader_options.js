@@ -59,7 +59,7 @@ module.exports = {
 		}
 	},
 	color: {
-		enabled: false,
+		enabled: true,
 		uSaturation: {
 			enabled: true,
 			uSaturation: 1.01,
@@ -158,7 +158,7 @@ module.exports = {
 		}
 	},
 	bit: {
-		enabled: false,
+		enabled: true,
 		"bitSize": {
 			enabled: true,
 			bitSize: 2.0,

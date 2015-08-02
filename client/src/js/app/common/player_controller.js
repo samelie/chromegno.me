@@ -23,7 +23,7 @@ var PlayerController = function() {
 		totalSegments = 0,
 		skipCount = 0,
 
-		chapterIndex = 0,
+		chapterIndex = 1,
 		currentChapter = 0;
 
 	//callback

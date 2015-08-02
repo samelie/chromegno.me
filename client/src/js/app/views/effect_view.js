@@ -7,6 +7,7 @@ var SCENE = require('../common/scene');
 var UTILS = require('../common/utils');
 var FX_OPTIONS = require('../common/shader_options');
 var TIMELINE = require('../common/timeline');
+var FOLDER_PLAYER = require('../common/folder_player');
 var WEBCAM = require('../common/webcam');
 var PLAYER = require('../common/player_controller');
 var AUDIO = require('../common/audio_analyser');
@@ -42,6 +43,8 @@ var mouseX = 0;
 var mouseY = 0;
 
 var controls;
+var _previousPitch = 0;
+var _pitchArray = [];
 
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
@@ -62,12 +65,11 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 				this.manifest = this.timeline.start(manifest);
 				this.setupPlayer();
 				App.reqres.request('reqres:youtube').then(function(youtube) {
-					this.playerController.setYoutubeManifest(document.getElementById('myVideo'), youtube);
+					//this.playerController.setYoutubeManifest(document.getElementById('myVideo'), youtube);
 					App.reqres.request('reqres:effects').then(function(effects) {
 						this.setupEffects(effects);
 						this.audio = new AUDIO();
-						this.audio.addTrack('assets/audio/rome.mp3');
-
+						this.audio.addTrack('assets/audio/chrome.mp3');
 					}.bind(this)).done();
 				}.bind(this)).done();
 			}.bind(this)).done();
@@ -75,6 +77,7 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 		setupPlayer: function() {
 			this.playerController = new PLAYER();
 			this.playerController.init(document.getElementById('myVideo2'));
+			console.log(this.manifest);
 			this.playerController.setEntireManifest(this.manifest);
 		},
 		onRender: function() {
@@ -186,9 +189,22 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 
 			this.videoElement3 = document.getElementById('mixer');
 			this.webcam = new WEBCAM(this.videoElement3);
+			//this.webcam.start();
 			this.videoElement3.volume = 0;
 			this.videoElement3.width = VIDEO_WIDTH;
 			this.videoElement3.height = VIDEO_HEIGHT;
+
+
+			App.reqres.request('reqres:made').then(function(made) {
+				this.madePlayer = new FOLDER_PLAYER(this.videoElement, made);
+				this.madePlayer.start();
+			}.bind(this)).done();
+
+			App.reqres.request('reqres:gnome').then(function(gnome) {
+				this.gnomePlayer = new FOLDER_PLAYER(this.videoElement3, gnome);
+				this.gnomePlayer.start();
+			}.bind(this)).done();
+
 
 			this.gui = gui;
 			this.setup3D();
@@ -301,16 +317,56 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 		},
 		animate: function() {
 			window.requestAnimationFrame(this.boundAnimate);
+			if (this.audio) {
+				var fft = this.audio.getFFT();
+				var pitch = this.audio.getPitch();
+				this._updateWithPitch(pitch);
+
+				//console.log(fft);
+				sceneA.fx.fftUpdate(fft);
+				sceneB.fx.fftUpdate(fft);
+			}
 			this.threeRender();
 			stats.update();
+		},
+
+		//0-11
+		_updateWithPitch: function(pitch) {
+			if (pitch) {
+				var p = this._storeAndGetPitch(pitch);
+				//var p = (_previousPitch + pitch) / 2;
+				videoMaterial.uniforms["uMixRatio"].value = p - .3;
+				console.log(videoMaterial.uniforms["uMixRatio"].value);
+				//console.log(videoMaterial.uniforms["uMixRatio"].value);
+				//videoMaterial.uniforms["uSaturation"].value = 10 * pitch;
+				_previousPitch = pitch;
+			}
+			if (sceneA) {
+				videoMaterial.uniforms["uThreshold"].value = .5 * sceneA.fx.getCos();
+			}
+		},
+
+		_storeAndGetPitch: function(p) {
+			var v = p;
+			if (_pitchArray.length < 20) {
+				_pitchArray.push(p);
+				return v;
+			} else {
+				_pitchArray.unshift(p);
+				_pitchArray.pop();
+				var l = _pitchArray.length;
+				var t = 0;
+				for (var i = 0; i < l; i++) {
+					t += _pitchArray[i];
+				}
+				return t / l;
+			}
 		},
 
 		threeRender: function() {
 			texture1.needsUpdate = true;
 			texture2.needsUpdate = true;
 			texture3.needsUpdate = true;
-			videoMaterial.uniforms.uMixRatio.value = this.guiOptions['uMixRatio'];
-			videoMaterial.uniforms.uThreshold.value = this.guiOptions['uThreshold'];
 			if (this.guiOptions['uMixRatio'] == 0) {
 				sceneB.render();
 			} else if (this.guiOptions['uMixRatio'] == 1) {
