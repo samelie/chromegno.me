@@ -92,14 +92,15 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	constantEffects = [effects.color, effects.bit];
 
 	function fftUpdate(data) {
-		data[0] *= 1.8; //more bass
+		data[0] *= 2; //more bass
 		var con = 1;
-		if(name === 'one'){
-			//con = _map(data[0], 0, 1, -4, -0.02);
-		}else{
+		if (name === 'one') {
+			//con = _map(data[0], 0, 1, 1, 2);
+		} else {
 			con = _map(data[0], 0, 1, 1, 4);
 		}
 		var sat = _map(data[1], 0, 1, 0, 6);
+		data[2] *= 2.4;
 		var hue = _map(data[2], 0, 1, 0, 4);
 		effects.color['uniforms']['uContrast'].value = con;
 		effects.color['uniforms']['uSaturation'].value = sat;
@@ -110,8 +111,8 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	}
 
 	function _changeEffectValue(name, val) {
-		effects[name]['uniforms']['bitSize'].value *= (1+val);
-		if(name === 'one'){
+		effects[name]['uniforms']['bitSize'].value *= (1 + val);
+		if (name === 'one') {
 			//console.log((1+val));
 		}
 	}
@@ -271,7 +272,7 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 		return (v === a) ? x : (v - a) * (y - x) / (b - a) + x;
 	}
 
-	function getCos(){
+	function getCos() {
 		return _cos;
 	}
 
