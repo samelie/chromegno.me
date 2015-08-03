@@ -660,63 +660,8 @@ p {
 }
 
 @font-face {
-  font-family: 'batman';
-  src: url("../font/batman.ttf") format('truetype');
-}
-
-@font-face {
-  font-family: 'battlestar';
-  src: url("../font/battlestar.TTF") format('truetype');
-}
-
-@font-face {
-  font-family: 'bladerunner';
-  src: url("../font/bladerunner.TTF") format('truetype');
-}
-
-@font-face {
-  font-family: 'megatron';
-  src: url("../font/megatron.otf") format('opentype');
-}
-
-@font-face {
-  font-family: 'prometheus';
-  src: url("../font/prometheus.ttf") format('truetype');
-}
-
-@font-face {
-  font-family: 'spaceage';
-  src: url("../font/spaceage.ttf") format('truetype');
-}
-
-@font-face {
-  font-family: 'starjedi';
-  src: url("../font/starwars.ttf") format('truetype');
-}
-
-@font-face {
-  font-family: 'unrealtournament';
-  src: url("../font/unreal.ttf") format('truetype');
-}
-
-@font-face {
-  font-family: 'montroc';
-  src: url("../font/montroc.ttf") format('truetype');
-}
-
-@font-face {
-  font-family: 'futurearth';
-  src: url("../font/Future-Earth.ttf") format('truetype');
-}
-
-@font-face {
-  font-family: 'termin';
-  src: url("../font/termin.ttf") format('truetype');
-}
-
-@font-face {
-  font-family: 'nasa';
-  src: url("../font/nasa.ttf") format('truetype');
+  font-family: 'klavika';
+  src: url("../fonts/Klavika-Regular.otf") format('opentype');
 }
 
 iframe {
@@ -907,7 +852,9 @@ button {
 }
 
 .Chrome {
-  position: relative;
+  position: absolute;
+  left: 0;
+  top: 0;
   width: 100%;
   background-color: #000;
   margin: 0 auto;
@@ -1207,6 +1154,18 @@ button {
   top: 0;
   left: 0;
   z-index: 1;
+}
+
+#chrome {
+  position: absolute;
+  bottom: 4px;
+  right: 5px;
+  font-family: 'klavika' Helvetica sans;
+  letter-spacing: 1px;
+  z-index: 6;
+  color: #fff;
+  opacity: 0.7;
+  -ms-filter: "alpha(opacity=70)";
 }
 
 .dg.ac {

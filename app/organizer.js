@@ -6,7 +6,7 @@ var dir = require('node-dir');
 var fs = require('fs-extra');
 
 var IMGS_PER_CLIP = 12;
-var EXT = 'JPG';
+var EXT = 'png';
 
 var Organizer = (function() {
 	var picsDir = path.join(process.cwd(), 'data/pics');

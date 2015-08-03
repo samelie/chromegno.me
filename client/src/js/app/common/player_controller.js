@@ -23,7 +23,7 @@ var PlayerController = function() {
 		totalSegments = 0,
 		skipCount = 0,
 
-		chapterIndex = 1,
+		chapterIndex = 0,
 		currentChapter = 0;
 
 	//callback
@@ -135,6 +135,7 @@ var PlayerController = function() {
 		var self = this;
 		var url = 'assets/videos/' + data['relPath'];
 		var xhr = new XMLHttpRequest();
+		console.log(url);
 		xhr.open('GET', url);
 		xhr.setRequestHeader("Range", "bytes=" + data['mediaRange']);
 		xhr.send();
@@ -223,6 +224,7 @@ var PlayerController = function() {
 	}
 
 	function _onChapterComplete() {
+		console.log("NEWWWW");
 		chapterIndex++;
 		if (chapterIndex > _manifest.length - 1) {
 			chapterIndex = 0;

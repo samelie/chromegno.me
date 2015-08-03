@@ -9,6 +9,7 @@ var FX_OPTIONS = require('../common/shader_options');
 var TIMELINE = require('../common/timeline');
 var FOLDER_PLAYER = require('../common/folder_player');
 var WEBCAM = require('../common/webcam');
+var THREE_HELPERS = require('../common/three_helpers');
 var PLAYER = require('../common/player_controller');
 var AUDIO = require('../common/audio_analyser');
 // app dependencies
@@ -89,8 +90,10 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 		},
 		onShow: function() {
 
+			this.threeHelpers = new THREE_HELPERS();
+
 			var self = this;
-			var gui = new dat.GUI();
+			/*var gui = new dat.GUI();
 			var main = gui.addFolder('main');
 			main.add(this.guiOptions, 'uMixRatio', 0, 1).onChange(function(val) {
 				videoMaterial.uniforms["uMixRatio"].value = this.guiOptions['uMixRatio'];
@@ -155,26 +158,9 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 					}
 				});
 			});
-			/*
-			var optnsFolder2 = [];
-			var optionsB = gui.addFolder('sceneB');
-			var options = _.cloneDeep(FX_OPTIONS);
-			_.forIn(options, function(obj, key) {
-				var f = optionsB.addFolder(key);
-				optnsFolder2.push(f);
-				_.forIn(obj, function(v, k) {
-					var b = Object.create(null);
-					b['uniforms'] = obj;
-					b['shader'] = key;
-					f.add(obj, k, 0.01, 10.0).onChange(function(val) {
-						console.log(val);
-						sceneB.updateUniforms(this);
-					}.bind(b));
-				});
-			});*/
-			//optionsA.
-
+		
 			gui.width = 300;
+			this.gui = gui;*/
 
 			this.videoElement = document.getElementById('myVideo');
 			this.videoElement.volume = 0;
@@ -196,17 +182,26 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 
 			App.reqres.request('reqres:made').then(function(made) {
 				this.madePlayer = new FOLDER_PLAYER(this.videoElement, made);
-				this.madePlayer.start();
+				//this.madePlayer.start();
 			}.bind(this)).done();
 
 			App.reqres.request('reqres:gnome').then(function(gnome) {
 				this.gnomePlayer = new FOLDER_PLAYER(this.videoElement3, gnome);
-				this.gnomePlayer.start();
+				//this.gnomePlayer.start();
 			}.bind(this)).done();
 
 
-			this.gui = gui;
 			this.setup3D();
+
+			document.addEventListener('keyup', function(e){
+				switch(e.keyCode){
+					case 13:
+					this.threeHelpers.fullscreen();
+					document.getElementById('three').style.display = 'block';
+					break;
+
+				}
+			}.bind(this));
 		},
 
 		////------------------------
@@ -221,10 +216,10 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			renderer.setSize(window.innerWidth, window.innerHeight);
 			document.getElementById('three').appendChild(renderer.domElement);
 
-			stats = new Stats();
+			/*stats = new Stats();
 			stats.domElement.style.position = 'absolute';
 			stats.domElement.style.top = '0px';
-			this.el.appendChild(stats.domElement);
+			this.el.appendChild(stats.domElement);*/
 
 			camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
 			camera.position.set(0, 0, Z_DIS);
@@ -326,7 +321,7 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 				sceneB.fx.fftUpdate(fft);
 			}
 			this.threeRender();
-			stats.update();
+			//stats.update();
 		},
 
 		//0-11

@@ -49,7 +49,7 @@ var MP4BOX = (function() {
 	function _createClipMPD(clip, name, callback) {
 		//dir = dir.replace('\ ');
 		process.chdir(clip['dir']);
-		console.log(process.cwd());
+		//console.log(process.cwd());
 		var out = name + '.mp4';
 		//output of dashed mp4
 		var dashedName = name + '_dashed.mp4';
@@ -99,7 +99,7 @@ var MP4BOX = (function() {
 		total = segObjs.length;
 
 		function __doOne(obj) {
-			//console.log(obj['mpd']);
+			console.log(obj['mpd']);
 			fs.readFile(obj['mpd'], function(err, data) {
 				if(!data){
 					count++;

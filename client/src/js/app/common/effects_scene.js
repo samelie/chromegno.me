@@ -28,6 +28,8 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 
 	var effects = {
 		bit: new THREE.ShaderPass(SHADERS.bit),
+		creepy: new THREE.ShaderPass(SHADERS.creepy),
+		distort: new THREE.ShaderPass(SHADERS.distort),
 		chroma: new THREE.ShaderPass(SHADERS.chroma),
 		mega: new THREE.ShaderPass(SHADERS.mega),
 		displacement: new THREE.ShaderPass(SHADERS.displacement),
@@ -65,10 +67,13 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	//composer.addPass(effects.dot);
 	//composer.addPass(effects.mega);
 	composer.addPass(effects.color);
+	composer.addPass(effects.creepy);
 	composer.addPass(effects.rgb);
+	//composer.addPass(effects.distort);
 	composer.addPass(effects.pixelate);
 	composer.addPass(effects.bleach);
 	composer.addPass(effects.bit);
+	composer.addPass(effects.glitch);
 	//composer.addPass(effects.edge);
 	//composer.addPass(effects.kaleido);
 	//composer.addPass(effects.twist);
@@ -77,6 +82,9 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 
 	changeEffects = [
 		//[effects.mega, 'mega'],
+		[effects.creepy, 'creepy'],
+		[effects.creepy, 'glitch'],
+		//[effects.distort, 'distort'],
 		[effects.rgb, 'rgb'],
 		//[effects.bit, 'bit'],
 		[effects.pixelate, 'pixelate'],
@@ -94,9 +102,9 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	function fftUpdate(data) {
 		data[0] *= 2; //more bass
 		var con = 1;
-		var sat = _map(data[1], 0, 1, 0, 5);
+		var sat = _map(data[1], 0, 1, 0, 4.3);
 		if (name === 'one') {
-			sat*=.5;
+			sat *= .5;
 			con = _map(data[0], 0, 1, 1, 5);
 		} else {
 			con = _map(data[0], 0, 1, 1, 4);
@@ -105,7 +113,7 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 		if (name === 'one') {
 			//sat *= -1;
 		}
-		var hue = _map(data[2], 0, 1, 0, 1);
+		var hue = _map(data[2], 0, 1, 0, 2);
 		effects.color['uniforms']['uContrast'].value = con;
 		effects.color['uniforms']['uSaturation'].value = sat;
 		effects.color['uniforms']['uHue'].value = hue;
@@ -123,7 +131,7 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 
 	function _updateEffects() {
 		if (_otherTexture) {
-
+			effects['distort']['uniforms']['tDisplacement'].value = _otherTexture;
 		}
 	}
 
@@ -132,6 +140,12 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 			return;
 		}
 		var currentEffect = currentEffectChapter[effectIndex];
+		if (!currentEffect) {
+			secondCounter = 0;
+			effectIndex++;
+			_onNewEffect();
+			return;
+		}
 		if (secondCounter >= currentEffect[0]) {
 			secondCounter = 0;
 			effectIndex++;
@@ -250,7 +264,7 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 
 	function setOtherTexture(t) {
 		_otherTexture = t;
-		//_updateEffects();
+		_updateEffects();
 	}
 
 

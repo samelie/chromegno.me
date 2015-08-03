@@ -4,7 +4,7 @@ var _ = require('lodash');
 //seconds
 var INTERVAL = 0.5;
 var SEQUENCIAL_REFS = false;
-var CHAPTER_DURATION = 45; //mins
+var CHAPTER_DURATION = 14.4; //mins
 
 var flattendData = [];
 

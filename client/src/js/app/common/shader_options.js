@@ -97,9 +97,11 @@ module.exports = {
 			enabled: true,
 			amount: 0.05,
 			min: 0,
-			max: 4
-		},
-		"angle": {
+			max: 0.6
+		}
+	},
+
+		/*"angle": {
 			enabled: true,
 			angle: 0.05,
 			min: 0,
@@ -141,7 +143,7 @@ module.exports = {
 			min: 0,
 			max: 4
 		}
-	},
+	},*/
 	dot: {
 		enabled: false,
 		"angle": {
@@ -164,6 +166,24 @@ module.exports = {
 			bitSize: 2.0,
 			min: 0.7,
 			max: 8
+		}
+	},
+	creepy: {
+		enabled: false,
+		"amount": {
+			enabled: true,
+			amount:0.01,
+			min: 0.005,
+			max: 0.02
+		}
+	},
+	distort: {
+		enabled: false,
+		"amount": {
+			enabled: true,
+			amount:0.05,
+			min: 0.01,
+			max: 0.7
 		}
 	},
 	kaleido: {

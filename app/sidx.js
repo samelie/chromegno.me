@@ -118,7 +118,7 @@ var SIDX = (function() {
 				}
 			}
 
-			if (process.customArgs.noupload) {
+			if (!process.customArgs.noupload) {
 				var params = {
 					Bucket: process.env.S3_BUCKET,
 					Key: key
@@ -189,7 +189,6 @@ var SIDX = (function() {
 			var url = obj['url'];
 			var parsed = obj['parsedMpd'];
 			var xhr = new XMLHttpRequest();
-			parsed['indexRange']
 			xhr.open('GET', url);
 			xhr.setRequestHeader("Range", "bytes=0-"+ parsed['indexRange']);
 			xhr.send();

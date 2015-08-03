@@ -8,7 +8,7 @@ var fs = require('fs-extra');
 var exec = require('child_process').exec;
 
 //var FRAME_RATES = ['3','2','1', (1 / 2).toFixed(3).toString(), (1 / 3).toFixed(3).toString(), (1 / 4).toFixed(3).toString()];
-var FRAME_RATES = ['3', '2', '1', (1 / 2).toFixed(3).toString(), (1 / 3).toFixed(3).toString(), (1 / 4).toFixed(3).toString()];
+var FRAME_RATES = ['3', '2', '1'];
 var IMGS_PER_CLIP = 12;
 var EXT = '.png';
 
@@ -55,7 +55,7 @@ var FFMPEG = (function() {
 			var frIndex = 0;
 			var output;
 			process.chdir(clipInfo['dir']);
-			console.log('\t', clipInfo['dir']);
+			//console.log('\t', clipInfo['dir']);
 
 			function __encodeComplete() {
 				clipInfo['videos'].push(output);
@@ -75,12 +75,16 @@ var FFMPEG = (function() {
 				var command = "ffmpeg ";
 				var indexs = [];
 				var count = 0;
-				var br = '500k';
+				var br = '2500k';
 				var scale = 720;
 				output = {
 					path: clipInfo['index'] + "_" + frIndex + ".mp4",
 					duration: framerate * IMGS_PER_CLIP
 				};
+				if (fs.existsSync(output['path'])) {
+					__encodeComplete();
+					return;
+				}
 				dir.files(process.cwd(), function(err, files) {
 					_.each(files, function(file, i) {
 						if (file.indexOf('.DS_') === -1 && file.indexOf('.mp4') === -1) {
