@@ -8,7 +8,6 @@ var GNOME_FOLDER = path.join(process.cwd(), '../client/assets/videos/gnome');
 var GNOME_JSON = path.join(process.cwd(), '../client/assets/json/gnome_manifest.json');
 
 dir.files(MADE_FOLDER, function(err, files) {
-	console.log(files);
 	var save = [];
 	_.each(files, function(file) {
 		if (file.indexOf('.DS') === -1) {
@@ -24,7 +23,6 @@ dir.files(MADE_FOLDER, function(err, files) {
 });
 
 dir.files(GNOME_FOLDER, function(err, files) {
-	console.log(files);
 	var save = [];
 	_.each(files, function(file) {
 		if (file.indexOf('.DS') === -1) {

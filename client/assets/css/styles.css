@@ -907,12 +907,14 @@ button {
 }
 
 .Chrome {
-  position: relative;
+  position: absolute;
   width: 100%;
   background-color: #000;
   margin: 0 auto;
   min-height: 100%;
   overflow: hidden;
+  left: 0;
+  top: 0;
 }
 
 .App {

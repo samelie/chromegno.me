@@ -4,8 +4,8 @@ module.exports = {
 		opacity: {
 			enabled: true,
 			opacity: 0.05,
-			min: -4,
-			max: 4
+			min: 0,
+			max: 1
 		}
 	},
 	blend: {

@@ -23,7 +23,7 @@ var PlayerController = function() {
 		totalSegments = 0,
 		skipCount = 0,
 
-		chapterIndex = 1,
+		chapterIndex = 0,
 		currentChapter = 0;
 
 	//callback
@@ -266,8 +266,13 @@ var PlayerController = function() {
 		totalSegments = currentChapter.length;
 	}
 
+	function getChapterIndex(){
+		return chapterIndex;
+	}
+
 	return {
 		init: init,
+		getChapterIndex: getChapterIndex,
 		setOnNewVo: setOnNewVo,
 		setEntireManifest: setEntireManifest,
 		setYoutubeManifest: setYoutubeManifest

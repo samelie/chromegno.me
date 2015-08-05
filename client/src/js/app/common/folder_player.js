@@ -1,24 +1,68 @@
 function FolderPlayer(videoEl, manifest) {
 	var _el = videoEl;
 	var _manifest = manifest;
+	var _webcam;
+	var WEBCAM_PROB = 0.2;
+	var WEBCAM_DURATION_MIN = 30000;
+	var WEBCAM_DURATION_MAX = 180000;
+
+	var preferedFiles = ["How_Its_Made_s02e13_Ball_Bearings_-_Electrical_Wires_-_Lost_Wax_Process_Casting_-_Automated_Machines_3.mp4"];
 
 	function onVideoComplete(e) {
-		_playOne();
+		var roll = Math.random();
+		if(!_webcam){
+			_playOne();
+			return;
+		}
+		if (roll < WEBCAM_PROB) {
+			stop();
+			_startWebcam();
+		} else {
+			_playOne();
+		}
 	}
-
-	_el.addEventListener('ended', onVideoComplete, false);
 
 	function _playOne() {
 		var ran = Math.floor(Math.random() * _manifest.length - 1);
+		if (ran > _manifest.length * .7) {
+			var p = Math.floor(Math.random() * preferedFiles.length - 1);
+			var preferd = _manifest.indexOf(preferedFiles[p]);
+			if (preferd !== -1) {
+				ran = preferd;
+			}
+		}
+		if (!_manifest[ran]) {
+			_playOne();
+			return;
+		}
 		_el.src = _manifest[ran];
 		_el.play();
 	}
 
+	function _startWebcam() {
+		_webcam.start();
+		setTimeout(function() {
+			_webcam.stop();
+			start();
+		}, Math.floor(Math.random() * WEBCAM_DURATION_MAX) + WEBCAM_DURATION_MIN);
+	}
+
+	function setWebcamSwap(webcam) {
+		_webcam = webcam;
+	}
+
 	function start() {
+		_el.removeEventListener('ended', onVideoComplete);
+		_el.addEventListener('ended', onVideoComplete, false);
 		_playOne();
 	}
 
+	function stop() {
+		_el.removeEventListener('ended', onVideoComplete);
+	}
+
 	return {
+		setWebcamSwap: setWebcamSwap,
 		start: start,
 		stop: stop
 	}
