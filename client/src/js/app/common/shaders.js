@@ -371,6 +371,24 @@ module.exports = {
                     fragmentShader:glslify('../../../glsl/rgbShift.frag'),
                     vertexShader:glslify('../../../glsl/basic.vert')
                 },
+                 'glitch' : {
+                    uniforms: THREE.UniformsUtils.merge( [
+
+                        {
+
+                        "tDiffuse"   : { type: "t", value: null },
+                        "tGlitch"   : { type: "t", value: THREE.ImageUtils.loadTexture('assets/img/glitch.png') },
+
+                        "amount"     : { type: "f", value: 0.1 },
+                        "uTime"     : { type: "f", value: 1. }
+
+                        }
+
+                        ] ),
+                        
+                        fragmentShader:glslify('../../../glsl/glitch.frag'),
+                        vertexShader:glslify('../../../glsl/basic.vert')
+                },
                 bleach:require('./shaders/BleachBypassShader'),
                 bit:require('./shaders/BitShader'),
                 pixelate:require('./shaders/PixelateShader'),
@@ -393,7 +411,7 @@ module.exports = {
                 mirror:require('./shaders/MirrorShader'),
                 rgb:require('./shaders/RGBShiftShader'),
                 sepia:require('./shaders/SepiaShader'),
-                glitch:require('./shaders/DigitalGlitch'),
+                //glitch:require('./shaders/DigitalGlitch'),
                 dot:require('./shaders/DotScreenShader'),
                 copy:THREE.CopyShader
     };

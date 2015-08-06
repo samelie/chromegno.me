@@ -91,7 +91,7 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 		onShow: function() {
 
 			var self = this;
-			var gui = new dat.GUI();
+			/*var gui = new dat.GUI();
 			var main = gui.addFolder('main');
 			main.add(this.guiOptions, 'uMixRatio', 0, 1).onChange(function(val) {
 				videoMaterial.uniforms["uMixRatio"].value = this.guiOptions['uMixRatio'];
@@ -156,27 +156,10 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 					}
 				});
 			});
-			/*
-			var optnsFolder2 = [];
-			var optionsB = gui.addFolder('sceneB');
-			var options = _.cloneDeep(FX_OPTIONS);
-			_.forIn(options, function(obj, key) {
-				var f = optionsB.addFolder(key);
-				optnsFolder2.push(f);
-				_.forIn(obj, function(v, k) {
-					var b = Object.create(null);
-					b['uniforms'] = obj;
-					b['shader'] = key;
-					f.add(obj, k, 0.01, 10.0).onChange(function(val) {
-						console.log(val);
-						sceneB.updateUniforms(this);
-					}.bind(b));
-				});
-			});*/
-			//optionsA.
 
 			gui.width = 300;
-
+			this.gui = gui;
+*/
 			this.videoElement = document.getElementById('myVideo');
 			this.videoElement.volume = 0;
 			this.videoElement.width = VIDEO_WIDTH;
@@ -194,16 +177,25 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 
 
 			App.reqres.request('reqres:made').then(function(made) {
-				this.madePlayer = new FOLDER_PLAYER(this.videoElement, made);
+				var options = {
+					probability:0.93,
+					files:["key1.mp4"]
+				};
+				this.madePlayer = new FOLDER_PLAYER(this.videoElement, made, options);
 				this.madePlayer.start();
 			}.bind(this)).done();
 
 			this.webcam = new WEBCAM(this.videoElement3);
 			App.reqres.request('reqres:gnome').then(function(gnome) {
-				this.gnomePlayer = new FOLDER_PLAYER(this.videoElement3, gnome);
+				var options = {
+					probability:0.85,
+					files:["How_Its_Made_s02e13_Ball_Bearings_-_Electrical_Wires_-_Lost_Wax_Process_Casting_-_Automated_Machines_3.mp4"]
+				};
+				this.gnomePlayer = new FOLDER_PLAYER(this.videoElement3, gnome, options);
 				//this.gnomePlayer.setWebcamSwap(this.webcam);
 				this.gnomePlayer.start();
 			}.bind(this)).done();
+
 
 			document.addEventListener('keyup', function(e){
 				switch(e.keyCode){
@@ -214,8 +206,6 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 
 				}
 			}.bind(this));
-
-			this.gui = gui;
 			this.setup3D();
 		},
 
@@ -231,10 +221,10 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			renderer.setSize(window.innerWidth, window.innerHeight);
 			document.getElementById('three').appendChild(renderer.domElement);
 
-			stats = new Stats();
+			/*stats = new Stats();
 			stats.domElement.style.position = 'absolute';
 			stats.domElement.style.top = '0px';
-			this.el.appendChild(stats.domElement);
+			this.el.appendChild(stats.domElement);*/
 
 			camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
 			camera.position.set(0, 0, Z_DIS);

@@ -97,49 +97,7 @@ module.exports = {
 			enabled: true,
 			amount: 0.05,
 			min: 0,
-			max: 4
-		},
-		"angle": {
-			enabled: true,
-			angle: 0.05,
-			min: 0,
-			max: Math.PI * 2
-		},
-		"seed": {
-			enabled: true,
-			seed: 0.05,
-			min: 0,
-			max: 4
-		},
-		"seed_x": {
-			enabled: true,
-			seed_x: 0.05,
-			min: 0,
-			max: 4
-		},
-		"seed_y": {
-			enabled: true,
-			seed_y: 0.05,
-			min: 0,
-			max: 4
-		},
-		"distortion_x": {
-			enabled: true,
-			distortion_x: 0.05,
-			min: 0,
-			max: 4
-		},
-		"distortion_y": {
-			enabled: true,
-			distortion_y: 0.05,
-			min: 0,
-			max: 4
-		},
-		"col_s": {
-			enabled: true,
-			col_s: 0.05,
-			min: 0,
-			max: 4
+			max: .2
 		}
 	},
 	dot: {

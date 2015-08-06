@@ -1,4 +1,4 @@
-function FolderPlayer(videoEl, manifest) {
+function FolderPlayer(videoEl, manifest, options) {
 	var _el = videoEl;
 	var _manifest = manifest;
 	var _webcam;
@@ -6,11 +6,11 @@ function FolderPlayer(videoEl, manifest) {
 	var WEBCAM_DURATION_MIN = 30000;
 	var WEBCAM_DURATION_MAX = 180000;
 
-	var preferedFiles = ["How_Its_Made_s02e13_Ball_Bearings_-_Electrical_Wires_-_Lost_Wax_Process_Casting_-_Automated_Machines_3.mp4"];
+	var preferedFiles = options['files'];
 
 	function onVideoComplete(e) {
 		var roll = Math.random();
-		if(!_webcam){
+		if (!_webcam) {
 			_playOne();
 			return;
 		}
@@ -24,17 +24,20 @@ function FolderPlayer(videoEl, manifest) {
 
 	function _playOne() {
 		var ran = Math.floor(Math.random() * _manifest.length - 1);
-		if (ran > _manifest.length * .7) {
-			var p = Math.floor(Math.random() * preferedFiles.length - 1);
-			var preferd = _manifest.indexOf(preferedFiles[p]);
-			if (preferd !== -1) {
-				ran = preferd;
-			}
+		if (ran > _manifest.length * options['probability']) {
+			var p = Math.floor(Math.random() * preferedFiles.length);
+			_.each(_manifest, function(file, i) {
+				var n = file.indexOf(preferedFiles[p]);
+				if (n !== -1) {
+					ran = i;
+				}
+			});
 		}
 		if (!_manifest[ran]) {
 			_playOne();
 			return;
 		}
+		console.log(_manifest[ran]);
 		_el.src = _manifest[ran];
 		_el.play();
 	}

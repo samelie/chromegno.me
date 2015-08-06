@@ -20,7 +20,7 @@ return __p
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class="EffectsView">\n\t<video id="myVideo" src="" controls autoplay ></video>\n\t<video id="myVideo2" src="" controls autoplay ></video>\n\t<video id="mixer" src="" controls autoplay ></video>\n\t\n\t<div id="three"></div>\n</div>';
+__p += '<div class="EffectsView">\n\t<video id="myVideo" src="" controls autoplay ></video>\n\t<video id="myVideo2" src="" controls autoplay ></video>\n\t<video id="mixer" src="" controls autoplay ></video>\n\t\n\t<div id="three"></div>\n\t<span id="chrome">ChromeGno.me</span>\n</div>';
 
 }
 return __p

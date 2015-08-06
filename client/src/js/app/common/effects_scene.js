@@ -64,6 +64,7 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	//composer.addPass(effects.blend);
 	//composer.addPass(effects.dot);
 	//composer.addPass(effects.mega);
+	//composer.addPass(effects.glitch);
 	composer.addPass(effects.color);
 	composer.addPass(effects.rgb);
 	composer.addPass(effects.pixelate);
@@ -83,7 +84,7 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 		[effects.bleach, 'bleach']
 		//[effects.dot, 'dot'],
 		//[effects.edge, 'edge'],
-		//[effects.glitch, 'glitch'],
+		//[effects.glitch, 'glitch']
 		//[effects.kaleido, 'kaleido']
 		//[effects.twist, 'twist'],
 		//[effects.rgbShift, 'rgbShift']
@@ -236,6 +237,7 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 		updateCounter++;
 		if (updateCounter % 60 === 0) {
 			secondCounter++;
+			//effects['glitch']['uniforms']['uTime'].value = secondCounter;
 			_checkCurrentEffect();
 		}
 		_changeEffectValues();
