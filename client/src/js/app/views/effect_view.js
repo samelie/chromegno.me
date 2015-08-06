@@ -12,6 +12,7 @@ var THREE_HELPERS = require('../common/three_helpers');
 var WEBCAM = require('../common/webcam');
 var THREE_HELPERS = require('../common/three_helpers');
 var PLAYER = require('../common/player_controller');
+var KEVIN = require('../common/kevin_player');
 var AUDIO = require('../common/audio_analyser');
 // app dependencies
 var NUM_COLUMNS = 2;
@@ -76,7 +77,7 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			}.bind(this)).done();
 		},
 		setupPlayer: function() {
-			this.playerController = new PLAYER();
+			this.playerController = new PLAYER(this._onChapterComplete.bind(this));
 			this.playerController.init(document.getElementById('myVideo2'));
 			console.log(this.manifest);
 			this.playerController.setEntireManifest(this.manifest);
@@ -94,75 +95,6 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			this.threeHelpers = new THREE_HELPERS();
 
 			var self = this;
-			/*var gui = new dat.GUI();
-			var main = gui.addFolder('main');
-			main.add(this.guiOptions, 'uMixRatio', 0, 1).onChange(function(val) {
-				videoMaterial.uniforms["uMixRatio"].value = this.guiOptions['uMixRatio'];
-			}.bind(this));
-
-			main.add(this.guiOptions, 'uThreshold', 0, .5).onChange(function() {
-				videoMaterial.uniforms["uThreshold"].value = this.guiOptions['uThreshold'];
-			}.bind(this));
-
-			main.add(this.guiOptions, 'uSaturation', 0, 10.).onChange(function() {
-				videoMaterial.uniforms["uSaturation"].value = this.guiOptions['uSaturation'];
-			}.bind(this));
-
-			var optionsA = gui.addFolder('sceneA');
-			var optnsFolder = [];
-			var options = _.cloneDeep(FX_OPTIONS);
-			_.forIn(options, function(obj, key) {
-				var f = optionsA.addFolder('sceneA-' + key);
-				optnsFolder.push(f);
-				_.forIn(obj, function(v, k) {
-					var b = Object.create(null);
-					b['uniforms'] = obj;
-					b['shader'] = key;
-					if (_.isObject(v)) {
-						_.forIn(v, function(vv, kk) {
-							if (kk === k) {
-								f.add(v, k, v['min'], v['max']).onChange(function(val) {
-									sceneA.updateUniforms(this);
-								}.bind(b));
-							}
-						});
-					} else if (typeof v === 'boolean') {
-						f.add(obj, k).onChange(function(val) {
-							sceneA.updateUniforms(this);
-						}.bind(b));
-					}
-				});
-			});
-
-			var optionsB = gui.addFolder('sceneB');
-			var optnsFolder = [];
-			var options = _.cloneDeep(FX_OPTIONS);
-			_.forIn(options, function(obj, key) {
-				var f = optionsB.addFolder('sceneB-' + key);
-				optnsFolder.push(f);
-				_.forIn(obj, function(v, k) {
-					var b = Object.create(null);
-					b['uniforms'] = obj;
-					b['shader'] = key;
-					if (_.isObject(v)) {
-						_.forIn(v, function(vv, kk) {
-							if (kk === k) {
-								f.add(v, k, v['min'], v['max']).onChange(function(val) {
-									sceneB.updateUniforms(this);
-								}.bind(b));
-							}
-						});
-					} else {
-						f.add(obj, k).onChange(function(val) {
-							sceneB.updateUniforms(this);
-						}.bind(b));
-					}
-				});
-			});
-<<<<<<< HEAD
-		
-			gui.width = 300;
-			this.gui = gui;*/
 
 			this.videoElement = document.getElementById('myVideo');
 			this.videoElement.volume = 0;
@@ -179,6 +111,8 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			this.videoElement3.width = VIDEO_WIDTH;
 			this.videoElement3.height = VIDEO_HEIGHT;
 
+			this.kevinPlayer = new KEVIN();
+			this.kevinPlayer.init(document.getElementById('kevin'), this._resume.bind(this));
 
 			App.reqres.request('reqres:made').then(function(made) {
 				var options = {
@@ -219,11 +153,12 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 
 		setup3D: function() {
 			var Z_DIS = 400;
+			this.$threeEl = $(document.getElementById('three'));
 			renderer = new THREE.WebGLRenderer({
 				antialias: true
 			});
 			renderer.setSize(window.innerWidth, window.innerHeight);
-			document.getElementById('three').appendChild(renderer.domElement);
+			this.$threeEl[0].appendChild(renderer.domElement);
 
 			/*stats = new Stats();
 			stats.domElement.style.position = 'absolute';
@@ -299,6 +234,33 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			sceneA.setEffectsManifest(manifest.splice(0, 4));
 			sceneB.setEffectsManifest(manifest.splice(0, 4));
 		},
+		_onChapterComplete: function(chapterIndex) {
+			console.log("CCHAPTER COMPLETE");
+			if (chapterIndex % 2 === 0) {
+				this._pause();
+			}
+		},
+		_pause: function() {
+			this.audio.fadeDown();
+			setTimeout(function() {
+				document.getElementById('chrome').style.display = 'none';
+				this.$threeEl.addClass('hide');
+				this.playerController.pause();
+				window.cancelAnimationFrame(this.requestId);
+				setTimeout(function() {
+					this.kevinPlayer.start();
+				}.bind(this), 10000);
+			}.bind(this), 10000);
+		},
+		_resume: function() {
+			setTimeout(function() {
+				document.getElementById('chrome').style.display = 'block';
+				this.$threeEl.removeClass('hide');
+				this.playerController.resume();
+				this.audio.fadeUp();
+				this.animate();
+			}.bind(this), 10000);
+		},
 		onWindowResize: function() {
 			var w = window.innerWidth;
 			var h = window.innerHeight;
@@ -321,7 +283,7 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			console.log(w, h);
 		},
 		animate: function() {
-			window.requestAnimationFrame(this.boundAnimate);
+			this.requestId = window.requestAnimationFrame(this.boundAnimate);
 			if (this.audio) {
 				var fft = this.audio.getFFT();
 				var pitch = this.audio.getPitch();

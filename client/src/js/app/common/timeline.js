@@ -4,7 +4,7 @@ var _ = require('lodash');
 //seconds
 var INTERVAL = 0.5;
 var SEQUENCIAL_REFS = false;
-var CHAPTER_DURATION = 14.4; //mins
+var CHAPTER_DURATION = 14.2; //mins
 
 var flattendData = [];
 
@@ -40,6 +40,9 @@ var Timeline = function() {
             var seed = Math.floor(Math.random() * chapter[0]['videos'].length);
             route.push([0, seed]);
             for (var i = 1; i < chapter.length; i++) {
+                if (totalDuration > (CHAPTER_DURATION * 60)) {
+                    break
+                }
                 var total = chapter[i]['videos'].length;
                 var factor = Perlin.getVal(i);
                 var min = Math.max(seed - 1, 0);
@@ -56,11 +59,11 @@ var Timeline = function() {
                     case 0:
                     case 3:
                         choiceFactor = (factor + Math.asin(norm)) / 2;
-                        choice = choices[Math.floor(_clamp(choices.length * choiceFactor, 0,total))];
+                        choice = choices[Math.floor(_clamp(choices.length * choiceFactor, 0, total))];
                         break;
                     case 1:
                     case 2:
-                        choice = choices[Math.floor(_clamp(choices.length * factor, 0,total))];
+                        choice = choices[Math.floor(_clamp(choices.length * factor, 0, total))];
                         break;
                 }
                 if (choice !== undefined) {
@@ -76,13 +79,13 @@ var Timeline = function() {
         __createRoute();
     }
 
-    function _replaceRoute(manifest, routes){
+    function _replaceRoute(manifest, routes) {
         var replacedManifest = [];
-        _.each(routes,function(routeObj, chapterIndex){
+        _.each(routes, function(routeObj, chapterIndex) {
             var videos = manifest[chapterIndex];
             var ch = [];
-            _.each(routeObj['routes'],function(route){
-                _.each(route,function(data, i){
+            _.each(routeObj['routes'], function(route) {
+                _.each(route, function(data, i) {
                     var o = Object.create(null);
                     var item = videos[data[0]];
                     o['chapter'] = chapterIndex;

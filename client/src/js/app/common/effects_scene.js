@@ -68,13 +68,13 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	//composer.addPass(effects.mega);
 	//composer.addPass(effects.glitch);
 	composer.addPass(effects.color);
-	composer.addPass(effects.creepy);
+	//composer.addPass(effects.creepy);
 	composer.addPass(effects.rgb);
 	//composer.addPass(effects.distort);
 	composer.addPass(effects.pixelate);
 	composer.addPass(effects.bleach);
 	composer.addPass(effects.bit);
-	composer.addPass(effects.glitch);
+	//composer.addPass(effects.glitch);
 	//composer.addPass(effects.edge);
 	//composer.addPass(effects.kaleido);
 	//composer.addPass(effects.twist);
@@ -84,7 +84,7 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	changeEffects = [
 		//[effects.mega, 'mega'],
 		[effects.creepy, 'creepy'],
-		[effects.creepy, 'glitch'],
+		//[effects.glitch, 'glitch'],
 		//[effects.distort, 'distort'],
 		[effects.rgb, 'rgb'],
 		//[effects.bit, 'bit'],
@@ -249,9 +249,9 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	function render() {
 		smallCounter += 0.001;
 		updateCounter++;
+		//effects['glitch']['uniforms']['uTime'].value = updateCounter;
 		if (updateCounter % 60 === 0) {
 			secondCounter++;
-			//effects['glitch']['uniforms']['uTime'].value = secondCounter;
 			_checkCurrentEffect();
 		}
 		_changeEffectValues();

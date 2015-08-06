@@ -2,7 +2,7 @@ this.JST = {"app": function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class="App">\n\t<button class="btn btn-default js-three">Three</button>\n\t<button class="btn btn-default js-shader">Shader</button>\n\t<button class="btn btn-default js-composer">Composer</button>\n\t<button class="btn btn-default js-fx">FX</button>\n\t<div id="#content"></div>\n</div>';
+__p += '<div class="App">\n\t<!-- <button class="btn btn-default js-three">Three</button>\n\t<button class="btn btn-default js-shader">Shader</button>\n\t<button class="btn btn-default js-composer">Composer</button>\n\t<button class="btn btn-default js-fx">FX</button> -->\n\t<div id="#content"></div>\n</div>';
 
 }
 return __p
@@ -20,11 +20,7 @@ return __p
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-<<<<<<< HEAD
-__p += '<div class="EffectsView">\n\t<video id="myVideo" src="assets/videos/0/0/0_3_dashinit.mp4" loop controls autoplay ></video>\n\t<video id="myVideo2" src="" controls autoplay ></video>\n\t<video id="mixer" src="assets/youtube/0/0/14_very_close_takeoffs_md11_777_787_a330_a300_767_md81_757_a321_manchester_airport.mp4" controls loop autoplay ></video>\n\t\n\t<div id="three"></div>\n\t<span id="chrome">ChromeGno.me</span>\n</div>';
-=======
-__p += '<div class="EffectsView">\n\t<video id="myVideo" src="" controls autoplay ></video>\n\t<video id="myVideo2" src="" controls autoplay ></video>\n\t<video id="mixer" src="" controls autoplay ></video>\n\t\n\t<div id="three"></div>\n\t<span id="chrome">ChromeGno.me</span>\n</div>';
->>>>>>> 8f860d595e1773e588bbc5611cbed5ab8439c90f
+__p += '<div class="EffectsView">\n\t<video id="myVideo" src="" controls autoplay ></video>\n\t<video id="myVideo2" src="" controls autoplay ></video>\n\t<video id="mixer" src="" controls autoplay ></video>\n\t<video id="kevin" src=""  autoplay ></video>\n\t\n\t<div id="three"></div>\n\t<span id="chrome">ChromeGno.me</span>\n</div>';
 
 }
 return __p

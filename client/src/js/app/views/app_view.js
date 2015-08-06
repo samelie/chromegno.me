@@ -17,6 +17,8 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
         },
         onRender: function() {},
         onShow: function() {
+              this.fxView = new App.Views.FX();
+            App.Regions.show('content', this.fxView);
         },
         onThree: function() {
             this.shaderView = new App.Views.YoutubeThreeView();

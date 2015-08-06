@@ -6,18 +6,12 @@ uniform float uTime;
 varying vec2 vUv;
 
 void main(void) {
-  vec2 block = floor(gl_FragCoord.xy / vec2(16));
+	vec2 block = floor(gl_FragCoord.xy / vec2(16));
 	vec2 uv_noise = block / vec2(64);
 	uv_noise += floor(vec2(uTime) * vec2(1234.0, 3543.0)) / vec2(64);
 	
-	//float block_thresh = amount;
-	//float line_thresh = amount *.8;
-	//uv_noise += floor(vec2(uTime)) / vec2(64);
-	
-	//float block_thresh = amount;
-	//float line_thresh = amount *.8;
-	float block_thresh = pow(fract(uTime * 1236.0453), 2.0) * .2;
-	float line_thresh = pow(fract(uTime * 2236.0453), 3.0) * .7;
+	float block_thresh = pow(fract(uTime * 1236.0453), 2.0) * 0.2;
+	float line_thresh = pow(fract(uTime * 2236.0453), 3.0) * 0.7;
 	
 	vec2 uv_r = vUv, uv_g = vUv, uv_b = vUv;
 
@@ -58,4 +52,3 @@ void main(void) {
 }
 
 
-	

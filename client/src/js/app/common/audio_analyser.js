@@ -164,12 +164,29 @@ var AudioAnalyser = function() {
         setupSono(url);
     }
 
+    function fadeUp(){
+        _sonoSound.fade(1, 10);
+        setTimeout(function(){
+            _sonoSound.play();
+        }, 10000);
+    }
+
+    function fadeDown(){
+        _sonoSound.fade(0, 10);
+        setTimeout(function(){
+            _sonoSound.stop();
+        }, 10000);
+    }
+
     function _map(v, a, b, x, y) {
         return (v === a) ? x : (v - a) * (y - x) / (b - a) + x;
     }
 
     return {
+        fadeDown: fadeDown,
         addTrack: addTrack,
+        fadeDown: fadeDown,
+        fadeUp: fadeUp,
         getPitch: getPitch,
         getFFT: getFFT
     }

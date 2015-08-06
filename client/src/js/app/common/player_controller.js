@@ -3,7 +3,7 @@ PlayerController.init = function(){
 
 };
 */
-var PlayerController = function() {
+var PlayerController = function(chapterCompleteCallback) {
 	'use strict';
 	if (!MediaSource) {
 		throw new Error('NO MEDIASOURCE!');
@@ -224,8 +224,8 @@ var PlayerController = function() {
 	}
 
 	function _onChapterComplete() {
-		console.log("NEWWWW");
 		chapterIndex++;
+		chapterCompleteCallback(chapterIndex);
 		if (chapterIndex > _manifest.length - 1) {
 			chapterIndex = 0;
 		}
@@ -272,8 +272,18 @@ var PlayerController = function() {
 		return chapterIndex;
 	}
 
+	function pause(){
+		window.cancelAnimationFrame(requestId);
+	}
+
+	function resume(){
+		requestId = window.requestAnimationFrame(boundUpdate);
+	}
+
 	return {
 		init: init,
+		pause: pause,
+		resume: resume,
 		getChapterIndex: getChapterIndex,
 		setOnNewVo: setOnNewVo,
 		setEntireManifest: setEntireManifest,
