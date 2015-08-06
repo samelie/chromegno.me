@@ -8,6 +8,7 @@ var UTILS = require('../common/utils');
 var FX_OPTIONS = require('../common/shader_options');
 var TIMELINE = require('../common/timeline');
 var FOLDER_PLAYER = require('../common/folder_player');
+var THREE_HELPERS = require('../common/three_helpers');
 var WEBCAM = require('../common/webcam');
 var THREE_HELPERS = require('../common/three_helpers');
 var PLAYER = require('../common/player_controller');
@@ -158,6 +159,7 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 					}
 				});
 			});
+<<<<<<< HEAD
 		
 			gui.width = 300;
 			this.gui = gui;*/
@@ -173,35 +175,42 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			this.videoElement2.height = VIDEO_HEIGHT;
 
 			this.videoElement3 = document.getElementById('mixer');
-			this.webcam = new WEBCAM(this.videoElement3);
-			//this.webcam.start();
 			this.videoElement3.volume = 0;
 			this.videoElement3.width = VIDEO_WIDTH;
 			this.videoElement3.height = VIDEO_HEIGHT;
 
 
 			App.reqres.request('reqres:made').then(function(made) {
-				this.madePlayer = new FOLDER_PLAYER(this.videoElement, made);
-				//this.madePlayer.start();
+				var options = {
+					probability: 0.93,
+					files: ["key1.mp4"]
+				};
+				this.madePlayer = new FOLDER_PLAYER(this.videoElement, made, options);
+				this.madePlayer.start();
 			}.bind(this)).done();
 
+			this.webcam = new WEBCAM(this.videoElement3);
 			App.reqres.request('reqres:gnome').then(function(gnome) {
-				this.gnomePlayer = new FOLDER_PLAYER(this.videoElement3, gnome);
-				//this.gnomePlayer.start();
+				var options = {
+					probability: 0.85,
+					files: ["How_Its_Made_s02e13_Ball_Bearings_-_Electrical_Wires_-_Lost_Wax_Process_Casting_-_Automated_Machines_3.mp4"]
+				};
+				this.gnomePlayer = new FOLDER_PLAYER(this.videoElement3, gnome, options);
+				//this.gnomePlayer.setWebcamSwap(this.webcam);
+				this.gnomePlayer.start();
 			}.bind(this)).done();
 
-
-			this.setup3D();
-
-			document.addEventListener('keyup', function(e){
-				switch(e.keyCode){
+			document.addEventListener('keyup', function(e) {
+				switch (e.keyCode) {
 					case 13:
-					this.threeHelpers.fullscreen();
-					document.getElementById('three').style.display = 'block';
-					break;
+						this.threeHelpers.fullscreen();
+						document.getElementById('three').style.display = 'block';
+						break;
 
 				}
 			}.bind(this));
+
+			this.setup3D();
 		},
 
 		////------------------------
@@ -237,6 +246,8 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			texture3.magFilter = THREE.LinearFilter;
 
 			var scaleObj = UTILS.onAspectResize();
+
+			this.threeHelpers = new THREE_HELPERS();
 
 			sceneA = new SCENE(renderer, 0xffffff, Z_DIS, 'one');
 			sceneA.createPlane(scaleObj.w, scaleObj.h, new THREE.MeshBasicMaterial({
@@ -315,8 +326,7 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 				var fft = this.audio.getFFT();
 				var pitch = this.audio.getPitch();
 				this._updateWithPitch(pitch);
-				videoMaterial.uniforms["uSaturation"].value = this._map(fft[4], 0, 1, 1, 3);
-				//console.log(fft);
+				videoMaterial.uniforms["uSaturation"].value = this._map(fft[4], 0, 1, 1, 2.5);
 				sceneA.fx.fftUpdate(fft);
 				sceneB.fx.fftUpdate(fft);
 			}
@@ -328,10 +338,14 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 		_updateWithPitch: function(pitch) {
 			if (pitch) {
 				var p = this._storeAndGetPitch(pitch);
-				videoMaterial.uniforms["uMixRatio"].value = p - .3;
+				var mod = 0.3;
+				if (this.playerController.getChapterIndex() > 1) {
+					mod = 0.07;
+				}
+				videoMaterial.uniforms["uMixRatio"].value = p - mod;
 			}
 			if (sceneA) {
-				videoMaterial.uniforms["uThreshold"].value = .5 * sceneA.fx.getCos();
+				videoMaterial.uniforms["uThreshold"].value = .7 * sceneA.fx.getCos();
 			}
 		},
 
@@ -360,14 +374,8 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			texture1.needsUpdate = true;
 			texture2.needsUpdate = true;
 			texture3.needsUpdate = true;
-			if (this.guiOptions['uMixRatio'] == 0) {
-				sceneB.render();
-			} else if (this.guiOptions['uMixRatio'] == 1) {
-				sceneA.render();
-			} else {
-				sceneA.render();
-				sceneB.render();
-			}
+			sceneA.render();
+			sceneB.render();
 			renderer.render(scene, camera, null, true);
 		}
 

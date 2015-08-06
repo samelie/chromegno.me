@@ -2,10 +2,10 @@ var fs = require('fs');
 var path = require('path');
 var NOISE = require('./noise');
 
-var CHAPTER_DURATION = 15; //mins
-var MAX_EFFECT_DURATION = 25 //seconds;
-var MIN_EFFECT_DURATION = 12 //seconds;
-var MAX_SIMULTANEOUS_EFFECTS = 3;
+var CHAPTER_DURATION = 18; //mins
+var MAX_EFFECT_DURATION = 20 //seconds;
+var MIN_EFFECT_DURATION = 8 //seconds;
+var MAX_SIMULTANEOUS_EFFECTS = 2;
 var CHAPTER_SPEED_RANGES = [
 	[0.01, 0.1],
 	[0.1, 0.3],

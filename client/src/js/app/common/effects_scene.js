@@ -66,6 +66,7 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	//composer.addPass(effects.blend);
 	//composer.addPass(effects.dot);
 	//composer.addPass(effects.mega);
+	//composer.addPass(effects.glitch);
 	composer.addPass(effects.color);
 	composer.addPass(effects.creepy);
 	composer.addPass(effects.rgb);
@@ -91,7 +92,7 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 		[effects.bleach, 'bleach']
 		//[effects.dot, 'dot'],
 		//[effects.edge, 'edge'],
-		//[effects.glitch, 'glitch'],
+		//[effects.glitch, 'glitch']
 		//[effects.kaleido, 'kaleido']
 		//[effects.twist, 'twist'],
 		//[effects.rgbShift, 'rgbShift']
@@ -102,7 +103,7 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 	function fftUpdate(data) {
 		data[0] *= 2; //more bass
 		var con = 1;
-		var sat = _map(data[1], 0, 1, 0, 4.3);
+		var sat = _map(data[1], 0, 1, 0.7, 3.5);
 		if (name === 'one') {
 			sat *= .5;
 			con = _map(data[0], 0, 1, 1, 5);
@@ -113,12 +114,12 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 		if (name === 'one') {
 			//sat *= -1;
 		}
-		var hue = _map(data[2], 0, 1, 0, 2);
+		var hue = _map(data[2], 0, 1, 0, 1.2);
 		effects.color['uniforms']['uContrast'].value = con;
 		effects.color['uniforms']['uSaturation'].value = sat;
 		effects.color['uniforms']['uHue'].value = hue;
 
-		var bit = _map(data[1], 0, 1, 0.3, 7);
+		var bit = _map(data[1], 0, 1, 0.6, 8);
 		effects.bit['uniforms']['bitSize'].value = bit;
 	}
 
@@ -250,6 +251,7 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 		updateCounter++;
 		if (updateCounter % 60 === 0) {
 			secondCounter++;
+			//effects['glitch']['uniforms']['uTime'].value = secondCounter;
 			_checkCurrentEffect();
 		}
 		_changeEffectValues();

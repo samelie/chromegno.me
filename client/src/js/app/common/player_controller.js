@@ -268,8 +268,13 @@ var PlayerController = function() {
 		totalSegments = currentChapter.length;
 	}
 
+	function getChapterIndex(){
+		return chapterIndex;
+	}
+
 	return {
 		init: init,
+		getChapterIndex: getChapterIndex,
 		setOnNewVo: setOnNewVo,
 		setEntireManifest: setEntireManifest,
 		setYoutubeManifest: setYoutubeManifest
