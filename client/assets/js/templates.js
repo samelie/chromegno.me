@@ -20,7 +20,7 @@ return __p
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class="EffectsView">\n\t<video id="myVideo" src="" controls autoplay ></video>\n\t<video id="myVideo2" src="" controls autoplay ></video>\n\t<video id="mixer" src="" controls autoplay ></video>\n\t<video id="kevin" src=""  autoplay ></video>\n\t\n\t<div id="three"></div>\n\t<span id="chrome">ChromeGno.me</span>\n</div>';
+__p += '<div class="EffectsView">\n\t<video id="myVideo" src="" controls autoplay ></video>\n\t<video id="myVideo2" src="" controls autoplay ></video>\n\t<video id="mixer" src="" controls autoplay ></video>\n\t<video id="kevin" src=""  autoplay ></video>\n\t\n\t<div id="three"></div>\n\t<div class="info"><div>ChromeGnome is an audio visual project exploring the concept of and endless video stream coming from a dataset stimulated by music written by my friend Davor Ivankovic.<br>The piece was part of an art gallery opening in August 2015 for Kevin Tran whose paintings thematically followed a trip across Europe.<br>A background layer of randomised video stream of machines hard at work, is keyed into a layer of endless  linearly and gently fading pictures of Kevin’s trip, by yet another layer of randomised Barcelona antics shot by myself.</div></div>\n\t<span id="chrome">ChromeGno.me</span>\n</div>';
 
 }
 return __p

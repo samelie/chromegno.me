@@ -97,6 +97,7 @@ var Timeline = function() {
             });
             replacedManifest.push(ch);
         });
+        console.log(replacedManifest);
         return replacedManifest;
     }
 

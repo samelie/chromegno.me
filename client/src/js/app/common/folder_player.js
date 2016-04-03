@@ -8,6 +8,10 @@ function FolderPlayer(videoEl, manifest, options) {
 
 	var preferedFiles = options['files'];
 
+	console.log(_manifest);
+
+	var preferedIndexs = ['s02e13_Ball_Bearings_-_Electrical_Wires_-_Lost_Wax_Process_Casting_-_Automated_Machines_3.mp4'];
+
 	function onVideoComplete(e) {
 		var roll = Math.random();
 		if (!_webcam) {
@@ -37,6 +41,7 @@ function FolderPlayer(videoEl, manifest, options) {
 			_playOne();
 			return;
 		}
+		console.log(ran);
 		console.log(_manifest[ran]);
 		_el.src = _manifest[ran];
 		_el.play();

@@ -103,8 +103,8 @@ var FFMPEG = (function() {
 						command += "[" + i + ":v][b" + (i + 1) + "v]";
 					});
 
-					command += "[" + indexs.length + ":v]concat=n=" + (count * 2 - 1) + ":v=1:a=0,scale=-1:" + scale + "[v]\"";
-					command += " -map \"[v]\" -codec:v libx264 -b:v " + br + " -maxrate " + br + " -bufsize " + br + " -threads 4 -r 24 -g 12 -codec:a libfdk_aac -b:a 128k -preset fast -profile:v baseline -pix_fmt yuv420p -y " + output['path'];
+					command += "[" + indexs.length + ":v]concat=n=" + (count * 2 - 1) + ":v=1:[v]\"";
+					command += " -codec:v libx264 -b:v " + br + " -maxrate " + br + " -bufsize " + br + " -threads 4 -r 24 -g 12 -codec:a libfdk_aac -b:a 128k -preset fast -profile:v baseline -pix_fmt yuv420p -y " + output['path'];
 					console.log(command);
 					var ff = exec(command, function(error, stdout, stderr) {
 						if (error) {}

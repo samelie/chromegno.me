@@ -83,8 +83,6 @@ var Effects = function(scene, camera, renderer, fbo, name) {
 
 	changeEffects = [
 		//[effects.mega, 'mega'],
-		[effects.creepy, 'creepy'],
-		//[effects.glitch, 'glitch'],
 		//[effects.distort, 'distort'],
 		[effects.rgb, 'rgb'],
 		//[effects.bit, 'bit'],

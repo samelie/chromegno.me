@@ -58,8 +58,13 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 
 	Views.FX = Marionette.ItemView.extend({
 		template: JST['effect_view'],
+		ui:{
+			info:'.info'
+		},
 		events: {
-			'click .js-go': 'startProcess'
+			'click .js-go': 'startProcess',
+			'mouseover @ui.info':'onInfoOver',
+			'mouseout @ui.info':'onInfoOut'
 		},
 		initialize: function(options) {
 			this.timeline = new TIMELINE();
@@ -71,7 +76,7 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 					App.reqres.request('reqres:effects').then(function(effects) {
 						this.setupEffects(effects);
 						this.audio = new AUDIO();
-						this.audio.addTrack('assets/audio/chrome.mp3');
+						this.audio.addTrack('assets/audio/chrome_short.mp3');
 					}.bind(this)).done();
 				}.bind(this)).done();
 			}.bind(this)).done();
@@ -81,6 +86,12 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 			this.playerController.init(document.getElementById('myVideo2'));
 			console.log(this.manifest);
 			this.playerController.setEntireManifest(this.manifest);
+		},
+		onInfoOver:function(){
+			this.ui.info.removeClass('is-hidden');
+		},
+		onInfoOut:function(){
+			this.ui.info.addClass('is-hidden');
 		},
 		onRender: function() {
 			this.updateCounter = 0;
@@ -92,9 +103,14 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 		},
 		onShow: function() {
 
+
 			this.threeHelpers = new THREE_HELPERS();
 
 			var self = this;
+
+			setTimeout(function(){
+				self.ui.info.addClass('is-hidden');
+			},3000);
 
 			this.videoElement = document.getElementById('myVideo');
 			this.videoElement.volume = 0;
