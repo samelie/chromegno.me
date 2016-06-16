@@ -1,6 +1,7 @@
 // app dependencies
 var App = require('../app');
 var Q = require('q');
+var _ = require('lodash');
 // define module
 App.module('Entities', function(Entities, App, Backbone, Marionette, $, _) {
 
@@ -10,6 +11,15 @@ App.module('Entities', function(Entities, App, Backbone, Marionette, $, _) {
             type: 'GET',
             url: 'assets/json/videos_manifest.json'
         })).then(function(data) {
+            console.log("----------------");
+            console.log("----------------");
+            _.each(data, function(chapter){
+                _.each(chapter, function(obj){
+                    obj.dir = SERVER_BASE+ obj.dir
+                    obj.dashed.video = SERVER_BASE+obj.dashed.video
+                })  
+            })
+            console.log(data);
             defer.resolve(data);
         });
         return defer.promise;
@@ -43,7 +53,10 @@ App.module('Entities', function(Entities, App, Backbone, Marionette, $, _) {
             type: 'GET',
             url: 'assets/json/made_manifest.json'
         })).then(function(data) {
-            defer.resolve(data);
+            let _m = data.map(function(p){
+                return SERVER_BASE + p
+            })
+            defer.resolve(_m);
         });
         return defer.promise;
     }
@@ -54,7 +67,10 @@ App.module('Entities', function(Entities, App, Backbone, Marionette, $, _) {
             type: 'GET',
             url: 'assets/json/gnome_manifest.json'
         })).then(function(data) {
-            defer.resolve(data);
+            let _m = data.map(function(p){
+                return SERVER_BASE + p
+            })
+            defer.resolve(_m);
         });
         return defer.promise;
     }

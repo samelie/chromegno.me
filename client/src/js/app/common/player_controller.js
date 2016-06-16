@@ -133,7 +133,7 @@ var PlayerController = function(chapterCompleteCallback) {
 
 	function playSegment(data) {
 		var self = this;
-		var url = 'assets/videos/' + data['relPath'];
+		var url = SERVER_BASE+ '/assets/videos/' + data['relPath'];
 		var xhr = new XMLHttpRequest();
 		console.log(url);
 		xhr.open('GET', url);

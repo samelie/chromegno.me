@@ -76,7 +76,7 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 					App.reqres.request('reqres:effects').then(function(effects) {
 						this.setupEffects(effects);
 						this.audio = new AUDIO();
-						this.audio.addTrack('assets/audio/chrome_short.mp3');
+						this.audio.addTrack(SERVER_BASE+'/assets/audio/chrome_short.mp3');
 					}.bind(this)).done();
 				}.bind(this)).done();
 			}.bind(this)).done();
