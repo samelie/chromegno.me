@@ -138,6 +138,7 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 		},
 		setupPlayer:function(){
 			this.videoElement = document.getElementById('myVideo');
+			this.videoElement.setAttribute('crossorigin', 'anonymous')
 			this.playerController = new PLAYER();
 			this.playerController.init(this.videoElement);
 			console.log(this.manifest);

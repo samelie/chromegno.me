@@ -69,6 +69,10 @@ App.module('Views', function(Views, App, Backbone, Marionette, $, _) {
 		initialize: function(options) {
 			this.timeline = new TIMELINE();
 			App.reqres.request('reqres:manifest').then(function(manifest) {
+
+				console.log(manifest);
+
+
 				this.manifest = this.timeline.start(manifest);
 				this.setupPlayer();
 				App.reqres.request('reqres:youtube').then(function(youtube) {

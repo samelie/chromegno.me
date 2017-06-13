@@ -15,9 +15,9 @@ App.module('Entities', function(Entities, App, Backbone, Marionette, $, _) {
             console.log("----------------");
             _.each(data, function(chapter){
                 _.each(chapter, function(obj){
-                    obj.dir = SERVER_BASE+ obj.dir
+                    obj.dir = SERVER_BASE + obj.dir
                     obj.dashed.video = SERVER_BASE+obj.dashed.video
-                })  
+                })
             })
             console.log(data);
             defer.resolve(data);
@@ -54,7 +54,7 @@ App.module('Entities', function(Entities, App, Backbone, Marionette, $, _) {
             url: 'assets/json/made_manifest.json'
         })).then(function(data) {
             let _m = data.map(function(p){
-                return SERVER_BASE + p
+                return SERVER_BASE +  "/" + p
             })
             defer.resolve(_m);
         });
@@ -68,7 +68,7 @@ App.module('Entities', function(Entities, App, Backbone, Marionette, $, _) {
             url: 'assets/json/gnome_manifest.json'
         })).then(function(data) {
             let _m = data.map(function(p){
-                return SERVER_BASE + p
+                return SERVER_BASE + "/" + p
             })
             defer.resolve(_m);
         });

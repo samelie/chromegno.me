@@ -186,9 +186,8 @@ var PlayerController = function(chapterCompleteCallback) {
 		}, false);
 	}
 
-
 	function initialRequest(data, callback) {
-		var url = 'assets/videos/' + data['relPath'];
+		var url = SERVER_BASE + '/assets/videos/' + data['relPath'];
 		var xhr = new XMLHttpRequest();
 		var range = "bytes=0-" + (data['firstOffset'] - 1);
 		xhr.open('GET', url);

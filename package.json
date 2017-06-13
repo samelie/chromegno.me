@@ -21,6 +21,5 @@
 		"mime": "latest",
 		"s3": "latest",
 		"s3-upload-stream": "latest"
-
 	}
 }

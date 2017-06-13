@@ -103,3 +103,5 @@ MP4Box
 *.mov
 envvars
 tagging/assets/**/*
+
+client/node_modules

@@ -69,11 +69,11 @@ gulp.task('templates', function() {
 //VENDOR JS
 function buildVendorJS(debug) {
     stream = gulp.src([
-        vendors + 'jquery/dist/jquery.js',
-        vendors + 'lodash/lodash.js',
-        vendors + 'backbone/backbone.js',
-        vendors + 'marionette/backbone.marionette.js'
-    ])
+            vendors + 'jquery/dist/jquery.js',
+            vendors + 'lodash/lodash.js',
+            vendors + 'backbone/backbone.js',
+            vendors + 'marionette/backbone.marionette.js'
+        ])
         .pipe(plugins.concat('libraries.js'))
         .pipe(gulp.dest(jsDist))
         .pipe(plugins.if(!debug, plugins.rename({
@@ -95,38 +95,40 @@ gulp.task('vendor-scripts-release', function() {
 
 //PROJECT JS
 function buildProjectJS(debug) {
-    var bundler = browserify(jsSrc + jsIndex);
+    var bundler = browserify(jsSrc + jsIndex, {
+        debug: debug,
+        alias: [
+            nodeModules + '/express/lib/express.js:./lib-cov/express'
+        ]
+    });
+
+    /*,
+    alias:[
+        'common/constants.js:constants'
+    ]*/
+    /*insertGlobals: true,
+    shim: {
+        templates: {
+            path: distAssets + '/js/templates.js',
+            exports: 'templates',
+            depends: {
+                underscore: '_'
+            }
+        }
+    }*/
+
     //bundler.plugin(remapify, [{
-    //	src: jsSrc + 'common/**/*.js',
-    //	expose: 'common',
-    //	cwd: __dirname
+    //  src: jsSrc + 'common/**/*.js',
+    //  expose: 'common',
+    //  cwd: __dirname
     //}])
     var bundle = function() {
-        var bundleStream = bundler.bundle({
-            debug: debug,
-            alias: [
-                nodeModules + '/express/lib/express.js:./lib-cov/express'
-            ]
-            /*,
-				alias:[
-					'common/constants.js:constants'
-				]*/
-            /*insertGlobals: true,
-				shim: {
-					templates: {
-						path: distAssets + '/js/templates.js',
-						exports: 'templates',
-						depends: {
-							underscore: '_'
-						}
-					}
-				}*/
-        });
+        var bundleStream = bundler.bundle();
         return bundleStream
             .on('error', logError)
             .pipe(source(jsSrc + jsIndex))
             .pipe(plugins.if(!debug, plugins.streamify(plugins.stripDebug())))
-            .pipe(plugins.if(!debug, plugins.streamify(plugins.uglify())))
+            //.pipe(plugins.if(!debug, plugins.streamify(plugins.uglify())))
             .pipe(plugins.rename(jsBundle))
             .pipe(plugins.if(!debug, plugins.rename({
                 suffix: '.min'
@@ -199,10 +201,10 @@ gulp.task('jsons', function() {
 //CSS LINT - ignore bundled
 gulp.task('csslint', function() {
     gulp.src([
-        cssSrc + '**/*.css',
-        '!' + cssSrc + cssIndex,
-        '!' + cssDist + cssBundle
-    ])
+            cssSrc + '**/*.css',
+            '!' + cssSrc + cssIndex,
+            '!' + cssDist + cssBundle
+        ])
         .pipe(csslint({
             'adjoining-classes': false,
             'box-model': false,
